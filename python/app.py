@@ -25,7 +25,7 @@ print "=========================================================================
 
 #Get all endpoints
 for key in sorted(swagger_json["paths"]):
-    print(key)
+    print key
     
 #Get all DELETE objects
 delete_objects = {}
@@ -72,7 +72,7 @@ print "Generated Class:\n"
 print "=================================================================================================="
       
 env = Environment(loader=FileSystemLoader('templates'))
-t = env.get_template('api_keys.jinja')
+t = env.get_template('endpoint_class.jinja')
 print t.render(class_name = "APIKeys",
          class_description = "The API Keys feature allows customers to be able to generate an API Key credential\n    which can be used for authentication with the SendGrid v3 Web API or the Mail API Endpoint",
          class_constructor_definition = "Constructs SendGrid APIKeys object.",
