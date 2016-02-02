@@ -1,0 +1,17 @@
+class {{ class_name }}(object):
+    """{{ class_description }}"""
+    
+    def __init__(self, client, **opts):
+        """
+        {{ class_constructor_definition }}
+        
+        See {{ url_to_documentation }}
+        """
+        self._base_endpoint = "/v3/{{ base_endpoint }}"
+        self.endpoint =  "/v3/{{ base_endpoint }}"
+        self.client = client
+        
+        # {{ function_description }}
+        def delete(self, {{ params }}):
+            self.endpoint = self._base_endpoint + "/" + {{ endpoint }}
+            return self.client.delete(self)
