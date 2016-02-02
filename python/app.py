@@ -40,3 +40,12 @@ for key in delete_objects:
     print "\n"
     print delete_objects[key]
     print "\n"
+
+#Group by URL
+for key in swagger_json["paths"]:
+    k = key.split('/')
+    for i in k:
+        print i # Separated URL
+    for i in k:
+        if '{' in i:
+            print i # URI parameters
