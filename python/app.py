@@ -2,6 +2,7 @@ import github3
 import os
 import base64
 import json
+import re
 from jinja2 import Environment, FileSystemLoader
 
 base_path = os.path.abspath(os.path.dirname(__file__))
@@ -13,6 +14,9 @@ if os.path.exists(base_path + '/.env'):
 github_token = os.environ.get('GITHUB_TOKEN')
 gh = github3.login(token=github_token)
 repo = gh.repository('sendgrid', 'sendgrid-swagger')
+
+def to_camelcase(s):
+    return re.sub(r'(?!^)_([a-zA-Z])', lambda m: m.group(1).upper(), s)
 
 #Get swagger
 content = repo.contents('swagger-stoplight.json')
@@ -68,11 +72,27 @@ for key in sorted(swagger_json["paths"]):
             print i # URI parameters
 
 print "=================================================================================================="
+print "Generate List of Class Names:\n"
+print "=================================================================================================="
+
+class_names = {}
+for endpoint in sorted(swagger_json["paths"]):
+    split_endpoint = endpoint.split('/')
+    class_name = to_camelcase(split_endpoint[1].capitalize())
+    try:
+        class_names[class_name].append(endpoint)
+    except KeyError, e:
+        class_names[class_name] = []
+        class_names[class_name].append(endpoint)
+    
+print class_names
+
+print "=================================================================================================="
 print "Generated Class:\n"
 print "=================================================================================================="
-      
 env = Environment(loader=FileSystemLoader('templates'))
 t = env.get_template('endpoint_class.jinja')
+# TODO: auto-generate this
 print t.render(class_name = "APIKeys",
          class_description = "The API Keys feature allows customers to be able to generate an API Key credential\n    which can be used for authentication with the SendGrid v3 Web API or the Mail API Endpoint",
          class_constructor_definition = "Constructs SendGrid APIKeys object.",
