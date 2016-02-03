@@ -4,14 +4,25 @@ class {{ class_name }}(object):
     def __init__(self, client, **opts):
         """
         {{ class_constructor_definition }}
-        
-        See {{ url_to_documentation }}
         """
         self._base_endpoint = "/v3/{{ base_endpoint }}"
         self.endpoint =  "/v3/{{ base_endpoint }}"
         self.client = client
+
+    @property
+    def base_endpoint(self):
+        return self._base_endpoint
+
+    @property
+    def endpoint(self):
+        endpoint = self._endpoint
+        return endpoint
         
-        # {{ function_description }}
-        def delete(self, {{ params }}):
-            self.endpoint = self._base_endpoint + "/" + {{ endpoint }}
-            return self.client.delete(self)
+    @endpoint.setter
+    def endpoint(self, value):
+        self._endpoint = value
+        
+    @property
+    def client(self):
+        return self._client
+

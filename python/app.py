@@ -1,104 +1,55 @@
-import github3
-import os
-import base64
-import json
-import re
-from jinja2 import Environment, FileSystemLoader
+from code_generator import CodeGenerator
+from swagger import Swagger
 
-base_path = os.path.abspath(os.path.dirname(__file__))
-if os.path.exists(base_path + '/.env'):
-    for line in open(base_path + '/.env'):
-        var = line.strip().split('=')
-        if len(var) == 2:
-            os.environ[var[0]] = var[1]
-github_token = os.environ.get('GITHUB_TOKEN')
-gh = github3.login(token=github_token)
-repo = gh.repository('sendgrid', 'sendgrid-swagger')
+swagger = Swagger()
+code_generator = CodeGenerator(swagger.swagger_json)
 
-def to_camelcase(s):
-    return re.sub(r'(?!^)_([a-zA-Z])', lambda m: m.group(1).upper(), s)
-
-#Get swagger
-content = repo.contents('swagger-stoplight.json')
-swagger = base64.b64decode(content.content)
-swagger_json = json.loads(swagger)
-
-print "=================================================================================================="
-print "All Endpoints:\n"
-print "=================================================================================================="
-
-#Get all endpoints
-for key in sorted(swagger_json["paths"]):
-    print key
-    
-#Get all DELETE objects
+endpoints = swagger.get_endpoints()
+delete_endpoints = swagger.get_endpoints("delete")
 delete_objects = {}
-for key in swagger_json["paths"]:
-    try:
-        delete_objects[key] = swagger_json["paths"][key]["delete"]
-    except KeyError, e:
-        pass
+for endpoint in delete_endpoints:
+    delete_objects[endpoint] = swagger.get_endpoint_object(endpoint, "delete")
+class_names = code_generator.get_class_names()
 
 print "=================================================================================================="
-print "DELETE Endpoints:\n"
-print "=================================================================================================="
+print "All Endpoints:"
+print "==================================================================================================\n"
 
-#Print all DELETE endpoints     
-for key in sorted(delete_objects):
-    print key
+for endpoint in endpoints:
+    print endpoint
 
-print "=================================================================================================="
-print "DELETE Endpoints with their Objects:\n"
-print "=================================================================================================="
+print "\n=================================================================================================="
+print "DELETE Endpoints:"
+print "==================================================================================================\n"
 
-#Print all DELETE endpoints and their objects
+for endpoint in delete_endpoints:
+    print endpoint
+
+print "\n=================================================================================================="
+print "DELETE Endpoints with their Objects:"
+print "==================================================================================================\n"
+
 for key in sorted(delete_objects):
     print key
     print "\n"
     print delete_objects[key]
     print "\n"
 
-print "=================================================================================================="
-print "Grouped by URL:\n"
-print "=================================================================================================="
+print "\n=================================================================================================="
+print "Generated Classes (APIKeys for first example):"
+print "==================================================================================================\n"
 
-#Group by URL
-for key in sorted(swagger_json["paths"]):
-    k = key.split('/')
-    for i in k:
-        print i # Separated URL
-    for i in k:
-        if '{' in i:
-            print i # URI parameters
-
-print "=================================================================================================="
-print "Generate List of Class Names:\n"
-print "=================================================================================================="
-
-class_names = {}
-for endpoint in sorted(swagger_json["paths"]):
-    split_endpoint = endpoint.split('/')
-    class_name = to_camelcase(split_endpoint[1].capitalize())
-    try:
-        class_names[class_name].append(endpoint)
-    except KeyError, e:
-        class_names[class_name] = []
-        class_names[class_name].append(endpoint)
-    
-print class_names
-
-print "=================================================================================================="
-print "Generated Class:\n"
-print "=================================================================================================="
-env = Environment(loader=FileSystemLoader('templates'))
-t = env.get_template('endpoint_class.jinja')
-# TODO: auto-generate this
-print t.render(class_name = "APIKeys",
-         class_description = "The API Keys feature allows customers to be able to generate an API Key credential\n    which can be used for authentication with the SendGrid v3 Web API or the Mail API Endpoint",
-         class_constructor_definition = "Constructs SendGrid APIKeys object.",
-         url_to_documentation = "https://sendgrid.com/docs/API_Reference/Web_API_v3/API_Keys/index.html",
-         base_endpoint = "api_keys",
-         function_description = "Delete a API key",
-         params = "api_key_id", # TODO: cover the case of multiple params
-         endpoint = "api_key_id"
-         )
+for key in sorted(class_names):
+    for endpoint in class_names[key]:
+        if endpoint in delete_objects:
+            if key == "ApiKeys":
+                class_name = key
+                class_description = code_generator.get_description("get", "/" + endpoint.split("/")[1]) # TODO: conform to PEP 8 rules for line length
+                class_constructor_definition = "Contructs the SendGrid " + key + " object."
+                base_endpoint = endpoint.split("/")[1]
+                generated_class = code_generator.generate_class(class_name, class_description, class_constructor_definition, base_endpoint)
+                function_description = code_generator.get_operation_id("delete", endpoint)
+                params = endpoint.split("/")[2].strip("{}")
+                # TODO: Implement https://github.com/sendgrid/sendgrid-python/blob/master/sendgrid/resources/asm_suppressions.py to cover case with multiple parameters
+                generated_class += code_generator.generate_delete_endpoint(function_description, params)
+print generated_class
