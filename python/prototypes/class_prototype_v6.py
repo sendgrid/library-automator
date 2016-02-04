@@ -23,5 +23,5 @@ url_params = [template_id, version_id]
 client.templates.versions.get(url_params)
 client.templates.versions.activate.get(url_params)
 
-# or how about having the url params embeddd like this:
+# or how about having the url params embedded like this:
 client.templates._template_id.versions._version_id.activate.get(url_params)
