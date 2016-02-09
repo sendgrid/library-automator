@@ -40,6 +40,9 @@ class Config(object):
     def swagger_filename(self):
         return self._swagger_filename
         
+    def get_custom_init(self, endpoint):
+        return self.config[endpoint]['custom_init']
+    
     def get_data(self, endpoint):
         return self.config[endpoint]['data']
     

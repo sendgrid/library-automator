@@ -30,12 +30,14 @@ class CodeGenerator(object):
     def generate_test_class_init(self, 
                                 class_name, 
                                 base_endpoint,
-                                test_id
+                                test_id,
+                                custom_init
                                 ):
         t = self.env.get_template('test_class_init.jinja')
         return t.render(class_name = class_name, 
                         base_endpoint = base_endpoint,
-                        test_id = test_id
+                        test_id = test_id,
+                        custom_init = custom_init
                         )
     def generate_test_class_function(self, 
                                     test_number, 

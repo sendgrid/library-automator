@@ -54,7 +54,9 @@ for key in sorted(class_names):
             base_endpoint = endpoint.split("/")[1]
             if init == "false":
                 test_id = config.get_id(base_endpoint)
-                generated_test_class += code_generator.generate_test_class_init(class_name, base_endpoint, test_id)
+                custom_init = config.get_custom_init(base_endpoint)
+                custom_init = custom_init.translate(None, '"')
+                generated_test_class += code_generator.generate_test_class_init(class_name, base_endpoint, test_id, custom_init)
                 init = "true"
             try:
                 test_number = "00"
