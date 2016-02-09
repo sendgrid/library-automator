@@ -16,3 +16,10 @@ api_keys:
       data = {"name": "Python Client APIKeys Test v4002", "scopes": self.scope}
   id: api_key_id
 
+templates:
+  custom_init: " "
+  data: >
+      data = {"name": "Python Client Template Endpoint Test v4000"}
+  patched_data: >
+      data = {"name": "Python Client Template Endpoint Test v4001"}
+  id: id
