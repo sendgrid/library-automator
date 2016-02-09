@@ -12,10 +12,10 @@ class Config(object):
            via properties"""
         self.base_path = os.path.abspath(os.path.dirname(__file__))
         with open(self.base_path + '/config.yml') as stream:
-            config = yaml.load(stream)
-            self._github_user = config['github_user']
-            self._swagger_source = config['swagger_source']
-            self._swagger_filename = config['swagger_filename']
+            self.config = yaml.load(stream)
+            self._github_user = self.config['github_user']
+            self._swagger_source = self.config['swagger_source']
+            self._swagger_filename = self.config['swagger_filename']
 
     @staticmethod
     def init_environment():
@@ -39,3 +39,15 @@ class Config(object):
     @property
     def swagger_filename(self):
         return self._swagger_filename
+        
+    def get_data(self, endpoint):
+        return self.config[endpoint]['data']
+    
+    def get_patched_data(self, endpoint):
+        return self.config[endpoint]['patched_data']
+
+    def get_put_data(self, endpoint):
+        return self.config[endpoint]['put_data']
+        
+    def get_id(self, endpoint):
+        return self.config[endpoint]['id']

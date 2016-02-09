@@ -1,3 +1,13 @@
 github_user: sendgrid
 swagger_source: sendgrid-swagger
 swagger_filename: swagger-stoplight.json
+
+api_keys:
+  data: >
+      data = {"name": "Python Client APIKeys Test v4000"}
+  patched_data: >
+      data = {"name": "Python Client APIKeys Test v4001"}
+  put_data: >
+      data = {"name": "Python Client APIKeys Test v4002"}
+  id: api_key_id
+

@@ -14,7 +14,8 @@ class Swagger(object):
         github_token = os.environ.get('GITHUB_TOKEN')
         gh = github3.login(token=github_token)
         repo = gh.repository(self.config.github_user, self.config.swagger_source)
-        content = repo.contents(self.config.swagger_filename)
+        
+        content = repo.file_contents(self.config.swagger_filename)
         swagger = base64.b64decode(content.content)
         return json.loads(swagger)
 
@@ -24,6 +25,7 @@ class Swagger(object):
             # Return all endpoints
             for key in sorted(self.swagger_json["paths"]):
                 endpoints.append(key)
+            endpoints.remove('/')
         else:
             # Return all endpoints for a given method
             for key in sorted(self.swagger_json["paths"]):
@@ -36,6 +38,12 @@ class Swagger(object):
         
     def get_endpoint_object(self, endpoint, method):
         return self.swagger_json["paths"][endpoint][method]
+
+    def get_endpoint_objects(self, endpoint):
+        return self.swagger_json["paths"][endpoint]
+        
+    def get_response_codes(self, endpoint, method):
+        return self.swagger_json["paths"][endpoint][method]["responses"].keys()
 
     @property
     def config(self):

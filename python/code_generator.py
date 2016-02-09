@@ -3,7 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 
 class CodeGenerator(object):
     def __init__(self, swagger_json):
-        self._env = Environment(loader=FileSystemLoader('templates'))
+        self._env = Environment(loader=FileSystemLoader('templates'), trim_blocks=True, lstrip_blocks=True)
         self._swagger_json = swagger_json
 
     @staticmethod
@@ -23,6 +23,39 @@ class CodeGenerator(object):
                         base_endpoint = base_endpoint
                         )
 
+    def generate_test_class_header(self):
+        t = self.env.get_template('test_header.jinja')
+        return t.render()
+    
+    def generate_test_class_init(self, 
+                                class_name, 
+                                base_endpoint,
+                                test_id
+                                ):
+        t = self.env.get_template('test_class_init.jinja')
+        return t.render(class_name = class_name, 
+                        base_endpoint = base_endpoint,
+                        test_id = test_id
+                        )
+    def generate_test_class_function(self, 
+                                    test_number, 
+                                    endpoint, 
+                                    method,
+                                    response_code,
+                                    test_id=None,
+                                    data=None,
+                                    specific=False
+                                    ):
+        t = self.env.get_template('test_class_function.jinja')
+        return t.render(test_number = test_number, 
+                        endpoint = endpoint,
+                        method = method,
+                        response_code = response_code,
+                        test_id = test_id,
+                        data = data,
+                        specific = specific
+                        )
+    
     def generate_delete_endpoint(self, function_description, params):
         t = self.env.get_template('delete_function.jinja')
         return t.render(function_description = function_description,
