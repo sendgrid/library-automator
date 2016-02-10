@@ -43,7 +43,7 @@ class Swagger(object):
         return self.swagger_json["paths"][endpoint]
         
     def get_response_codes(self, endpoint, method):
-        return self.swagger_json["paths"][endpoint][method]["responses"].keys()
+        return sorted(self.swagger_json["paths"][endpoint][method]["responses"].keys())
 
     @property
     def config(self):

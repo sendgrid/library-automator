@@ -31,9 +31,12 @@ class CodeGenerator(object):
                                 class_name, 
                                 base_endpoint,
                                 test_id,
-                                custom_init
+                                custom_init,
+                                custom_class_name=None
                                 ):
         t = self.env.get_template('test_class_init.jinja')
+        if custom_class_name:
+            class_name = custom_class_name #TODO:config this
         return t.render(class_name = class_name, 
                         base_endpoint = base_endpoint,
                         test_id = test_id,
