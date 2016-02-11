@@ -40,8 +40,23 @@ suppression:
   init_id_value: info@elmerthomas.com
 
 bounces:
+  parent: suppression
   mocked_params: 
       delete: >
           {"mock": 204}
       delete_specific: >
           {"mock": 204}
+
+campaigns:
+  custom_init: " "
+  data: >
+      data = {"title": "Python Client Campaign Test v4000"}
+  patched_data: >
+      data = {"name": "Python Client Campaign Test v4001"}
+  id: id
+  mocked_params: 
+      post: >
+          {"mock": 201}
+  appended_endpoint: 
+      schedules: schedules
+      now: schedules.now

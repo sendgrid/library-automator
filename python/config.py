@@ -116,4 +116,10 @@ class Config(object):
         try:
              return self.config[endpoint]['full_endpoint_path']
         except KeyError, e:
-             return None           
+             return None    
+
+    def get_appended_endpoint(self, endpoint, end):
+        try:
+             return self.config[endpoint]['appended_endpoint'][end]
+        except KeyError, e:
+             return None         
