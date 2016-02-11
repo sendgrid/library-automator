@@ -32,7 +32,11 @@ class CodeGenerator(object):
                                 base_endpoint,
                                 test_id,
                                 custom_init,
-                                custom_class_name=None
+                                custom_class_name=None,
+                                init_id_value=None,
+                                proxy_url=None,
+                                final_endpoint=None,
+                                full_endpoint_path=None
                                 ):
         t = self.env.get_template('test_class_init.jinja')
         if custom_class_name:
@@ -40,7 +44,11 @@ class CodeGenerator(object):
         return t.render(class_name = class_name, 
                         base_endpoint = base_endpoint,
                         test_id = test_id,
-                        custom_init = custom_init
+                        custom_init = custom_init,
+                        init_id_value = init_id_value,
+                        proxy_url = proxy_url,
+                        final_endpoint = final_endpoint,
+                        full_endpoint_path = full_endpoint_path
                         )
     def generate_test_class_function(self, 
                                     test_number, 
@@ -49,6 +57,7 @@ class CodeGenerator(object):
                                     response_code,
                                     test_id=None,
                                     data=None,
+                                    params=None,
                                     specific=False
                                     ):
         t = self.env.get_template('test_class_function.jinja')
@@ -58,6 +67,7 @@ class CodeGenerator(object):
                         response_code = response_code,
                         test_id = test_id,
                         data = data,
+                        params = params,
                         specific = specific
                         )
     

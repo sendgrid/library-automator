@@ -2,6 +2,10 @@ github_user: sendgrid
 swagger_source: sendgrid-swagger
 swagger_filename: swagger-stoplight.json
 
+global:
+    is_proxied: True
+    proxy_url: host="https://e9sk3d3bfaikbpdq7.stoplight-proxy.io/v3"
+
 api_keys:
   custom_init: |+
       "scopes = self.sg.client.scopes"
@@ -27,3 +31,17 @@ templates:
 
 scopes:
   custom_init: " "
+
+suppression:
+  custom_init: " "
+  final_endpoint: bounces
+  full_endpoint_path: suppression.bounces
+  id: email
+  init_id_value: info@elmerthomas.com
+
+bounces:
+  mocked_params: 
+      delete: >
+          {"mock": 204}
+      delete_specific: >
+          {"mock": 204}

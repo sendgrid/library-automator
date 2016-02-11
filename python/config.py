@@ -44,25 +44,43 @@ class Config(object):
         try:
             return self.config[endpoint]['custom_init']
         except KeyError, e:
-            return
+            return None
     
     def get_data(self, endpoint):
         try:
             return self.config[endpoint]['data']
         except KeyError, e:
-            return
+            return None
+
+    def get_params(self, endpoint, method=None):
+        try:
+            if method:
+                return self.config[endpoint]['params'][method]
+            else:
+                return self.config[endpoint]['params']
+        except KeyError, e:
+            return None
+
+    def get_mocked_params(self, endpoint, method=None):
+        try:
+            if method:
+                return self.config[endpoint]['mocked_params'][method]
+            else:
+                return self.config[endpoint]['mocked_params']
+        except KeyError, e:
+            return None
         
     def get_patched_data(self, endpoint):
         try:
             return self.config[endpoint]['patched_data']
         except KeyError, e:
-            return
+            return None
 
     def get_put_data(self, endpoint):
         try:
             return self.config[endpoint]['put_data']
         except KeyError, e:
-            return
+            return None
 
     def get_custom_class_name(self, endpoint):
         try:
@@ -74,4 +92,28 @@ class Config(object):
         try:
             return self.config[endpoint]['id']
         except KeyError, e:
-            return
+            return None
+            
+    def get_init_id_value(self, endpoint):
+        try:
+            return self.config[endpoint]['init_id_value']
+        except KeyError, e:
+            return None
+            
+    def is_proxied(self):
+        return self.config["global"]["is_proxied"]
+
+    def get_proxy_url(self):
+        return self.config["global"]["proxy_url"]
+        
+    def get_final_endpoint(self, endpoint):
+        try:
+            return self.config[endpoint]['final_endpoint']
+        except KeyError, e:
+            return None
+ 
+    def get_full_endpoint_path(self, endpoint):
+        try:
+             return self.config[endpoint]['full_endpoint_path']
+        except KeyError, e:
+             return None           
