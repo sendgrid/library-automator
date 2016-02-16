@@ -54,7 +54,7 @@ class TestAPIKeys(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_03_api_keys_patch(self):
-        data = {"name": "Python Client APIKeys Test v4001"}
+        data = {"name": "Python Client APIKeys Test v4000"}
         response = self.api_keys._(self.__class__.api_key_id).patch(data=data)
         self.assertEqual(response.status_code, 200)
 
@@ -92,7 +92,7 @@ class TestCampaigns(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_03_campaigns_patch(self):
-        data = {"name": "Python Client Campaign Test v4001"}
+        data = {"title": "Python Client Campaign Test v4000"}
         response = self.campaigns._(self.__class__.id).patch(data=data)
         self.assertEqual(response.status_code, 200)
 
@@ -107,7 +107,23 @@ class TestCampaigns(unittest.TestCase):
         self.__class__.id = response_json['id']
         self.assertEqual(response.status_code, 201)
 
-    def test_06_campaigns_post_specific(self):
+    def test_06_campaigns_get_specific(self):
+        params = {"mock": 200}
+        response = self.campaigns._(self.__class__.id).schedules.get(params=params)
+        self.assertEqual(response.status_code, 200)
+
+    def test_07_campaigns_patch(self):
+        data = {"send_at": 1489451436}
+        params = {"mock": 200}
+        response = self.campaigns._(self.__class__.id).schedules.patch(data=data, params=params)
+        self.assertEqual(response.status_code, 200)
+
+    def test_08_campaigns_delete_specific(self):
+        params = {"mock": 204}
+        response = self.campaigns._(self.__class__.id).schedules.delete(params=params)
+        self.assertEqual(response.status_code, 204)
+
+    def test_9_campaigns_post_specific(self):
         params = {"mock": 201}
         response = self.campaigns._(self.__class__.id).schedules.now.post(params=params)
         response_json = response.json()
@@ -143,9 +159,9 @@ class TestSuppression(unittest.TestCase):
         response = self.bounces._(self.__class__.email).get()
         self.assertEqual(response.status_code, 200)
 
-    def test_02_bounces_delete(self):
+    def test_02_bounces_delete_specific(self):
         params = {"mock": 204}
-        response = self.bounces.delete(params=params)
+        response = self.bounces._(self.__class__.email).delete(params=params)
         self.assertEqual(response.status_code, 204)
 
     def test_03_bounces_delete_specific(self):
@@ -178,7 +194,7 @@ class TestTemplates(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_03_templates_patch(self):
-        data = {"name": "Python Client Template Endpoint Test v4001"}
+        data = {"name": "Python Client Template Endpoint Test v4000"}
         response = self.templates._(self.__class__.id).patch(data=data)
         self.assertEqual(response.status_code, 200)
 

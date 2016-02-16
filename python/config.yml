@@ -55,8 +55,19 @@ campaigns:
       data = {"name": "Python Client Campaign Test v4001"}
   id: id
   mocked_params: 
+      get: >
+          {"mock": 200}
       post: >
           {"mock": 201}
+      patch: >
+          {"mock": 200}
+      delete: >
+          {"mock": 204}
   appended_endpoint: 
       schedules: schedules
       now: schedules.now
+
+schedules:
+  patched_data: > 
+      data = {"send_at": 1489451436}
+    

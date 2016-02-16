@@ -57,7 +57,7 @@ class CodeGenerator(object):
                         full_endpoint_path = full_endpoint_path
                         )
 
-    def build_test(self, init, class_name, base_endpoint, endpoint, endpoint_id, methods, mocked_methods=None, appended_endpoint=None):
+    def build_test(self, init, class_name, base_endpoint, endpoint, endpoint_id, methods, mocked_methods=None, appended_endpoint=None, end=None):
         generated_test_class = ""
         test_id = self.config.get_id(base_endpoint)
         if init == False:
@@ -96,6 +96,12 @@ class CodeGenerator(object):
                         response_code = j['mock']
                         specific = True
                         data = None
+                    else:
+                        params = self.config.get_params(base_endpoint)
+                        response_codes = self.swagger.get_response_codes(endpoint, method)
+                        response_code = response_codes[0]
+                        data = self.config.get_data(base_endpoint)
+                        specific = False
                 except TypeError, e:
                     params = self.config.get_params(base_endpoint)
                     response_codes = self.swagger.get_response_codes(endpoint, method)
@@ -103,7 +109,6 @@ class CodeGenerator(object):
                     data = self.config.get_data(base_endpoint)
                     specific = False
             
-                endpoint_post = self.swagger.get_endpoint_object(endpoint, method)
                 generated_test_class += self.generate_test_class_function(
                                                                         test_number = test_number, 
                                                                         endpoint = base_endpoint, 
@@ -117,17 +122,40 @@ class CodeGenerator(object):
                                                                         )
                 self.test_count += 1
             if "get" in methods:
+                response_code = ""
+                params = None
+                specific = None
                 test_number = self.test_count_to_string()
                 method = "get"
-                endpoint_post = self.swagger.get_endpoint_object(endpoint, method)
-                response_codes = self.swagger.get_response_codes(endpoint, method)
-                params = self.config.get_params(base_endpoint)
+                try:
+                    if "get" in mocked_methods:
+                        params = self.config.get_mocked_params(base_endpoint, "get")
+                        j = json.loads(params)
+                        response_code = j['mock']
+                        specific = True
+                        data = None
+                    else:
+                        params = self.config.get_params(base_endpoint)
+                        response_codes = self.swagger.get_response_codes(endpoint, method)
+                        response_code = response_codes[0]
+                        data = self.config.get_data(base_endpoint)
+                        specific = False
+                except TypeError, e:
+                    params = self.config.get_params(base_endpoint)
+                    response_codes = self.swagger.get_response_codes(endpoint, method)
+                    response_code = response_codes[0]
+                    data = self.config.get_data(base_endpoint)
+                    specific = False
+                    
                 generated_test_class += self.generate_test_class_function(
                                                                         test_number = test_number, 
                                                                         endpoint = base_endpoint, 
                                                                         method = method,
-                                                                        response_code = response_codes[0],
-                                                                        params = params
+                                                                        response_code = response_code,
+                                                                        test_id = test_id,
+                                                                        params = params,
+                                                                        specific = specific,
+                                                                        appended_endpoint = appended_endpoint
                                                                         )
                 self.test_count += 1
             if "get_specific" in methods:
@@ -150,18 +178,38 @@ class CodeGenerator(object):
             if "patch" in methods:
                 test_number = self.test_count_to_string()
                 method = "patch"
-                data = self.config.get_patched_data(base_endpoint)
-                params = self.config.get_params(base_endpoint)
-                endpoint_post = self.swagger.get_endpoint_object(endpoint + "/{" + endpoint_id + "}", method)
-                response_codes = self.swagger.get_response_codes(endpoint + "/{" + endpoint_id + "}", method)
+                try:
+                    if "patch" in mocked_methods:
+                        params = self.config.get_mocked_params(base_endpoint, "patch")
+                        j = json.loads(params)
+                        response_code = j['mock']
+                        specific = True
+                        data = None
+                    else:
+                        params = self.config.get_params(base_endpoint)
+                        response_codes = self.swagger.get_response_codes(endpoint + "/{" + endpoint_id + "}", method)
+                        response_code = response_codes[0]
+                        specific = False
+                except TypeError, e:
+                    params = self.config.get_params(base_endpoint)
+                    response_codes = self.swagger.get_response_codes(endpoint + "/{" + endpoint_id + "}", method)
+                    response_code = response_codes[0]
+                    specific = False
+                
+                if appended_endpoint:
+                    data = self.config.get_patched_params_appended(end)
+                else:
+                    data = self.config.get_data(base_endpoint)
+                       
                 generated_test_class += self.generate_test_class_function(
                                                                         test_number = test_number, 
                                                                         endpoint = base_endpoint, 
                                                                         method = method,
-                                                                        response_code = response_codes[0],
+                                                                        response_code = response_code,
                                                                         test_id = test_id,
                                                                         data = data,
-                                                                        params = params
+                                                                        params = params,
+                                                                        appended_endpoint = appended_endpoint
                                                                         )
                 self.test_count += 1
             if "put" in methods:
@@ -189,17 +237,33 @@ class CodeGenerator(object):
                         params = self.config.get_mocked_params(base_endpoint, "delete")
                         j = json.loads(params)
                         response_code = j['mock']
+                        specific = True
+                    else:
+                        params = self.config.get_params(base_endpoint)
+                        response_codes = self.swagger.get_response_codes(endpoint, method)
+                        response_code = response_codes[0]
+                        specific = False
                 except TypeError, e:
                     params = self.config.get_params(base_endpoint)
                     response_codes = self.swagger.get_response_codes(endpoint, method)
                     response_code = response_codes[0]
+                    specific = False
+                    
+                if appended_endpoint:
+                    data = self.config.get_patched_params_appended(end)
+                else:
+                    data = self.config.get_data(base_endpoint)
+
                 endpoint_post = self.swagger.get_endpoint_object(endpoint, method)
                 generated_test_class += self.generate_test_class_function(
                                                                         test_number = test_number, 
                                                                         endpoint = base_endpoint, 
                                                                         method = method,
                                                                         response_code = response_code,
-                                                                        params = params
+                                                                        test_id = test_id,
+                                                                        params = params,
+                                                                        specific = specific,
+                                                                        appended_endpoint = appended_endpoint
                                                                         )
                 self.test_count += 1
             if "delete_specific" in methods:
@@ -210,6 +274,10 @@ class CodeGenerator(object):
                         params = self.config.get_mocked_params(base_endpoint, "delete_specific")
                         j = json.loads(params)
                         response_code = j['mock']
+                    else:
+                        params = self.config.get_params(base_endpoint)
+                        response_codes = self.swagger.get_response_codes(endpoint + "/{" + endpoint_id + "}", method)
+                        response_code = response_codes[0]
                 except TypeError, e:
                     params = self.config.get_params(base_endpoint)
                     response_codes = self.swagger.get_response_codes(endpoint + "/{" + endpoint_id + "}", method)

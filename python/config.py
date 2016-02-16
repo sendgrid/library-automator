@@ -123,3 +123,9 @@ class Config(object):
              return self.config[endpoint]['appended_endpoint'][end]
         except KeyError, e:
              return None         
+
+    def get_patched_params_appended(self, end):
+        try:
+             return self.config[end]['patched_data']
+        except KeyError, e:
+             return None       

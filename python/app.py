@@ -17,6 +17,7 @@ for key in sorted(class_names):
         
         #API Key Permissions
         init = False
+        mocked_methods = None
         if key == "Scopes" and endpoint == "/scopes":
             base_endpoint = endpoint.split("/")[1]
             endpoint_id = ""
@@ -25,6 +26,7 @@ for key in sorted(class_names):
         
         #Bounces API
         init = False
+        mocked_methods = None
         if key == "Suppression" and endpoint == "/suppression/bounces":
             base_endpoint = endpoint.split("/")[1]
             endpoint_id = "email"
@@ -34,6 +36,7 @@ for key in sorted(class_names):
         
         #Transactional Templates        
         init = False
+        mocked_methods = None
         if key == "Templates" and endpoint == "/templates":
             class_name = key
             base_endpoint = endpoint.split("/")[1]
@@ -43,6 +46,7 @@ for key in sorted(class_names):
             
         #Campaigns       
         init = False
+        mocked_methods = None
         if key == "Campaigns" and endpoint == "/campaigns":
             class_name = key
             base_endpoint = endpoint.split("/")[1]
@@ -51,6 +55,7 @@ for key in sorted(class_names):
             generated_test_class += code_generator.build_test(init, key, base_endpoint, endpoint, endpoint_id, methods)
         if key == "Campaigns" and endpoint == "/campaigns/{campaign_id}/schedules/now":
             init = True
+            mocked_methods = None
             class_name = key
             base_endpoint = endpoint.split("/")[1]
             endpoint_id = "campaign_id"
@@ -61,13 +66,14 @@ for key in sorted(class_names):
             generated_test_class += code_generator.build_test(init, key, base_endpoint, endpoint, endpoint_id, methods, mocked_methods, appended_endpoint)
         if key == "Campaigns" and endpoint == "/campaigns/{campaign_id}/schedules":
             init = True
+            mocked_methods = None
             class_name = key
             base_endpoint = endpoint.split("/")[1]
             endpoint_id = "campaign_id"
-            methods = ['post']
-            mocked_methods = ['post']
+            methods = ['get', 'post', 'patch', 'delete']
+            mocked_methods = ['get', 'post', 'patch', 'delete']
             end = "schedules"
             appended_endpoint = code_generator.config.get_appended_endpoint(base_endpoint, end)
-            generated_test_class += code_generator.build_test(init, key, base_endpoint, endpoint, endpoint_id, methods, mocked_methods, appended_endpoint)
+            generated_test_class += code_generator.build_test(init, key, base_endpoint, endpoint, endpoint_id, methods, mocked_methods, appended_endpoint, end)
 
 print generated_test_class
