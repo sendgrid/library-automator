@@ -16,6 +16,10 @@ class Config(object):
             self._github_user = self.config['github_user']
             self._swagger_source = self.config['swagger_source']
             self._swagger_filename = self.config['swagger_filename']
+            self._is_proxied = self.config["global"]["is_proxied"]
+            self._proxy_url = self.config["global"]["proxy_url"]
+            self._host = self.config["global"]["host"]
+            self._api_key = self.config["global"]["api_key"]
 
     @staticmethod
     def init_environment():
@@ -39,93 +43,20 @@ class Config(object):
     @property
     def swagger_filename(self):
         return self._swagger_filename
-        
-    def get_custom_init(self, endpoint):
-        try:
-            return self.config[endpoint]['custom_init']
-        except KeyError, e:
-            return None
     
-    def get_data(self, endpoint):
-        try:
-            return self.config[endpoint]['data']
-        except KeyError, e:
-            return None
-
-    def get_params(self, endpoint, method=None):
-        try:
-            if method:
-                return self.config[endpoint]['params'][method]
-            else:
-                return self.config[endpoint]['params']
-        except KeyError, e:
-            return None
-
-    def get_mocked_params(self, endpoint, method=None):
-        try:
-            if method:
-                return self.config[endpoint]['mocked_params'][method]
-            else:
-                return self.config[endpoint]['mocked_params']
-        except KeyError, e:
-            return None
-        
-    def get_patched_data(self, endpoint):
-        try:
-            return self.config[endpoint]['patched_data']
-        except KeyError, e:
-            return None
-
-    def get_put_data(self, endpoint):
-        try:
-            return self.config[endpoint]['put_data']
-        except KeyError, e:
-            return None
-
-    def get_custom_class_name(self, endpoint):
-        try:
-            return self.config[endpoint]['custom_class_name']
-        except KeyError, e:
-            return None
-        
-    def get_id(self, endpoint):
-        try:
-            return self.config[endpoint]['id']
-        except KeyError, e:
-            return None
-            
-    def get_init_id_value(self, endpoint):
-        try:
-            return self.config[endpoint]['init_id_value']
-        except KeyError, e:
-            return None
-            
+    @property        
     def is_proxied(self):
-        return self.config["global"]["is_proxied"]
+        return self._is_proxied
 
-    def get_proxy_url(self):
-        return self.config["global"]["proxy_url"]
-        
-    def get_final_endpoint(self, endpoint):
-        try:
-            return self.config[endpoint]['final_endpoint']
-        except KeyError, e:
-            return None
- 
-    def get_full_endpoint_path(self, endpoint):
-        try:
-             return self.config[endpoint]['full_endpoint_path']
-        except KeyError, e:
-             return None    
+    @property
+    def proxy_url(self):
+        return self._proxy_url
 
-    def get_appended_endpoint(self, endpoint, end):
-        try:
-             return self.config[endpoint]['appended_endpoint'][end]
-        except KeyError, e:
-             return None         
-
-    def get_patched_params_appended(self, end):
-        try:
-             return self.config[end]['patched_data']
-        except KeyError, e:
-             return None       
+    @property
+    def host(self):
+        return self._host
+    
+    @property    
+    def api_key(self):
+        return self._api_key
+           

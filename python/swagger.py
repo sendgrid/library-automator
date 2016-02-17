@@ -25,7 +25,6 @@ class Swagger(object):
             # Return all endpoints
             for key in sorted(self.swagger_json["paths"]):
                 endpoints.append(key)
-            # endpoints.remove('/')
         else:
             # Return all endpoints for a given method
             for key in sorted(self.swagger_json["paths"]):
@@ -48,7 +47,9 @@ class Swagger(object):
     def get_example_data(self, endpoint, method, response_code):
         try:
             #TODO: This should come from requests instead of responses
-            return self.swagger_json["paths"][endpoint][method]["responses"][response_code]["examples"]["application/json"]
+            #data = self.swagger_json["paths"][endpoint][method]["responses"][response_code]["examples"]["application/json"]
+            #return json.dumps(data)
+            return {"sample": "data"}
         except KeyError, e:
             return None
 

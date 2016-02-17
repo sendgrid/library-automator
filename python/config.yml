@@ -1,73 +1,9 @@
-github_user: sendgrid
-swagger_source: sendgrid-swagger
+github_user:      sendgrid
+swagger_source:   sendgrid-swagger
 swagger_filename: swagger-stoplight.json
 
 global:
     is_proxied: True
-    proxy_url: host="https://e9sk3d3bfaikbpdq7.stoplight-proxy.io/v3"
-
-api_keys:
-  custom_init: |+
-      "scopes = self.sg.client.scopes"
-      "        response = scopes.get()"
-      "        response_json = response.json()"
-      "        self.scope = response_json['scopes']"
-  data: >
-      data = {"name": "Python Client APIKeys Test v4000"}
-  patched_data: >
-      data = {"name": "Python Client APIKeys Test v4001"}
-  put_data: >
-      data = {"name": "Python Client APIKeys Test v4002", "scopes": self.scope}
-  id: api_key_id
-  custom_class_name: APIKeys
-
-templates:
-  custom_init: " "
-  data: >
-      data = {"name": "Python Client Template Endpoint Test v4000"}
-  patched_data: >
-      data = {"name": "Python Client Template Endpoint Test v4001"}
-  id: id
-
-scopes:
-  custom_init: " "
-
-suppression:
-  custom_init: " "
-  final_endpoint: bounces
-  full_endpoint_path: suppression.bounces
-  id: email
-  init_id_value: info@elmerthomas.com
-
-bounces:
-  parent: suppression
-  mocked_params: 
-      delete: >
-          {"mock": 204}
-      delete_specific: >
-          {"mock": 204}
-
-campaigns:
-  custom_init: " "
-  data: >
-      data = {"title": "Python Client Campaign Test v4000"}
-  patched_data: >
-      data = {"name": "Python Client Campaign Test v4001"}
-  id: id
-  mocked_params: 
-      get: >
-          {"mock": 200}
-      post: >
-          {"mock": 201}
-      patch: >
-          {"mock": 200}
-      delete: >
-          {"mock": 204}
-  appended_endpoint: 
-      schedules: schedules
-      now: schedules.now
-
-schedules:
-  patched_data: > 
-      data = {"send_at": 1489451436}
-    
+    proxy_url:  "https://e9sk3d3bfaikbpdq7.stoplight-proxy.io/v3"
+    host:       "https://api.sendgrid.com/v3"
+    api_key:    "os.environ.get('SENDGRID_API_KEY')"
