@@ -1,6 +1,0 @@
-    # {{ function_description }}
-    def delete(self, {{ params }}):
-        self.endpoint = self._base_endpoint + {{ endpoint }}
-        self.endpoint = self._base_endpoint + "/" + params
-        self.endpoint = self._base_endpoint + "/" + str(id) + "/suppressions/" + email
-        return self.client.delete(self)

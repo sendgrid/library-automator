@@ -1,10 +1,45 @@
 from code_generator import CodeGenerator
+from swagger import Swagger
+import json
 
 code_generator = CodeGenerator()
-
+swagger = Swagger()
 class_names = code_generator.get_class_names()
-
 generated_test_class = code_generator.generate_test_class_header()
+
+for key in sorted(class_names): # Loop through all sorted endpoints
+    if key == "ApiKeys":
+        for endpoint in class_names[key]: 
+            # print key + ": " + endpoint # Print all sorted endpoints
+            objects = swagger.get_endpoint_objects(endpoint)
+            for method in objects:
+                if method != "parameters":
+                    test_name = code_generator.generate_test_name(endpoint, method)
+                    # print test_name
+                    response_codes = swagger.get_response_codes(endpoint, method)
+                    response_code = response_codes[0]
+                    data = swagger.get_example_data(endpoint, method, response_code)
+                    if data != None:
+                        data = json.dumps(data)
+                    api_call = code_generator.generate_api_call(endpoint, method)
+                    # params = code_generator.generate_params(response_code, {"hello": "world", "bye": 2})
+                    params = code_generator.generate_params(response_code)
+                    url_params = code_generator.generate_url_params(endpoint)
+                    # print response_code
+                    #TODO: get from config
+                    test_id="test_id"
+                    generated_test_class += code_generator.generate_test_class_function(test_name,
+                                                                                        endpoint, 
+                                                                                        method,
+                                                                                        response_code,
+                                                                                        api_call,
+                                                                                        test_id=None,
+                                                                                        params=params,
+                                                                                        url_params=url_params,
+                                                                                        data=data
+                                                                                        )
+
+"""
 init = False
 for key in sorted(class_names):
     for endpoint in class_names[key]:
@@ -75,5 +110,5 @@ for key in sorted(class_names):
             end = "schedules"
             appended_endpoint = code_generator.config.get_appended_endpoint(base_endpoint, end)
             generated_test_class += code_generator.build_test(init, key, base_endpoint, endpoint, endpoint_id, methods, mocked_methods, appended_endpoint, end)
-
+"""
 print generated_test_class

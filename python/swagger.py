@@ -45,6 +45,13 @@ class Swagger(object):
     def get_response_codes(self, endpoint, method):
         return sorted(self.swagger_json["paths"][endpoint][method]["responses"].keys())
 
+    def get_example_data(self, endpoint, method, response_code):
+        try:
+            #TODO: This should come from requests instead of responses
+            return self.swagger_json["paths"][endpoint][method]["responses"][response_code]["examples"]["application/json"]
+        except KeyError, e:
+            return None
+
     @property
     def config(self):
         return self._config

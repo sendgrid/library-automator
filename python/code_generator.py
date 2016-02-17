@@ -299,24 +299,28 @@ class CodeGenerator(object):
             return None
     
     def generate_test_class_function(self, 
-                                    test_number, 
+                                    test_name,
                                     endpoint, 
                                     method,
                                     response_code,
+                                    api_call,
                                     test_id=None,
                                     data=None,
                                     params=None,
+                                    url_params=None,
                                     specific=False,
                                     appended_endpoint=None
                                     ):
         t = self.env.get_template('test_class_function.jinja')
-        return t.render(test_number = test_number, 
+        return t.render(test_name = test_name,
                         endpoint = endpoint,
                         method = method,
                         response_code = response_code,
+                        api_call = api_call,
                         test_id = test_id,
                         data = data,
                         params = params,
+                        url_params = url_params,
                         specific = specific,
                         appended_endpoint = appended_endpoint
                         )
@@ -340,6 +344,32 @@ class CodeGenerator(object):
                 class_names[class_name].append(endpoint)
         return class_names
 
+    def generate_test_name(self, endpoint, method):
+       endpoint = endpoint.replace("/", "_").replace("{", "_").replace("}", "_")
+       return "test" + endpoint + "_" + method + "(self):"
+
+    def generate_api_call(self, endpoint, method):
+       endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
+       return endpoint + "." + method
+       
+    def generate_params(self, response_code, params=None):
+        all_params = {}
+        all_params["mock"] = int(response_code)
+        if params != None:
+            for param in params:
+                all_params[param] = params[param]
+        return all_params
+
+    def generate_url_params(self, endpoint, value=None):
+        if value == None:
+            value = "test_url_param"
+        if endpoint.count('{') < 1:
+            return None
+        elif endpoint.count('{') == 1:
+            return endpoint.split('{', 1)[-1][:-1] + " = " + "\"" + value + "\""
+        else:
+            return None    
+    
     def get_description(self, method, key):
         return self.swagger_json["paths"][key][method]["description"]
     
