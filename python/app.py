@@ -26,7 +26,8 @@ for key in sorted(class_names): # Loop through all sorted endpoints, grouped by 
                 response_code = response_codes[0]
                 data = swagger.get_example_data(endpoint, method, response_code)
                 api_call = code_generator.generate_api_call(endpoint, method)
-                params = code_generator.generate_params(response_code)
+                query_params = swagger.get_query_parameters(endpoint, method)
+                params = code_generator.generate_params(response_code, query_params)
                 url_params = code_generator.generate_url_params(endpoint)
                 if response_code != "default": # schema undefined in swagger
                     generated_test_class += code_generator.generate_test_class_function(test_name,

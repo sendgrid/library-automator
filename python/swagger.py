@@ -43,6 +43,25 @@ class Swagger(object):
         
     def get_response_codes(self, endpoint, method):
         return sorted(self.swagger_json["paths"][endpoint][method]["responses"].keys())
+        
+    def get_query_parameters(self, endpoint, method):
+        query_params = self.swagger_json["paths"][endpoint][method]["parameters"]
+        qparams = {}
+        try:
+            for param in query_params:
+                if param[u'in'] == u'query':
+                    if param[u'type'] == u'string':
+                        type_test_data = "test_string"
+                    elif param[u'type'] == u'number' or u'integer':
+                        type_test_data = 0
+                    elif param[u'type'] == u'boolean':
+                        type_test_data = True
+                    else:
+                        type_test_data = "default_test_data"   
+                    qparams[str(param[u'name'])] = type_test_data
+        except KeyError, e:
+            qparams = None
+        return qparams
 
     def get_example_data(self, endpoint, method, response_code):
         try:

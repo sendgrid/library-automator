@@ -4,6 +4,6 @@ swagger_filename: swagger-stoplight.json
 
 global:
     is_proxied: True
-    proxy_url:  "https://e9sk3d3bfaikbpdq7.stoplight-proxy.io/v3"
+    proxy_url:  "os.environ.get('TEST_HOST')"
     host:       "https://api.sendgrid.com/v3"
     api_key:    "os.environ.get('SENDGRID_API_KEY')"
