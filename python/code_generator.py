@@ -64,6 +64,43 @@ class CodeGenerator(object):
                         generated_documentation += self.generate_documentation_endpoint(endpoint, method)
                 
         return generated_documentation.encode('ascii', 'ignore')
+        
+    def generate_examples(self):
+        class_names = self.get_class_names()
+        generated_examples = self.generate_example_title()
+        for key in sorted(class_names):
+            for endpoint in class_names[key]: 
+                objects = self.swagger.get_endpoint_objects(endpoint)
+                for method in objects:
+                    if method != "parameters":
+                        generated_examples += self.generate_examples_endpoint(endpoint, method)
+        return generated_examples.encode('ascii', 'ignore')
+    
+    def generate_example_title(self):
+        t = self.env.get_template('examples_header.jinja')
+        return t.render()
+
+    def generate_examples_endpoint(self, endpoint, method):
+        t = self.env.get_template('examples_endpoint.jinja')
+        title = self.swagger.get_endpoint_short_description(endpoint, method)
+        description = self.swagger.get_endpoint_description(endpoint, method)
+        api_call = self.generate_api_call(endpoint, method)
+        response_codes = self.swagger.get_response_codes(endpoint, method)
+        response_code = response_codes[0]
+        data = self.swagger.get_example_data(endpoint, method, response_code)
+        query_params = self.swagger.get_query_parameters(endpoint, method)
+        params = self.generate_params(response_code, query_params, mock=False)
+        url_params = self.generate_url_params(endpoint)
+        return t.render(title=title,
+                        description=description,
+                        endpoint=endpoint,
+                        method_title=method.upper(),
+                        method=method,
+                        api_call=api_call,
+                        params=params,
+                        url_params=url_params,
+                        data=data
+                        )
     
     def generate_documenation_title(self):
         t = self.env.get_template('documentation_title.jinja')
