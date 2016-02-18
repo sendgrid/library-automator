@@ -59,7 +59,8 @@ class CodeGenerator(object):
 
     def generate_api_call(self, endpoint, method):
        endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
-       endpoint = endpoint.replace("global", "global_")
+       # Account for Python reserved word
+       endpoint = endpoint.replace("global", "_(\"global\")")
        return endpoint + "." + method
        
     # params should be formatted like: {"hello": "world", "bye": 2}
