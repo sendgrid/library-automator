@@ -41,6 +41,12 @@ class Swagger(object):
     def get_endpoint_objects(self, endpoint):
         return self.swagger_json["paths"][endpoint]
         
+    def get_endpoint_description(self, endpoint, method):
+        return self.swagger_json["paths"][endpoint][method]["description"]
+
+    def get_endpoint_short_description(self, endpoint, method):
+        return self.swagger_json["paths"][endpoint][method]["operationId"]
+    
     def get_response_codes(self, endpoint, method):
         return sorted(self.swagger_json["paths"][endpoint][method]["responses"].keys())
         
