@@ -17,7 +17,7 @@
       "file": "environments/common/production.rb",
       "key": "(\\$environment\\['library-automator'\\]\\['deployment'\\]\\['revision'\\] = )(.*)"
     }
-  ]
+  ],
   "jenkins": {
       "master": "library-automator",
       "pr": "library-automator-pullrequests"
