@@ -1,0 +1,25 @@
+{
+  "name": "library-automator",
+  "wf_version": "1.0.0",
+  "envrepo": "sendgrid-ops/chef-data",
+  "staging": [
+    {
+      "file": "environments/common/staging/dfw2.rb",
+      "key": "(\\$environment\\['library-automator'\\]\\['deployment'\\]\\['revision'\\] = )(.*)"
+    },
+    {
+      "file": "environments/common/staging/mdw1.rb",
+      "key": "(\\$environment\\['library-automator'\\]\\['deployment'\\]\\['revision'\\] = )(.*)"
+    }
+  ],
+  "production": [
+    {
+      "file": "environments/common/production.rb",
+      "key": "(\\$environment\\['library-automator'\\]\\['deployment'\\]\\['revision'\\] = )(.*)"
+    }
+  ]
+  "jenkins": {
+      "master": "library-automator",
+      "pr": "library-automator-pullrequests"
+  }
+}
