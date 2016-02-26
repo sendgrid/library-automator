@@ -1,7 +1,7 @@
 import re
 from jinja2 import Environment, FileSystemLoader
-from config import Config
 from swagger import Swagger
+from config import Config
 import json
 
 class CodeGenerator(object):
@@ -24,7 +24,7 @@ class CodeGenerator(object):
         api_key = self.config.api_key
         
         class_names = self.get_class_names()
-        generated_test_class = self.generate_test_class_header(host=host, api_key=api_key)
+        generated_test_class = self.generate_test_class_header()
         
         for key in sorted(class_names): # Loop through all sorted endpoints, grouped by class name
             for endpoint in class_names[key]: 
@@ -37,8 +37,9 @@ class CodeGenerator(object):
                         data = self.swagger.get_example_data(endpoint, method, response_code)
                         api_call = self.generate_api_call(endpoint, method)
                         query_params = self.swagger.get_query_parameters(endpoint, method)
-                        params = self.generate_params(response_code, query_params, mock=True)
+                        params = self.generate_params(response_code, query_params, mock=False)
                         url_params = self.generate_url_params(endpoint)
+                        headers = self.generate_headers(response_code)
                         if response_code != "default": # schema undefined in swagger
                             generated_test_class += self.generate_test_class_function(test_name,
                                                                                     endpoint, 
@@ -47,7 +48,8 @@ class CodeGenerator(object):
                                                                                     api_call,
                                                                                     params=params,
                                                                                     url_params=url_params,
-                                                                                    data=data
+                                                                                    data=data,
+                                                                                    headers=headers
                                                                                     )
         return generated_test_class
     
@@ -132,9 +134,9 @@ class CodeGenerator(object):
                         data=data
                         )
     
-    def generate_test_class_header(self, host, api_key):
+    def generate_test_class_header(self):
         t = self.env.get_template('test_header.jinja')
-        return t.render(host=host, api_key=api_key)
+        return t.render()
     
     def generate_test_class_function(self, 
                                     test_name,
@@ -144,7 +146,8 @@ class CodeGenerator(object):
                                     api_call,
                                     data=None,
                                     params=None,
-                                    url_params=None
+                                    url_params=None,
+                                    headers=None
                                     ):
         t = self.env.get_template('test_class_function.jinja')
         return t.render(test_name = test_name,
@@ -154,7 +157,8 @@ class CodeGenerator(object):
                         api_call = api_call,
                         data = data,
                         params = params,
-                        url_params = url_params
+                        url_params = url_params,
+                        headers = headers
                         )
     
     def get_class_names(self):
@@ -194,7 +198,14 @@ class CodeGenerator(object):
         if params:
             for param in params:
                 all_params[param] = params[param]
+        if all_params == {}:
+            all_params = None
         return all_params
+
+    def generate_headers(self, response_code):
+        header = {}
+        header["X-Mock"] = int(response_code)
+        return header
 
     def generate_url_params(self, endpoint, value=None):
         if value == None:
