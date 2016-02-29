@@ -54,11 +54,11 @@ class CodeGenerator(object):
         return generated_test_class
     
     def generate_docs(self):
-        class_names = self.get_class_names()
+        class_names = self.get_raw_class_names()
         generated_documentation = self.generate_documenation_title()
         generated_documentation += self.generate_documentation_toc(self.get_raw_class_names())
         for key in sorted(class_names):
-            heading = self.generate_heading_name(key.upper())
+            heading = self.generate_heading_name(key.upper().replace('_', ' '))
             heading_link = heading.lower().replace(' ', '_')
             generated_documentation += self.generate_documentation_header(heading, heading_link)
             for endpoint in class_names[key]: 

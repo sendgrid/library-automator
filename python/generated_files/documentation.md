@@ -41,8 +41,8 @@ sg = sendgrid.SendGridAPIClient(host=host, request_headers=request_headers)
 * [WHITELABEL](#whitelabel)
 
 
-<a name="apikey"></a>
-# APIKEY
+<a name="api_key"></a>
+# API KEY
 
 ## Create API keys
 
@@ -64,8 +64,8 @@ print response.response_body
 print response.response_headers
 ```
 
-<a name="apikeys"></a>
-# APIKEYS
+<a name="api_keys"></a>
+# API KEYS
 
 ## List all API Keys belonging to the authenticated user
 
@@ -1555,8 +1555,8 @@ print response.response_body
 print response.response_headers
 ```
 
-<a name="mailsettings"></a>
-# MAILSETTINGS
+<a name="mail_settings"></a>
+# MAIL SETTINGS
 
 ## Get all mail settings
 
@@ -1815,8 +1815,8 @@ print response.response_body
 print response.response_headers
 ```
 
-<a name="mailboxproviders"></a>
-# MAILBOXPROVIDERS
+<a name="mailbox_providers"></a>
+# MAILBOX PROVIDERS
 
 ## Retrieve email statistics by mailbox provider.
 
@@ -1836,8 +1836,8 @@ print response.response_body
 print response.response_headers
 ```
 
-<a name="partnersettings"></a>
-# PARTNERSETTINGS
+<a name="partner_settings"></a>
+# PARTNER SETTINGS
 
 ## Returns a list of all partner settings.
 
@@ -2464,8 +2464,8 @@ print response.response_body
 print response.response_headers
 ```
 
-<a name="trackingsettings"></a>
-# TRACKINGSETTINGS
+<a name="tracking_settings"></a>
+# TRACKING SETTINGS
 
 ## Get Tracking Settings
 
