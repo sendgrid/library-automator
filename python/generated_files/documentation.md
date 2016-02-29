@@ -58,12 +58,11 @@ See the [API Key Permissions List](https://sendgrid.com/docs/API_Reference/Web_A
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.api_key.post(data=data)
+response = self.sg.client.api_key.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="api_keys"></a>
 # API KEYS
 
@@ -79,7 +78,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update the name & scopes of an API Key
 
 A JSON request body with a "name" property is required.
@@ -93,12 +91,11 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 ```
 data = {'sample': 'data'}
 api_key_id = "test_url_param"
-response = self.sg.client.api_keys._(api_key_id).put(data=data)
+response = self.sg.client.api_keys._(api_key_id).put(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update API keys
 
 **Update the name of an existing API Key**
@@ -118,12 +115,11 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 ```
 data = {'sample': 'data'}
 api_key_id = "test_url_param"
-response = self.sg.client.api_keys._(api_key_id).patch(data=data)
+response = self.sg.client.api_keys._(api_key_id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get an existing API Key
 
 Retrieve a single api key.
@@ -144,7 +140,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete API keys
 
 **Revoke an existing API Key**
@@ -168,7 +163,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="asm"></a>
 # ASM
 
@@ -186,12 +180,11 @@ Each user can create up to 25 different suppression groups.
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.asm.groups.post(data=data)
+response = self.sg.client.asm.groups.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve all suppression groups associated with the user.
 
 **This endpoint allows you to retrieve a list of all suppression groups created by this user.**
@@ -210,7 +203,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a suppression group.
 
 **This endpoint allows you to update or change a suppression group.**
@@ -226,12 +218,11 @@ Each user can create up to 25 different suppression groups.
 ```
 data = {'sample': 'data'}
 group_id = "test_url_param"
-response = self.sg.client.asm.groups._(group_id).patch(data=data)
+response = self.sg.client.asm.groups._(group_id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get information on a single suppression group.
 
 **This endpoint allows you to retrieve a single suppression group.**
@@ -251,7 +242,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a suppression group.
 
 **This endpoint allows you to delete a suppression group.**
@@ -273,7 +263,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add suppressions to a suppression group
 
 **This endpoint allows you to add email addresses to an unsubscribe group.**
@@ -287,12 +276,11 @@ Suppressions are recipient email addresses that are added to [unsubscribe groups
 ```
 data = {'sample': 'data'}
 group_id = "test_url_param"
-response = self.sg.client.asm.groups._(group_id).suppressions.post(data=data)
+response = self.sg.client.asm.groups._(group_id).suppressions.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve all suppressions for a suppression group
 
 **This endpoint allows you to retrieve all suppressed email addresses belonging to the given group.**
@@ -308,7 +296,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a suppression from a suppression group
 
 **This endpoint allows you to remove a suppressed email address from the given suppression group.**
@@ -325,7 +312,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add recipient addresses to the global suppression group.
 
 Global Suppressions are email addresses that will not receive any emails.
@@ -334,12 +320,11 @@ Global Suppressions are email addresses that will not receive any emails.
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.asm.suppressions._("global").post(data=data)
+response = self.sg.client.asm.suppressions._("global").post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Check if a recipient address is in the global suppressions group.
 
 Global Suppressions are email addresses that will not receive any emails.
@@ -353,7 +338,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a Global Suppression
 
 
@@ -367,7 +351,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a Global Suppression
 
 
@@ -381,7 +364,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="browsers"></a>
 # BROWSERS
 
@@ -397,12 +379,11 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ```
 params = {'end_date': 'test_string', 'aggregated_by': 'test_string', 'browsers': 'test_string', 'limit': 'test_string', 'offset': 'test_string', 'start_date': 'test_string'}
-response = self.sg.client.browsers.stats.get(, params=params)
+response = self.sg.client.browsers.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="campaigns"></a>
 # CAMPAIGNS
 
@@ -421,12 +402,11 @@ For more information:
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.campaigns.post(data=data)
+response = self.sg.client.campaigns.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get all Campaigns
 
 Returns campaigns in reverse order they were created (newest first).
@@ -441,12 +421,11 @@ For more information:
 
 ```
 params = {'limit': 0, 'offset': 0}
-response = self.sg.client.campaigns.get(, params=params)
+response = self.sg.client.campaigns.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a Campaign
 
 Update a campaign. This is especially useful if you only set up the campaign using POST /campaigns, but didn't set many of the parameters.
@@ -460,12 +439,11 @@ For more information:
 ```
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).patch(data=data)
+response = self.sg.client.campaigns._(campaign_id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get a single campaign
 
 This is a place for notes and extra information about this endpoint. It is written
@@ -489,7 +467,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a Campaign
 
 For more information:
@@ -505,7 +482,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a Scheduled Campaign
 
 Changes the send_at time for the specified campaign.
@@ -519,12 +495,11 @@ For more information:
 ```
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.patch(data=data)
+response = self.sg.client.campaigns._(campaign_id).schedules.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Schedule a Campaign
 
 Send your campaign at a specific date and time.
@@ -538,12 +513,11 @@ For more information:
 ```
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.post(data=data)
+response = self.sg.client.campaigns._(campaign_id).schedules.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## View Scheduled Time of a Campaign
 
 View the time that this campaign is scheduled to be sent. 
@@ -561,7 +535,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Unschedule a Scheduled Campaign
 
 A successful unschedule will return a 204.
@@ -580,7 +553,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Send a Campaign
 
 Send your campaign right now. Normally a POST would have a request body, but since this endpoint is telling us to send a resource that is already created, we don't need a body.
@@ -594,12 +566,11 @@ For more information:
 ```
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.now.post(data=data)
+response = self.sg.client.campaigns._(campaign_id).schedules.now.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Send a Test Campaign
 
 To send to multiple addresses, use an array for the JSON "to" value ["one@address","two@address"]
@@ -613,12 +584,11 @@ For more information:
 ```
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.test.post(data=data)
+response = self.sg.client.campaigns._(campaign_id).schedules.test.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="categories"></a>
 # CATEGORIES
 
@@ -630,12 +600,11 @@ print response.response_headers
 
 ```
 params = {'category': 'test_string', 'sort_by': 'test_string', 'limit': 0, 'order': 'test_string', 'offset': 0}
-response = self.sg.client.categories.get(, params=params)
+response = self.sg.client.categories.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve Email Statistics for Categories
 
 **This endpoint allows you to retrieve all of your email statistics for each of your categories.**
@@ -648,12 +617,11 @@ Categories allow you to group your emails together according to broad topics tha
 
 ```
 params = {'end_date': 'test_string', 'aggregated_by': 'test_string', 'limit': 0, 'offset': 0, 'start_date': 'test_string', 'categories': 'test_string'}
-response = self.sg.client.categories.stats.get(, params=params)
+response = self.sg.client.categories.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve sums of email stats for each category [Needs: Stats object defined, has category ID?]
 
 **This endpoint allows you to retrieve the total sum of each email statistic for every category over the given date range.**
@@ -666,12 +634,11 @@ Categories allow you to group your emails together according to broad topics tha
 
 ```
 params = {'end_date': 'test_string', 'aggregated_by': 'test_string', 'limit': 0, 'sort_by_metric': 'test_string', 'offset': 0, 'start_date': 'test_string', 'sort_by_direction': 'test_string'}
-response = self.sg.client.categories.stats.sums.get(, params=params)
+response = self.sg.client.categories.stats.sums.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="clients"></a>
 # CLIENTS
 
@@ -687,12 +654,11 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ```
 params = {'aggregated_by': 'test_string', 'start_date': 'test_string', 'end_date': 'test_string'}
-response = self.sg.client.clients.stats.get(, params=params)
+response = self.sg.client.clients.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve stats by a specific client type.
 
 **This endpoint allows you to retrieve your email statistics segmented by a specific client type.**
@@ -712,12 +678,11 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 ```
 params = {'aggregated_by': 'test_string', 'start_date': 'test_string', 'end_date': 'test_string'}
 client_type = "test_url_param"
-response = self.sg.client.clients._(client_type).stats.get(, params=params)
+response = self.sg.client.clients._(client_type).stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="contactdb"></a>
 # CONTACTDB
 
@@ -731,12 +696,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.contactdb.custom_fields.post(data=data)
+response = self.sg.client.contactdb.custom_fields.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List All Custom Fields
 
 Get all custom fields. 
@@ -751,7 +715,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get a Custom Field
 
 Get a custom field by ID.
@@ -763,12 +726,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'custom_field_id': 0}
 custom_field_id = "test_url_param"
-response = self.sg.client.contactdb.custom_fields._(custom_field_id).get(, params=params)
+response = self.sg.client.contactdb.custom_fields._(custom_field_id).get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a Custom Field
 
 Delete a custom field by ID.
@@ -784,7 +746,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Create a List
 
 Create a list for your recipients.
@@ -795,12 +756,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.contactdb.lists.post(data=data)
+response = self.sg.client.contactdb.lists.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List All Lists
 
 Returns an empty list if you GET and no lists exist on your account.
@@ -815,7 +775,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete Multiple lists
 
 Delete multiple lists.
@@ -831,7 +790,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a List
 
 Update the name of a list.
@@ -845,12 +803,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 data = {'sample': 'data'}
 params = {'list_id': 0}
 list_id = "test_url_param"
-response = self.sg.client.contactdb.lists._(list_id).patch(data=data, params=params)
+response = self.sg.client.contactdb.lists._(list_id).patch(request_body=data, query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get a single list.
 
 Get a single list. 
@@ -862,12 +819,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'list_id': 0}
 list_id = "test_url_param"
-response = self.sg.client.contactdb.lists._(list_id).get(, params=params)
+response = self.sg.client.contactdb.lists._(list_id).get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a List
 
 Delete a list by ID.
@@ -879,12 +835,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'delete_contacts': 0}
 list_id = "test_url_param"
-response = self.sg.client.contactdb.lists._(list_id).delete(, params=params)
+response = self.sg.client.contactdb.lists._(list_id).delete(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add Multiple Recipients to a List
 
 Adds existing recipients to a list, passing in the recipient IDs to add. Recipient IDs should be passed exactly as they are returned from recipient endpoints.
@@ -897,12 +852,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 data = {'sample': 'data'}
 params = {'list_id': 0}
 list_id = "test_url_param"
-response = self.sg.client.contactdb.lists._(list_id).recipients.post(data=data, params=params)
+response = self.sg.client.contactdb.lists._(list_id).recipients.post(request_body=data, query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List Recipients on a List
 
 List all the recipients currently on a specific list.
@@ -914,12 +868,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'page': 0, 'page_size': 0, 'list_id': 0}
 list_id = "test_url_param"
-response = self.sg.client.contactdb.lists._(list_id).recipients.get(, params=params)
+response = self.sg.client.contactdb.lists._(list_id).recipients.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add a Single Recipient to a List
 
 Add a recipient to a list.
@@ -933,12 +886,11 @@ data = {'sample': 'data'}
 params = {'recipient_id': 'test_string', 'list_id': 0}
 list_id = "test_url_param"
         recipient_id = "test_url_param"
-response = self.sg.client.contactdb.lists._(list_id).recipients._(recipient_id).post(data=data, params=params)
+response = self.sg.client.contactdb.lists._(list_id).recipients._(recipient_id).post(request_body=data, query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a Single Recipient from a Single List
 
 Delete a single recipient from a list.
@@ -951,12 +903,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 params = {'recipient_id': 0, 'list_id': 0}
 list_id = "test_url_param"
         recipient_id = "test_url_param"
-response = self.sg.client.contactdb.lists._(list_id).recipients._(recipient_id).delete(, params=params)
+response = self.sg.client.contactdb.lists._(list_id).recipients._(recipient_id).delete(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update Recipient
 
 Updates one or more recipients. The body is an array of recipient objects.
@@ -969,12 +920,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.contactdb.recipients.patch(data=data)
+response = self.sg.client.contactdb.recipients.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add recipients
 
 Add a recipient to your contactdb. It is of note that you can add custom field data as a parameter on this endpoint. We have provided an example using some of the default custom fields SendGrid provides.
@@ -985,12 +935,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.contactdb.recipients.post(data=data)
+response = self.sg.client.contactdb.recipients.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List Recipients [waiting on Bryan Adamson's response]
 
 Batch deletion of a page makes it possible to receive an empty page of recipients before reaching the end of
@@ -1002,12 +951,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```
 params = {'page': 0, 'page_size': 0}
-response = self.sg.client.contactdb.recipients.get(, params=params)
+response = self.sg.client.contactdb.recipients.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete Recipient
 
 Deletes one or more recipients. The body is a list of recipient ids to delete.
@@ -1022,7 +970,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get the count of billable recipients
 
 You are billed for marketing campaigns based on the highest number of recipients you have had in your account at one time. This endpoint will allow you to know the current billable count value.
@@ -1037,7 +984,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get a Count of Recipients
 
 Get a count of the current number of recipients in your contact database.
@@ -1052,7 +998,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get Recipients Matching Search Criteria
 
 Search the recipients in your contactdb.
@@ -1072,12 +1017,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```
 params = {'{field_name}': 'test_string'}
-response = self.sg.client.contactdb.recipients.search.get(, params=params)
+response = self.sg.client.contactdb.recipients.search.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a single recipient
 
 Retrieve a single recipient by ID from your contact database.
@@ -1089,12 +1033,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'recipient_id': 'test_string'}
 recipient_id = "test_url_param"
-response = self.sg.client.contactdb.recipients._(recipient_id).get(, params=params)
+response = self.sg.client.contactdb.recipients._(recipient_id).get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a Recipient
 
 Delete a single recipient from your contact database, by ID.
@@ -1106,12 +1049,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'recipient_id': 'test_string'}
 recipient_id = "test_url_param"
-response = self.sg.client.contactdb.recipients._(recipient_id).delete(, params=params)
+response = self.sg.client.contactdb.recipients._(recipient_id).delete(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get the Lists the Recipient Is On
 
 Each recipient can be on many lists. This endpoint gives you the lists this recipient is associated to.
@@ -1123,12 +1065,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'recipient_id': 'test_string'}
 recipient_id = "test_url_param"
-response = self.sg.client.contactdb.recipients._(recipient_id).lists.get(, params=params)
+response = self.sg.client.contactdb.recipients._(recipient_id).lists.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get reserved custom fields fields.
 
 List fields that are reserved and can't be used for custom field names. [GET]
@@ -1143,7 +1084,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Create a Segment
 
 Create a segment. All recipients in your contactdb will be added or removed automatically depending on whether they match the criteria for this segment.
@@ -1170,12 +1110,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.contactdb.segments.post(data=data)
+response = self.sg.client.contactdb.segments.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List All Segments
 
 Get all your segments.
@@ -1190,7 +1129,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a segment
 
 Update a segment.
@@ -1203,12 +1141,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 data = {'sample': 'data'}
 params = {'segment_id': 'test_string'}
 segment_id = "test_url_param"
-response = self.sg.client.contactdb.segments._(segment_id).patch(data=data, params=params)
+response = self.sg.client.contactdb.segments._(segment_id).patch(request_body=data, query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a Segment
 
 Get a single segment by ID.
@@ -1220,12 +1157,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'segment_id': 0}
 segment_id = "test_url_param"
-response = self.sg.client.contactdb.segments._(segment_id).get(, params=params)
+response = self.sg.client.contactdb.segments._(segment_id).get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a Segment
 
 Delete a segment from your contactdb. You also have the option to delete all the contacts from your contactdb who were in this segment.
@@ -1237,12 +1173,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'delete_contacts': 0}
 segment_id = "test_url_param"
-response = self.sg.client.contactdb.segments._(segment_id).delete(, params=params)
+response = self.sg.client.contactdb.segments._(segment_id).delete(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List Recipients On a Segment
 
 List all of the recipients in a segment.
@@ -1254,12 +1189,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 ```
 params = {'page': 0, 'page_size': 0}
 segment_id = "test_url_param"
-response = self.sg.client.contactdb.segments._(segment_id).recipients.get(, params=params)
+response = self.sg.client.contactdb.segments._(segment_id).recipients.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="devices"></a>
 # DEVICES
 
@@ -1284,12 +1218,11 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ```
 params = {'aggregated_by': 'test_string', 'limit': 0, 'start_date': 'test_string', 'end_date': 'test_string', 'offset': 0}
-response = self.sg.client.devices.stats.get(, params=params)
+response = self.sg.client.devices.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="geo"></a>
 # GEO
 
@@ -1305,12 +1238,11 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ```
 params = {'end_date': 'test_string', 'country': 'test_string', 'aggregated_by': 'test_string', 'limit': 0, 'offset': 0, 'start_date': 'test_string'}
-response = self.sg.client.geo.stats.get(, params=params)
+response = self.sg.client.geo.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="ips"></a>
 # IPS
 
@@ -1324,12 +1256,11 @@ The start_date field corresponds to when warmup started for that IP.
 
 ```
 params = {'subuser': 'test_string', 'ip': 'test_string', 'limit': 0, 'exclude_whitelabels': 0, 'offset': 0}
-response = self.sg.client.ips.get(, params=params)
+response = self.sg.client.ips.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List all assigned IPs
 
 Retrieve a list of your IP addresses.
@@ -1342,7 +1273,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Create an IP pool.
 
 
@@ -1351,12 +1281,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.ips.pools.post(data=data)
+response = self.sg.client.ips.pools.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List all IP pools.
 
 
@@ -1369,7 +1298,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update an IP pools name.
 
 
@@ -1379,12 +1307,11 @@ print response.response_headers
 ```
 data = {'sample': 'data'}
 pool_name = "test_url_param"
-response = self.sg.client.ips.pools._(pool_name).put(data=data)
+response = self.sg.client.ips.pools._(pool_name).put(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List the IPs in a specified pool.
 
 
@@ -1398,7 +1325,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete an IP pool.
 
 
@@ -1412,7 +1338,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add an IP to a pool
 
 
@@ -1422,12 +1347,11 @@ print response.response_headers
 ```
 data = {'sample': 'data'}
 pool_name = "test_url_param"
-response = self.sg.client.ips.pools._(pool_name).ips.post(data=data)
+response = self.sg.client.ips.pools._(pool_name).ips.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Remove an IP address from a pool.
 
 
@@ -1442,7 +1366,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add an IP to warmup.
 
 
@@ -1451,12 +1374,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.ips.warmup.post(data=data)
+response = self.sg.client.ips.warmup.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get all IPs that are currently warming up.
 
 
@@ -1469,7 +1391,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get warmup status for a particular IP.
 
 
@@ -1483,7 +1404,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Remove an IP from warmup.
 
 
@@ -1497,7 +1417,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## See which pools an IP address belongs to.
 
 
@@ -1511,7 +1430,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="mail"></a>
 # MAIL
 
@@ -1529,12 +1447,11 @@ More Information:
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail.batch.post(data=data)
+response = self.sg.client.mail.batch.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Validate batch ID
 
 Validate whether or not a batch id is valid.
@@ -1554,7 +1471,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="mail_settings"></a>
 # MAIL SETTINGS
 
@@ -1566,12 +1482,11 @@ print response.response_headers
 
 ```
 params = {'limit': 0, 'offset': 0}
-response = self.sg.client.mail_settings.get(, params=params)
+response = self.sg.client.mail_settings.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update address whitelist mail settings
 
 
@@ -1580,12 +1495,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.address_whitelist.patch(data=data)
+response = self.sg.client.mail_settings.address_whitelist.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get address whitelist mail settings
 
 
@@ -1598,7 +1512,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update BCC mail settings
 
 
@@ -1607,12 +1520,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.bcc.patch(data=data)
+response = self.sg.client.mail_settings.bcc.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get BCC mail settings
 
 
@@ -1625,7 +1537,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update bounce purge mail settings
 
 
@@ -1634,12 +1545,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.bounce_purge.patch(data=data)
+response = self.sg.client.mail_settings.bounce_purge.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get bounce purge mail settings
 
 
@@ -1652,7 +1562,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update footer mail settings
 
 
@@ -1661,12 +1570,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.footer.patch(data=data)
+response = self.sg.client.mail_settings.footer.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get footer mail settings [params can be null?]
 
 
@@ -1679,7 +1587,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update forward bounce mail settings
 
 
@@ -1688,12 +1595,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.forward_bounce.patch(data=data)
+response = self.sg.client.mail_settings.forward_bounce.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get forward bounce mail settings
 
 
@@ -1706,7 +1612,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update forward spam mail settings
 
 
@@ -1715,12 +1620,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.forward_spam.patch(data=data)
+response = self.sg.client.mail_settings.forward_spam.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get forward spam mail settings
 
 
@@ -1733,7 +1637,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update plain content mail settings
 
 
@@ -1742,12 +1645,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.plain_content.patch(data=data)
+response = self.sg.client.mail_settings.plain_content.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get plain content mail settings
 
 
@@ -1760,7 +1662,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update spam check mail settings
 
 
@@ -1769,12 +1670,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.spam_check.patch(data=data)
+response = self.sg.client.mail_settings.spam_check.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get spam check mail settings
 
 
@@ -1787,7 +1687,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update template mail settings
 
 
@@ -1796,12 +1695,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.mail_settings.template.patch(data=data)
+response = self.sg.client.mail_settings.template.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get template mail settings
 
 
@@ -1814,7 +1712,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="mailbox_providers"></a>
 # MAILBOX PROVIDERS
 
@@ -1830,12 +1727,11 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ```
 params = {'end_date': 'test_string', 'mailbox_providers': 'test_string', 'aggregated_by': 'test_string', 'limit': 0, 'offset': 0, 'start_date': 'test_string'}
-response = self.sg.client.mailbox_providers.stats.get(, params=params)
+response = self.sg.client.mailbox_providers.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="partner_settings"></a>
 # PARTNER SETTINGS
 
@@ -1849,12 +1745,11 @@ Our partner settings allow you to integrate your SendGrid account with our partn
 
 ```
 params = {'limit': 0, 'offset': 0}
-response = self.sg.client.partner_settings.get(, params=params)
+response = self.sg.client.partner_settings.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Updates New Relic partner settings.
 
 **This endpoint allows you to update or change your New Relic partner settings.**
@@ -1867,12 +1762,11 @@ By integrating with New Relic, you can send your SendGrid email statistics to yo
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.partner_settings.new_relic.patch(data=data)
+response = self.sg.client.partner_settings.new_relic.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Returns all New Relic partner settings.
 
 **This endpoint allows you to retrieve your current New Relic partner settings.**
@@ -1889,7 +1783,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update SendWithUs Settings
 
 
@@ -1898,12 +1791,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.partner_settings.sendwithus.patch(data=data)
+response = self.sg.client.partner_settings.sendwithus.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get SendWithUs Settings
 
 
@@ -1916,7 +1808,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="scopes"></a>
 # SCOPES
 
@@ -1934,7 +1825,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="stats"></a>
 # STATS
 
@@ -1948,12 +1838,11 @@ Parent accounts will see aggregated stats for their account and all subuser acco
 
 ```
 params = {'aggregated_by': 'test_string', 'limit': 0, 'start_date': 'test_string', 'end_date': 'test_string', 'offset': 0}
-response = self.sg.client.stats.get(, params=params)
+response = self.sg.client.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="subusers"></a>
 # SUBUSERS
 
@@ -1970,12 +1859,11 @@ For more information about Subusers:
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.subusers.post(data=data)
+response = self.sg.client.subusers.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List all Subusers
 
 This endpoint allows you to retrieve a list of all of your subusers. You can choose to retrieve specific subusers as well as limit the results that come back from the API.
@@ -1989,12 +1877,11 @@ For more information about Subusers:
 
 ```
 params = {'username': 'test_string', 'limit': 0, 'offset': 0}
-response = self.sg.client.subusers.get(, params=params)
+response = self.sg.client.subusers.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve Subuser Reputations
 
 Subuser sender reputations give a good idea how well a sender is doing with regards to how recipients and recipient servers react to the mail that is being received. When a bounce, spam report, or other negative action happens on a sent email, it will effect your sender rating.
@@ -2005,12 +1892,11 @@ This endpoint allows you to request the reputations for your subusers.
 
 ```
 params = {'usernames': 'test_string'}
-response = self.sg.client.subusers.reputations.get(, params=params)
+response = self.sg.client.subusers.reputations.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve email statistics for your subusers.
 
 **This endpoint allows you to retrieve the email statistics for the given subusers.**
@@ -2025,12 +1911,11 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 
 ```
 params = {'end_date': 'test_string', 'aggregated_by': 'test_string', 'limit': 0, 'offset': 0, 'start_date': 'test_string', 'subusers': 'test_string'}
-response = self.sg.client.subusers.stats.get(, params=params)
+response = self.sg.client.subusers.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ##  Retrieve the totals for each email statistic metric for all subusers.
 
 **This endpoint allows you to retrieve the total sums of each email statistic metric for all subusers over the given date range.**
@@ -2044,12 +1929,11 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 
 ```
 params = {'end_date': 'test_string', 'aggregated_by': 'test_string', 'limit': 0, 'sort_by_metric': 'test_string', 'offset': 0, 'start_date': 'test_string', 'sort_by_direction': 'test_string'}
-response = self.sg.client.subusers.stats.sums.get(, params=params)
+response = self.sg.client.subusers.stats.sums.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Enable/disable a subuser
 
 This endpoint allows you to enable or disable a subuser.
@@ -2064,12 +1948,11 @@ For more information about Subusers:
 ```
 data = {'sample': 'data'}
 subuser_name = "test_url_param"
-response = self.sg.client.subusers._(subuser_name).patch(data=data)
+response = self.sg.client.subusers._(subuser_name).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a subuser
 
 This endpoint allows you to delete a subuser. This is a permanent action, once deleted a subuser cannot be retrieved.
@@ -2088,7 +1971,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update IPs assigned to a subuser
 
 Each subuser should be assigned to an IP address, from which all of this subuser's mail will be sent. Often, this is the same IP as the parent account, but each subuser can have their own, or multiple, IP addresses as well. 
@@ -2103,12 +1985,11 @@ More information:
 ```
 data = {'sample': 'data'}
 subuser_name = "test_url_param"
-response = self.sg.client.subusers._(subuser_name).ips.put(data=data)
+response = self.sg.client.subusers._(subuser_name).ips.put(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update Monitor Settings for a subuser
 
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
@@ -2118,12 +1999,11 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 ```
 data = {'sample': 'data'}
 subuser_name = "test_url_param"
-response = self.sg.client.subusers._(subuser_name).monitor.put(data=data)
+response = self.sg.client.subusers._(subuser_name).monitor.put(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Create monitor settings
 
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
@@ -2133,12 +2013,11 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 ```
 data = {'sample': 'data'}
 subuser_name = "test_url_param"
-response = self.sg.client.subusers._(subuser_name).monitor.post(data=data)
+response = self.sg.client.subusers._(subuser_name).monitor.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve monitor settings for a subuser
 
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
@@ -2152,7 +2031,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete monitor settings
 
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
@@ -2166,7 +2044,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="suppression"></a>
 # SUPPRESSION
 
@@ -2183,12 +2060,11 @@ For more information see:
 
 ```
 params = {'start_time': 0, 'end_time': 0}
-response = self.sg.client.suppression.bounces.get(, params=params)
+response = self.sg.client.suppression.bounces.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete bounces
 
 Bounces are messages that are returned to the server that sent it. This endpoint allows you to delete email addresses from your bounce list. 
@@ -2209,7 +2085,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get a Bounce
 
 
@@ -2223,7 +2098,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a bounce
 
 Bounces are messages that are returned to the server that sent it. This endpoint allows you to delete a single email addresses from your bounce list. 
@@ -2239,12 +2113,11 @@ For more information see:
 ```
 params = {'email_address': 'test_string'}
 email = "test_url_param"
-response = self.sg.client.suppression.bounces._(email).delete(, params=params)
+response = self.sg.client.suppression.bounces._(email).delete(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="templates"></a>
 # TEMPLATES
 
@@ -2260,12 +2133,11 @@ Transactional templates are templates created specifically for transactional ema
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.templates.post(data=data)
+response = self.sg.client.templates.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve all transactional templates.
 
 **This endpoint allows you to retrieve all transactional templates.**
@@ -2282,7 +2154,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Edit a transactional template.
 
 **This endpoint allows you to edit a transactional template.**
@@ -2297,12 +2168,11 @@ Transactional templates are templates created specifically for transactional ema
 ```
 data = {'sample': 'data'}
 template_id = "test_url_param"
-response = self.sg.client.templates._(template_id).patch(data=data)
+response = self.sg.client.templates._(template_id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a single transactional template.
 
 **This endpoint allows you to retrieve a single transactional template.**
@@ -2321,7 +2191,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a template.
 
 **This endpoint allows you to delete a transactional template.**
@@ -2340,7 +2209,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Create a new transactional template version.
 
 **This endpoint allows you to create a new version of a template.**
@@ -2355,12 +2223,11 @@ For more information about transactional templates, please see our [User Guide](
 ```
 data = {'sample': 'data'}
 template_id = "test_url_param"
-response = self.sg.client.templates._(template_id).versions.post(data=data)
+response = self.sg.client.templates._(template_id).versions.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Edit a transactional template version.
 
 **This endpoint allows you to edit a version of one of your transactional templates.**
@@ -2381,12 +2248,11 @@ For more information about transactional templates, please see our [User Guide](
 data = {'sample': 'data'}
 template_id = "test_url_param"
         version_id = "test_url_param"
-response = self.sg.client.templates._(template_id).versions._(version_id).patch(data=data)
+response = self.sg.client.templates._(template_id).versions._(version_id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a specific transactional template version.
 
 **This endpoint allows you to retrieve a specific version of a template.**
@@ -2411,7 +2277,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a transactional template version.
 
 **This endpoint allows you to delete one of your transactional template versions.**
@@ -2436,7 +2301,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Activate a transactional template version.
 
 **This endpoint allows you to activate a version of one of your templates.**
@@ -2458,12 +2322,11 @@ For more information about transactional templates, please see our [User Guide](
 data = {'sample': 'data'}
 template_id = "test_url_param"
         version_id = "test_url_param"
-response = self.sg.client.templates._(template_id).versions._(version_id).activate.post(data=data)
+response = self.sg.client.templates._(template_id).versions._(version_id).activate.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="tracking_settings"></a>
 # TRACKING SETTINGS
 
@@ -2475,12 +2338,11 @@ print response.response_headers
 
 ```
 params = {'limit': 0, 'offset': 0}
-response = self.sg.client.tracking_settings.get(, params=params)
+response = self.sg.client.tracking_settings.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update Click Tracking Settings
 
 
@@ -2489,12 +2351,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.tracking_settings.click.patch(data=data)
+response = self.sg.client.tracking_settings.click.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get Click Track Settings
 
 
@@ -2507,7 +2368,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update Google Analytics Settings
 
 
@@ -2516,12 +2376,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.tracking_settings.google_analytics.patch(data=data)
+response = self.sg.client.tracking_settings.google_analytics.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get Google Analytics Settings
 
 
@@ -2534,7 +2393,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update Open Tracking Settings
 
 
@@ -2543,12 +2401,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.tracking_settings.open.patch(data=data)
+response = self.sg.client.tracking_settings.open.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get Open Tracking Settings
 
 
@@ -2561,7 +2418,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update Subscription Tracking Settings
 
 
@@ -2570,12 +2426,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.tracking_settings.subscription.patch(data=data)
+response = self.sg.client.tracking_settings.subscription.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get Subscription Tracking Settings
 
 
@@ -2588,7 +2443,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="user"></a>
 # USER
 
@@ -2604,7 +2458,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a user's profile
 
 Keeping your user profile up to date is important. This will help SendGrid to verify who you are as well as contact you should we need to.
@@ -2619,12 +2472,11 @@ It should be noted that any one or more of the parameters can be updated via the
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.user.profile.patch(data=data)
+response = self.sg.client.user.profile.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get a user's profile
 
 Keeping your user profile up to date is important. This will help SendGrid to verify who you are as well as contact you should we need to.
@@ -2641,7 +2493,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Cancel or pause a scheduled send
 
 Cancel or pause a scheduled send. If the maximum number of cancellations/pauses are added, HTTP 400 will
@@ -2653,12 +2504,11 @@ The Cancel Scheduled Sends feature allows the customer to cancel a scheduled sen
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.user.scheduled_sends.post(data=data)
+response = self.sg.client.user.scheduled_sends.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get all scheduled sends
 
 Get all cancel/paused scheduled send information.
@@ -2673,7 +2523,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update user scheduled send information
 
 Update the status of a scheduled send.
@@ -2685,12 +2534,11 @@ The Cancel Scheduled Sends feature allows the customer to cancel a scheduled sen
 ```
 data = {'sample': 'data'}
 batch_id = "test_url_param"
-response = self.sg.client.user.scheduled_sends._(batch_id).patch(data=data)
+response = self.sg.client.user.scheduled_sends._(batch_id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve scheduled send
 
 Get cancel/paused scheduled send information for a specific batch_id.
@@ -2706,7 +2554,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a cancellation or pause of a scheduled send
 
 Delete the cancellation/pause of a scheduled send.
@@ -2722,7 +2569,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Change the Enforced TLS settings
 
 
@@ -2731,12 +2577,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.user.settings.enforced_tls.patch(data=data)
+response = self.sg.client.user.settings.enforced_tls.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get the current Enforced TLS settings.
 
 
@@ -2749,7 +2594,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update Event Notification Settings
 
 
@@ -2758,12 +2602,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.user.webhooks.event.settings.patch(data=data)
+response = self.sg.client.user.webhooks.event.settings.patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve Event Webhook Settings
 
 
@@ -2776,7 +2619,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Test Event Notification Settings 
 
 
@@ -2785,12 +2627,11 @@ print response.response_headers
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.user.webhooks.event.test.post(data=data)
+response = self.sg.client.user.webhooks.event.test.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve Parse API settings
 
 
@@ -2803,7 +2644,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieves Inbound Parse Webhook statistics.
 
 **This endpoint allows you to retrieve the statistics for your Parse Webhook useage.**
@@ -2816,12 +2656,11 @@ There are a number of pre-made integrations for the SendGrid Parse Webhook which
 
 ```
 params = {'aggregated_by': 'test_string', 'limit': 'test_string', 'start_date': 'test_string', 'end_date': 'test_string', 'offset': 'test_string'}
-response = self.sg.client.user.webhooks.parse.stats.get(, params=params)
+response = self.sg.client.user.webhooks.parse.stats.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 <a name="whitelabel"></a>
 # WHITELABEL
 
@@ -2841,12 +2680,11 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.whitelabel.domains.post(data=data)
+response = self.sg.client.whitelabel.domains.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List all domain whitelabels.
 
 **This endpoint allows you to retrieve a list of all domain whitelabels you have created.**
@@ -2860,12 +2698,11 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ```
 params = {'username': 'test_string', 'domain': 'test_string', 'exclude_subusers': 0, 'limit': 0, 'offset': 0}
-response = self.sg.client.whitelabel.domains.get(, params=params)
+response = self.sg.client.whitelabel.domains.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Get the default domain whitelabel.
 
 **This endpoint allows you to retrieve the default whitelabel for a domain.**
@@ -2887,7 +2724,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## List the domain whitelabel associated with the given user.
 
 **This endpoint allows you to retrieve all of the whitelabels that have been assigned to a specific subuser.**
@@ -2911,7 +2747,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Disassociate a domain whitelabel from a given user.
 
 **This endpoint allows you to disassociate a specific whitelabel from a subuser.**
@@ -2935,7 +2770,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a domain whitelabel.
 
 **This endpoint allows you to update the settings for a domain whitelabel.**
@@ -2949,12 +2783,11 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 ```
 data = {'sample': 'data'}
 domain_id = "test_url_param"
-response = self.sg.client.whitelabel.domains._(domain_id).patch(data=data)
+response = self.sg.client.whitelabel.domains._(domain_id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a domain whitelabel.
 
 **This endpoint allows you to retrieve a specific domain whitelabel.**
@@ -2973,7 +2806,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a domain whitelabel.
 
 **This endpoint allows you to delete a domain whitelabel.**
@@ -2991,7 +2823,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Associate a domain whitelabel with a given user.
 
 **This endpoint allows you to associate a specific domain whitelabel with a subuser.**
@@ -3012,12 +2843,11 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 ```
 data = {'sample': 'data'}
 domain_id = "test_url_param"
-response = self.sg.client.whitelabel.domains._(domain_id).subuser.post(data=data)
+response = self.sg.client.whitelabel.domains._(domain_id).subuser.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Add an IP to a domain whitelabel.
 
 **This endpoint allows you to add an IP address to a domain whitelabel.**
@@ -3036,12 +2866,11 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 ```
 data = {'sample': 'data'}
 id = "test_url_param"
-response = self.sg.client.whitelabel.domains._(id).ips.post(data=data)
+response = self.sg.client.whitelabel.domains._(id).ips.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Remove an IP from a domain whitelabel.
 
 **This endpoint allows you to remove a domain's IP address from that domain's whitelabel.**
@@ -3066,7 +2895,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Validate a domain whitelabel.
 
 **This endpoint allows you to validate a domain whitelabel. If it fails, it will return an error message describing why the whitelabel could not be validated.**
@@ -3085,12 +2913,11 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 ```
 data = {'sample': 'data'}
 id = "test_url_param"
-response = self.sg.client.whitelabel.domains._(id).validate.post(data=data)
+response = self.sg.client.whitelabel.domains._(id).validate.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Create an IP whitelabel
 
 **This endpoint allows you to create an IP whitelabel.**
@@ -3105,12 +2932,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ```
 data = {'sample': 'data'}
-response = self.sg.client.whitelabel.ips.post(data=data)
+response = self.sg.client.whitelabel.ips.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve all IP whitelabels
 
 **This endpoint allows you to retrieve all of the IP whitelabels that have been createdy by this account.**
@@ -3125,12 +2951,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ```
 params = {'ip': 'test_string', 'limit': 0, 'offset': 0}
-response = self.sg.client.whitelabel.ips.get(, params=params)
+response = self.sg.client.whitelabel.ips.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve an IP whitelabel
 
 **This endpoint allows you to retrieve an IP whitelabel.**
@@ -3148,7 +2973,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete an IP whitelabel
 
 **This endpoint allows you to delete an IP whitelabel.**
@@ -3166,7 +2990,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Validate an IP whitelabel
 
 **This endpoint allows you to validate an IP whitelabel.**
@@ -3180,12 +3003,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 ```
 data = {'sample': 'data'}
 id = "test_url_param"
-response = self.sg.client.whitelabel.ips._(id).validate.post(data=data)
+response = self.sg.client.whitelabel.ips._(id).validate.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Create a Link Whitelabel
 
 **This endpoint allows you to create a new link whitelabel.**
@@ -3199,12 +3021,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 ```
 data = {'sample': 'data'}
 params = {'limit': 0, 'offset': 0}
-response = self.sg.client.whitelabel.links.post(data=data, params=params)
+response = self.sg.client.whitelabel.links.post(request_body=data, query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve all link whitelabels
 
 **This endpoint allows you to retrieve all link whitelabels.**
@@ -3217,12 +3038,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ```
 params = {'limit': 0}
-response = self.sg.client.whitelabel.links.get(, params=params)
+response = self.sg.client.whitelabel.links.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a Default Link Whitelabel
 
 **This endpoint allows you to retrieve the default link whitelabel.**
@@ -3242,12 +3062,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ```
 params = {'domain': 'test_string'}
-response = self.sg.client.whitelabel.links.default.get(, params=params)
+response = self.sg.client.whitelabel.links.default.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve Associated Link Whitelabel
 
 **This endpoint allows you to retrieve the associated link whitelabel for a subuser.**
@@ -3264,12 +3083,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ```
 params = {'username': 'test_string'}
-response = self.sg.client.whitelabel.links.subuser.get(, params=params)
+response = self.sg.client.whitelabel.links.subuser.get(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Disassociate a Link Whitelabel
 
 **This endpoint allows you to disassociate a link whitelabel from a subuser.**
@@ -3286,12 +3104,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ```
 params = {'username': 'test_string'}
-response = self.sg.client.whitelabel.links.subuser.delete(, params=params)
+response = self.sg.client.whitelabel.links.subuser.delete(query_params=params)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Update a Link Whitelabel
 
 **This endpoint allows you to update a specific link whitelabel. You can use this endpoint to change a link whitelabel's default status.**
@@ -3305,12 +3122,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 ```
 data = {'sample': 'data'}
 id = "test_url_param"
-response = self.sg.client.whitelabel.links._(id).patch(data=data)
+response = self.sg.client.whitelabel.links._(id).patch(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Retrieve a Link Whitelabel
 
 **This endpoint allows you to retrieve a specific link whitelabel.**
@@ -3328,7 +3144,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Delete a Link Whitelabel
 
 **This endpoint allows you to delete a link whitelabel.**
@@ -3346,7 +3161,6 @@ print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Validate a Link Whitelabel
 
 **This endpoint allows you to validate a link whitelabel.**
@@ -3360,12 +3174,11 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 ```
 data = {'sample': 'data'}
 id = "test_url_param"
-response = self.sg.client.whitelabel.links._(id).validate.post(data=data)
+response = self.sg.client.whitelabel.links._(id).validate.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 ## Associate a Link Whitelabel
 
 **This endpoint allows you to associate a link whitelabel with a subuser account.**
@@ -3383,10 +3196,9 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 ```
 data = {'sample': 'data'}
 link_id = "test_url_param"
-response = self.sg.client.whitelabel.links._(link_id).subuser.post(data=data)
+response = self.sg.client.whitelabel.links._(link_id).subuser.post(request_body=data)
 print response.status_code
 print response.response_body
 print response.response_headers
 ```
-
 
