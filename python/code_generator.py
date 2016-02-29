@@ -56,9 +56,11 @@ class CodeGenerator(object):
     def generate_docs(self):
         class_names = self.get_class_names()
         generated_documentation = self.generate_documenation_title()
+        generated_documentation += self.generate_documenation_toc(class_names)
         for key in sorted(class_names):
             heading = self.generate_heading_name(key.upper())
-            generated_documentation += self.generate_documentation_header(heading)
+            heading_link = heading.lower().replace(' ', '_')
+            generated_documentation += self.generate_documentation_header(heading, heading_link)
             for endpoint in class_names[key]: 
                 objects = self.swagger.get_endpoint_objects(endpoint)
                 for method in objects:
@@ -107,10 +109,19 @@ class CodeGenerator(object):
     def generate_documenation_title(self):
         t = self.env.get_template('documentation_title.jinja')
         return t.render()
+        
+    def generate_documenation_toc(self, class_names):
+        toc = ''
+        for key in sorted(class_names):
+            heading = self.generate_heading_name(key.upper())
+            heading_link = heading.lower().replace(' ', '_')
+            toc += "* [" + heading + "]" + "(#" + heading_link + ")\n"
+        t = self.env.get_template('documentation_toc.jinja')
+        return t.render(toc=toc)
     
-    def generate_documentation_header(self, heading):
+    def generate_documentation_header(self, heading, heading_link):
         t = self.env.get_template('documentation_header.jinja')
-        return t.render(heading=heading)
+        return t.render(heading=heading, heading_link=heading_link)
         
     def generate_documentation_endpoint(self, endpoint, method):
         t = self.env.get_template('documentation_endpoint.jinja')
