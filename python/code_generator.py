@@ -56,7 +56,7 @@ class CodeGenerator(object):
     def generate_docs(self):
         class_names = self.get_class_names()
         generated_documentation = self.generate_documenation_title()
-        generated_documentation += self.generate_documenation_toc(class_names)
+        generated_documentation += self.generate_documentation_toc(self.get_raw_class_names())
         for key in sorted(class_names):
             heading = self.generate_heading_name(key.upper())
             heading_link = heading.lower().replace(' ', '_')
@@ -110,10 +110,10 @@ class CodeGenerator(object):
         t = self.env.get_template('documentation_title.jinja')
         return t.render()
         
-    def generate_documenation_toc(self, class_names):
+    def generate_documentation_toc(self, class_names):
         toc = ''
         for key in sorted(class_names):
-            heading = self.generate_heading_name(key.upper())
+            heading = self.generate_heading_name(key.upper().replace('_', ' '))
             heading_link = heading.lower().replace(' ', '_')
             toc += "* [" + heading + "]" + "(#" + heading_link + ")\n"
         t = self.env.get_template('documentation_toc.jinja')
@@ -177,6 +177,18 @@ class CodeGenerator(object):
         for endpoint in sorted(self.swagger_json["paths"]):
             split_endpoint = endpoint.split('/')
             class_name = self.to_camelcase(split_endpoint[1].capitalize())
+            try:
+                class_names[class_name].append(endpoint)
+            except KeyError, e:
+                class_names[class_name] = []
+                class_names[class_name].append(endpoint)
+        return class_names
+
+    def get_raw_class_names(self):
+        class_names = {}
+        for endpoint in sorted(self.swagger_json["paths"]):
+            split_endpoint = endpoint.split('/')
+            class_name = split_endpoint[1].capitalize()
             try:
                 class_names[class_name].append(endpoint)
             except KeyError, e:
