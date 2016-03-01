@@ -1,4 +1,5 @@
 import re
+import os
 from jinja2 import Environment, FileSystemLoader
 from swagger import Swagger
 from config import Config
@@ -71,13 +72,21 @@ class CodeGenerator(object):
         
     def generate_examples(self):
         class_names = self.get_class_names()
-        generated_examples = self.generate_example_title()
         for key in sorted(class_names):
+            path = '{0}'.format(os.path.abspath(os.path.dirname(__file__)))
+            newpath = '{0}/generated_files/examples/{1}'.format(path, key.lower())
+            if not os.path.exists(newpath):
+                os.makedirs(newpath)
+            file = open(str(newpath + '/' + key.lower() + '.py'), 'w')
+            generated_examples = self.generate_example_title()
             for endpoint in class_names[key]: 
                 objects = self.swagger.get_endpoint_objects(endpoint)
                 for method in objects:
                     if method != "parameters":
                         generated_examples += self.generate_examples_endpoint(endpoint, method)
+            file.write(generated_examples.encode('ascii', 'ignore'))
+            file.close()
+            print generated_examples
         return generated_examples.encode('ascii', 'ignore')
     
     def generate_example_title(self):
