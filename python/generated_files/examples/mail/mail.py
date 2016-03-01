@@ -9,7 +9,7 @@ sg = sendgrid.SendGridAPIClient()
 # POST /mail/batch #
 
 data = {'sample': 'data'}
-response = self.sg.client.mail.batch.post(request_body=data)
+response = sg.client.mail.batch.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -19,7 +19,7 @@ print(response.response_headers)
 # GET /mail/batch/{batch_id} #
 
 batch_id = "test_url_param"
-response = self.sg.client.mail.batch._(batch_id).get()
+response = sg.client.mail.batch._(batch_id).get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)

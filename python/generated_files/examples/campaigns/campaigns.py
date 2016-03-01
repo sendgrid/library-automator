@@ -9,7 +9,7 @@ sg = sendgrid.SendGridAPIClient()
 # POST /campaigns #
 
 data = {'sample': 'data'}
-response = self.sg.client.campaigns.post(request_body=data)
+response = sg.client.campaigns.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -19,7 +19,7 @@ print(response.response_headers)
 # GET /campaigns #
 
 params = {'limit': 0, 'offset': 0}
-response = self.sg.client.campaigns.get(query_params=params)
+response = sg.client.campaigns.get(query_params=params)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -30,7 +30,7 @@ print(response.response_headers)
 
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).patch(request_body=data)
+response = sg.client.campaigns._(campaign_id).patch(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -40,7 +40,7 @@ print(response.response_headers)
 # GET /campaigns/{campaign_id} #
 
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).get()
+response = sg.client.campaigns._(campaign_id).get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -50,7 +50,7 @@ print(response.response_headers)
 # DELETE /campaigns/{campaign_id} #
 
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).delete()
+response = sg.client.campaigns._(campaign_id).delete()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -61,7 +61,7 @@ print(response.response_headers)
 
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.patch(request_body=data)
+response = sg.client.campaigns._(campaign_id).schedules.patch(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -72,7 +72,7 @@ print(response.response_headers)
 
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.post(request_body=data)
+response = sg.client.campaigns._(campaign_id).schedules.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -82,7 +82,7 @@ print(response.response_headers)
 # GET /campaigns/{campaign_id}/schedules #
 
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.get()
+response = sg.client.campaigns._(campaign_id).schedules.get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -92,7 +92,7 @@ print(response.response_headers)
 # DELETE /campaigns/{campaign_id}/schedules #
 
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.delete()
+response = sg.client.campaigns._(campaign_id).schedules.delete()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -103,7 +103,7 @@ print(response.response_headers)
 
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.now.post(request_body=data)
+response = sg.client.campaigns._(campaign_id).schedules.now.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -114,7 +114,7 @@ print(response.response_headers)
 
 data = {'sample': 'data'}
 campaign_id = "test_url_param"
-response = self.sg.client.campaigns._(campaign_id).schedules.test.post(request_body=data)
+response = sg.client.campaigns._(campaign_id).schedules.test.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)

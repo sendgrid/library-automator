@@ -9,7 +9,7 @@ sg = sendgrid.SendGridAPIClient()
 # POST /api_key #
 
 data = {'sample': 'data'}
-response = self.sg.client.api_key.post(request_body=data)
+response = sg.client.api_key.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)

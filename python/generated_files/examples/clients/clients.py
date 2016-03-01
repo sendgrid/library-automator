@@ -9,7 +9,7 @@ sg = sendgrid.SendGridAPIClient()
 # GET /clients/stats #
 
 params = {'aggregated_by': 'test_string', 'start_date': 'test_string', 'end_date': 'test_string'}
-response = self.sg.client.clients.stats.get(query_params=params)
+response = sg.client.clients.stats.get(query_params=params)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -20,7 +20,7 @@ print(response.response_headers)
 
 params = {'aggregated_by': 'test_string', 'start_date': 'test_string', 'end_date': 'test_string'}
 client_type = "test_url_param"
-response = self.sg.client.clients._(client_type).stats.get(query_params=params)
+response = sg.client.clients._(client_type).stats.get(query_params=params)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)

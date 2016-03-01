@@ -9,7 +9,7 @@ sg = sendgrid.SendGridAPIClient()
 # GET /ips #
 
 params = {'subuser': 'test_string', 'ip': 'test_string', 'limit': 0, 'exclude_whitelabels': 0, 'offset': 0}
-response = self.sg.client.ips.get(query_params=params)
+response = sg.client.ips.get(query_params=params)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -18,7 +18,7 @@ print(response.response_headers)
 # List all assigned IPs #
 # GET /ips/assigned #
 
-response = self.sg.client.ips.assigned.get()
+response = sg.client.ips.assigned.get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -28,7 +28,7 @@ print(response.response_headers)
 # POST /ips/pools #
 
 data = {'sample': 'data'}
-response = self.sg.client.ips.pools.post(request_body=data)
+response = sg.client.ips.pools.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -37,7 +37,7 @@ print(response.response_headers)
 # List all IP pools. #
 # GET /ips/pools #
 
-response = self.sg.client.ips.pools.get()
+response = sg.client.ips.pools.get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -48,7 +48,7 @@ print(response.response_headers)
 
 data = {'sample': 'data'}
 pool_name = "test_url_param"
-response = self.sg.client.ips.pools._(pool_name).put(request_body=data)
+response = sg.client.ips.pools._(pool_name).put(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -58,7 +58,7 @@ print(response.response_headers)
 # GET /ips/pools/{pool_name} #
 
 pool_name = "test_url_param"
-response = self.sg.client.ips.pools._(pool_name).get()
+response = sg.client.ips.pools._(pool_name).get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -68,7 +68,7 @@ print(response.response_headers)
 # DELETE /ips/pools/{pool_name} #
 
 pool_name = "test_url_param"
-response = self.sg.client.ips.pools._(pool_name).delete()
+response = sg.client.ips.pools._(pool_name).delete()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -79,7 +79,7 @@ print(response.response_headers)
 
 data = {'sample': 'data'}
 pool_name = "test_url_param"
-response = self.sg.client.ips.pools._(pool_name).ips.post(request_body=data)
+response = sg.client.ips.pools._(pool_name).ips.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -90,7 +90,7 @@ print(response.response_headers)
 
 pool_name = "test_url_param"
         ip = "test_url_param"
-response = self.sg.client.ips.pools._(pool_name).ips._(ip).delete()
+response = sg.client.ips.pools._(pool_name).ips._(ip).delete()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -100,7 +100,7 @@ print(response.response_headers)
 # POST /ips/warmup #
 
 data = {'sample': 'data'}
-response = self.sg.client.ips.warmup.post(request_body=data)
+response = sg.client.ips.warmup.post(request_body=data)
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -109,7 +109,7 @@ print(response.response_headers)
 # Get all IPs that are currently warming up. #
 # GET /ips/warmup #
 
-response = self.sg.client.ips.warmup.get()
+response = sg.client.ips.warmup.get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -119,7 +119,7 @@ print(response.response_headers)
 # GET /ips/warmup/{ip_address} #
 
 ip_address = "test_url_param"
-response = self.sg.client.ips.warmup._(ip_address).get()
+response = sg.client.ips.warmup._(ip_address).get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -129,7 +129,7 @@ print(response.response_headers)
 # DELETE /ips/warmup/{ip_address} #
 
 ip_address = "test_url_param"
-response = self.sg.client.ips.warmup._(ip_address).delete()
+response = sg.client.ips.warmup._(ip_address).delete()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
@@ -139,7 +139,7 @@ print(response.response_headers)
 # GET /ips/{ip_address} #
 
 ip_address = "test_url_param"
-response = self.sg.client.ips._(ip_address).get()
+response = sg.client.ips._(ip_address).get()
 print(response.status_code)
 print(response.response_body)
 print(response.response_headers)
