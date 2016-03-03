@@ -1,6 +1,6 @@
 github_user:      sendgrid
 swagger_source:   sendgrid-swagger
-swagger_filename: swagger-stoplight.json
+swagger_filename: swagger.json
 
 global:
     is_proxied: True
