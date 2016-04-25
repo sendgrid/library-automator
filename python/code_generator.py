@@ -36,6 +36,13 @@ class CodeGenerator(object):
                         response_codes = self.swagger.get_response_codes(endpoint, method)
                         response_code = response_codes[0]
                         data = self.swagger.get_example_data(endpoint, method, response_code)
+                        try:
+                            if "true" in data:
+                                data = data.replace("true", "True")
+                            if "false" in data:
+                                data = data.replace("false", "False")
+                        except TypeError, e:
+                            pass
                         api_call = self.generate_api_call(endpoint, method)
                         query_params = self.swagger.get_query_parameters(endpoint, method)
                         params = self.generate_params(response_code, query_params, mock=False)
@@ -43,15 +50,15 @@ class CodeGenerator(object):
                         headers = self.generate_headers(response_code)
                         if response_code != "default": # schema undefined in swagger
                             generated_test_class += self.generate_test_class_function(test_name,
-                                                                                    endpoint, 
-                                                                                    method,
-                                                                                    response_code,
-                                                                                    api_call,
-                                                                                    params=params,
-                                                                                    url_params=url_params,
-                                                                                    data=data,
-                                                                                    headers=headers
-                                                                                    )
+                                                                                      endpoint,
+                                                                                      method,
+                                                                                      response_code,
+                                                                                      api_call,
+                                                                                      params=params,
+                                                                                      url_params=url_params,
+                                                                                      data=data,
+                                                                                      headers=headers
+                                                                                      )
         return generated_test_class
     
     def generate_docs(self):
