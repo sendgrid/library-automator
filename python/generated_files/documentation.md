@@ -7,8 +7,7 @@ import sendgrid
 import os
 
 
-sg = sendgrid.SendGridAPIClient(apikey='SENDGRID_API_KEY')
-# You can also store your API key an .env variable 'SENDGRID_API_KEY'
+sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 ```
 
 # Table of Contents

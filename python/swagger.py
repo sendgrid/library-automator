@@ -14,8 +14,8 @@ class Swagger(object):
         github_token = os.environ.get('GITHUB_TOKEN')
         gh = github3.login(token=github_token)
         repo = gh.repository(self.config.github_user, self.config.swagger_source)
-        
-        content = repo.contents(self.config.swagger_filename)
+
+        content = repo.file_contents(self.config.swagger_filename)
         swagger = base64.b64decode(content.content)
         return json.loads(swagger)
 
@@ -34,22 +34,22 @@ class Swagger(object):
                 except KeyError, e:
                     pass
         return endpoints
-        
+
     def get_endpoint_object(self, endpoint, method):
         return self.swagger_json["paths"][endpoint][method]
 
     def get_endpoint_objects(self, endpoint):
         return self.swagger_json["paths"][endpoint]
-        
+
     def get_endpoint_description(self, endpoint, method):
         return self.swagger_json["paths"][endpoint][method]["description"]
 
     def get_endpoint_short_description(self, endpoint, method):
         return self.swagger_json["paths"][endpoint][method]["summary"]
-    
+
     def get_response_codes(self, endpoint, method):
         return sorted(self.swagger_json["paths"][endpoint][method]["responses"].keys())
-        
+
     def get_query_parameters(self, endpoint, method):
         query_params = self.swagger_json["paths"][endpoint][method]["parameters"]
         qparams = {}
