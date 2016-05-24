@@ -43,8 +43,8 @@ class Config(object):
     @property
     def swagger_filename(self):
         return self._swagger_filename
-    
-    @property        
+
+    @property
     def is_proxied(self):
         return self._is_proxied
 
@@ -55,8 +55,7 @@ class Config(object):
     @property
     def host(self):
         return self._host
-    
-    @property    
+
+    @property
     def api_key(self):
         return self._api_key
-           

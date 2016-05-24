@@ -81,7 +81,7 @@ class CodeGenerator(object):
         class_names = self.get_class_names()
         for key in sorted(class_names):
             path = '{0}'.format(os.path.abspath(os.path.dirname(__file__)))
-            newpath = '{0}/generated_files/examples/{1}'.format(path, key.lower())
+            newpath = '{0}/{1}/generated_files/examples/{2}'.format(path, self._language, key.lower())
             if not os.path.exists(newpath):
                 os.makedirs(newpath)
             file = open(str(newpath + '/' + key.lower() + '.py'), 'w')

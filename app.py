@@ -7,7 +7,7 @@ for arg in sys.argv:
     args.append(arg)
 
 if "python" in args:
-    from python.code_generator import CodeGenerator
+    from code_generator import CodeGenerator
     code_generator = CodeGenerator("python")
     if "tests" in args:
         print code_generator.generate_tests()

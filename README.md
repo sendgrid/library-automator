@@ -22,3 +22,11 @@ python app.py python usage > ./python/generated_files/USAGE.md
 ```bash
 python app.py python examples
 ```
+
+## PHP
+
+### Generate Tests
+
+```bash
+python app.py php tests > ./php/generated_files/unit_tests.py
+```
