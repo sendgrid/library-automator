@@ -1,5 +1,4 @@
-# library-automator
-For automating v3 endpoints into our 7 libraries
+For automating docs (USAGE.md), unit tests and examples into our 7 SendGrid open source client libraries.
 
 ## Python
 
