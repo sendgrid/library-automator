@@ -1,6 +1,6 @@
 github_user:      sendgrid
-swagger_source:   sendgrid-swagger
-swagger_filename: swagger.json
+swagger_source:   sendgrid-oai
+swagger_filename: oai.json
 
 global:
     is_proxied: True

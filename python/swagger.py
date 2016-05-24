@@ -14,8 +14,8 @@ class Swagger(object):
         github_token = os.environ.get('GITHUB_TOKEN')
         gh = github3.login(token=github_token)
         repo = gh.repository(self.config.github_user, self.config.swagger_source)
-
-        content = repo.file_contents(self.config.swagger_filename)
+        contents = repo.directory_contents('/', return_as=dict)
+        content = repo.blob(contents[self.config.swagger_filename].sha)
         swagger = base64.b64decode(content.content)
         return json.loads(swagger)
 

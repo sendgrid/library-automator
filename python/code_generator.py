@@ -6,13 +6,14 @@ from config import Config
 import json
 
 class CodeGenerator(object):
-    def __init__(self):
-        self._env = Environment(loader=FileSystemLoader('templates'), trim_blocks=True, lstrip_blocks=True)
+    def __init__(self, language):
+        self._env = Environment(loader=FileSystemLoader(language + '/templates'), trim_blocks=True, lstrip_blocks=True)
         self._swagger = Swagger()
         self._swagger_json = self.swagger.swagger_json
         self._test_count = 0
         self._config = Config()
-        
+        self._language = language
+
     @staticmethod
     def to_camelcase(string):
         return re.sub(r'(?!^)_([a-zA-Z])', lambda m: m.group(1).upper(), string)
@@ -23,12 +24,11 @@ class CodeGenerator(object):
         else:
             host = self.config.host
         api_key = self.config.api_key
-        
+
         class_names = self.get_class_names()
         generated_test_class = self.generate_test_class_header()
-        
         for key in sorted(class_names): # Loop through all sorted endpoints, grouped by class name
-            for endpoint in class_names[key]: 
+            for endpoint in class_names[key]:
                 objects = self.swagger.get_endpoint_objects(endpoint)
                 for method in objects:
                     if method != "parameters":
@@ -60,7 +60,7 @@ class CodeGenerator(object):
                                                                                       headers=headers
                                                                                       )
         return generated_test_class
-    
+
     def generate_docs(self):
         class_names = self.get_raw_class_names()
         generated_documentation = self.generate_documenation_title()
@@ -69,14 +69,14 @@ class CodeGenerator(object):
             heading = self.generate_heading_name(key.upper().replace('_', ' '))
             heading_link = heading.lower().replace(' ', '_')
             generated_documentation += self.generate_documentation_header(heading, heading_link)
-            for endpoint in class_names[key]: 
+            for endpoint in class_names[key]:
                 objects = self.swagger.get_endpoint_objects(endpoint)
                 for method in objects:
                     if method != "parameters":
                         generated_documentation += self.generate_documentation_endpoint(endpoint, method)
-                
+
         return generated_documentation.encode('ascii', 'ignore')
-        
+
     def generate_examples(self):
         class_names = self.get_class_names()
         for key in sorted(class_names):
@@ -86,7 +86,7 @@ class CodeGenerator(object):
                 os.makedirs(newpath)
             file = open(str(newpath + '/' + key.lower() + '.py'), 'w')
             generated_examples = self.generate_example_title()
-            for endpoint in class_names[key]: 
+            for endpoint in class_names[key]:
                 objects = self.swagger.get_endpoint_objects(endpoint)
                 for method in objects:
                     if method != "parameters":
@@ -95,7 +95,7 @@ class CodeGenerator(object):
             file.close()
             print generated_examples
         return generated_examples.encode('ascii', 'ignore')
-    
+
     def generate_example_title(self):
         t = self.env.get_template('examples_header.jinja')
         return t.render()
@@ -121,11 +121,11 @@ class CodeGenerator(object):
                         url_params=url_params,
                         data=data
                         )
-    
+
     def generate_documenation_title(self):
         t = self.env.get_template('documentation_title.jinja')
         return t.render()
-        
+
     def generate_documentation_toc(self, class_names):
         toc = ''
         for key in sorted(class_names):
@@ -134,11 +134,11 @@ class CodeGenerator(object):
             toc += "* [" + heading + "]" + "(#" + heading_link + ")\n"
         t = self.env.get_template('documentation_toc.jinja')
         return t.render(toc=toc)
-    
+
     def generate_documentation_header(self, heading, heading_link):
         t = self.env.get_template('documentation_header.jinja')
         return t.render(heading=heading, heading_link=heading_link)
-        
+
     def generate_documentation_endpoint(self, endpoint, method):
         t = self.env.get_template('documentation_endpoint.jinja')
         title = self.swagger.get_endpoint_short_description(endpoint, method)
@@ -160,14 +160,14 @@ class CodeGenerator(object):
                         url_params=url_params,
                         data=data
                         )
-    
+
     def generate_test_class_header(self):
         t = self.env.get_template('test_header.jinja')
         return t.render()
-    
-    def generate_test_class_function(self, 
+
+    def generate_test_class_function(self,
                                     test_name,
-                                    endpoint, 
+                                    endpoint,
                                     method,
                                     response_code,
                                     api_call,
@@ -187,7 +187,7 @@ class CodeGenerator(object):
                         url_params = url_params,
                         headers = headers
                         )
-    
+
     def get_class_names(self):
         class_names = {}
         for endpoint in sorted(self.swagger_json["paths"]):
@@ -211,7 +211,7 @@ class CodeGenerator(object):
                 class_names[class_name] = []
                 class_names[class_name].append(endpoint)
         return class_names
-    
+
     def generate_heading_name(self, heading_name):
         #TODO: allow for customizations through the config file
         return heading_name
@@ -225,7 +225,7 @@ class CodeGenerator(object):
        # Account for Python reserved word
        endpoint = endpoint.replace("global", "_(\"global\")")
        return endpoint + "." + method
-       
+
     # params should be formatted like: {"hello": "world", "bye": 2}
     def generate_params(self, response_code, params=None, mock=None):
         all_params = {}
@@ -258,8 +258,8 @@ class CodeGenerator(object):
             split_endpoint = endpoint.split('{')
             url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
             url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
-            return url_params  
-    
+            return url_params
+
     @property
     def env(self):
         return self._env
@@ -271,7 +271,7 @@ class CodeGenerator(object):
     @property
     def config(self):
         return self._config
-        
+
     @property
     def swagger(self):
         return self._swagger
