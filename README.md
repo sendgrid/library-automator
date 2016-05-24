@@ -7,20 +7,22 @@ For automating v3 endpoints into our 7 libraries
 
 ```bash
 python app.py python tests > ./python/generated_files/unit_tests.py
+cp ./python/generated_files/examples/unit_tests.md <path-to>/sendgrid-python/examples/test_sendgrid.py
 ```
 
 ### Generate Docs (Usage.md)
 
 ```bash
 python app.py python usage > ./python/generated_files/USAGE.md
+cp ./python/generated_files/examples/USAGE.md <path-to>/sendgrid-python/examples/
 ```
 
 ### Generate Examples
 
-# this will populate the python/generated_files/examples folder
-# cp -R ./python/generated_files/examples/ ../../../temp/sendgrid-python/examples/
+This will populate the python/generated_files/examples folder
 ```bash
 python app.py python examples
+cp -R ./python/generated_files/examples/ <path-to>/sendgrid-python/examples/
 ```
 
 ## PHP
