@@ -270,7 +270,7 @@ class CodeGenerator(object):
                 all_params[param] = params[param]
         if all_params == {}:
             all_params = None
-        if self._language == "php":
+        if (self._language == "php") and (all_params != None):
             all_params = json.dumps(all_params)
         return all_params
 
