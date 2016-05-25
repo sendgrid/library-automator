@@ -29,5 +29,5 @@ cp -R ./python/generated_files/examples/ <path-to>/sendgrid-python/examples/
 ### Generate Tests
 
 ```bash
-python app.py php tests > ./php/generated_files/unit_tests.py
+python app.py php tests > ./php/generated_files/unit_tests.php
 ```

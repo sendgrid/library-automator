@@ -43,11 +43,16 @@ class CodeGenerator(object):
                                 data = data.replace("false", "False")
                         except TypeError, e:
                             pass
+                        if data:
+                            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
                         api_call = self.generate_api_call(endpoint, method)
                         query_params = self.swagger.get_query_parameters(endpoint, method)
                         params = self.generate_params(response_code, query_params, mock=False)
                         url_params = self.generate_url_params(endpoint)
-                        headers = self.generate_headers(response_code)
+                        if self._language == "python":
+                            headers = self.generate_headers(response_code)
+                        if self._language == "php":
+                            headers = "X-Mock: " + response_code
                         if response_code != "default": # schema undefined in swagger
                             generated_test_class += self.generate_test_class_function(test_name,
                                                                                       endpoint,
@@ -59,6 +64,8 @@ class CodeGenerator(object):
                                                                                       data=data,
                                                                                       headers=headers
                                                                                       )
+        if self._language == "php":
+            generated_test_class += "}"
         return generated_test_class
 
     def generate_docs(self):
@@ -84,6 +91,11 @@ class CodeGenerator(object):
             newpath = '{0}/{1}/generated_files/examples/{2}'.format(path, self._language, key.lower())
             if not os.path.exists(newpath):
                 os.makedirs(newpath)
+            suffix = ""
+            if self._language == "python":
+                suffix = ".py"
+            if self._language == "php":
+                suffix = ".php"
             file = open(str(newpath + '/' + key.lower() + '.py'), 'w')
             generated_examples = self.generate_example_title()
             for endpoint in class_names[key]:
@@ -218,13 +230,32 @@ class CodeGenerator(object):
 
     def generate_test_name(self, endpoint, method):
        endpoint = endpoint.replace("/", "_").replace("{", "_").replace("}", "_")
-       return "test" + endpoint + "_" + method + "(self):"
+       call = ""
+       if self._language == "python":
+           call = "(self):"
+       if self._language == "php":
+           call = "()"
+       return "test" + endpoint + "_" + method + call
 
     def generate_api_call(self, endpoint, method):
-       endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
-       # Account for Python reserved word
-       endpoint = endpoint.replace("global", "_(\"global\")")
-       return endpoint + "." + method
+       if self._language == "python":
+           endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
+           # Account for Python reserved word
+           endpoint = endpoint.replace("global", "_(\"global\")")
+       if self._language == "php":
+           endpoint = endpoint.replace("{", "_($").replace("}/", ")->")
+           endpoint = endpoint.replace("}", ")->")
+           endpoint = endpoint[1:]
+           endpoint = endpoint.replace("/", "()->")
+       seperator = ""
+       if self._language == "python":
+           seperator = "."
+       if self._language == "php":
+           if endpoint.endswith(">"):
+               seperator = ""
+           else:
+               seperator = "()->"
+       return endpoint + seperator + method
 
     # params should be formatted like: {"hello": "world", "bye": 2}
     def generate_params(self, response_code, params=None, mock=None):
@@ -239,6 +270,8 @@ class CodeGenerator(object):
                 all_params[param] = params[param]
         if all_params == {}:
             all_params = None
+        if self._language == "php":
+            all_params = json.dumps(all_params)
         return all_params
 
     def generate_headers(self, response_code):
@@ -253,11 +286,18 @@ class CodeGenerator(object):
         if endpoint.count('{') < 1:
             return None
         elif endpoint.count('{') == 1:
-            return endpoint.split('{', 1)[-1].split('}')[0] + " = " + "\"" + value + "\""
+            if self._language == "python":
+                return endpoint.split('{', 1)[-1].split('}')[0] + " = " + "\"" + value + "\""
+            if self._language == "php":
+                return "$" + endpoint.split('{', 1)[-1].split('}')[0] + " = " + "\"" + value + "\""
         else:
             split_endpoint = endpoint.split('{')
-            url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
-            url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+            if self._language == "python":
+                url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
+                url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+            if self._language == "php":
+                url_params = "$" + split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\";\n"
+                url_params += "        $" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
             return url_params
 
     @property
