@@ -18,6 +18,10 @@ class CodeGenerator(object):
     def to_camelcase(string):
         return re.sub(r'(?!^)_([a-zA-Z])', lambda m: m.group(1).upper(), string)
 
+###############################################################################
+####### GENERATE TESTS
+###############################################################################
+
     def generate_tests(self):
         if self.config.is_proxied:
             host = self.config.proxy_url
@@ -69,6 +73,71 @@ class CodeGenerator(object):
             generated_test_class += "}"
         return generated_test_class
 
+    def generate_test_class_header(self):
+        t = self.env.get_template('test_header.jinja')
+        return t.render()
+
+    def generate_test_class_function(self,
+                                    test_name,
+                                    endpoint,
+                                    method,
+                                    response_code,
+                                    api_call,
+                                    data=None,
+                                    params=None,
+                                    url_params=None,
+                                    headers=None
+                                    ):
+        t = self.env.get_template('test_class_function.jinja')
+        return t.render(test_name = test_name,
+                        endpoint = endpoint,
+                        method = method,
+                        response_code = response_code,
+                        api_call = api_call,
+                        data = data,
+                        params = params,
+                        url_params = url_params,
+                        headers = headers
+                        )
+
+    def generate_test_name(self, endpoint, method):
+       endpoint = endpoint.replace("/", "_").replace("{", "_").replace("}", "_")
+       call = ""
+       if self._language == "python":
+           call = "(self):"
+       if self._language == "php":
+           call = "()"
+       return "test" + endpoint + "_" + method + call
+
+    def generate_api_call(self, endpoint, method):
+       if self._language == "python":
+           endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
+           # Account for Python reserved word
+           endpoint = endpoint.replace("global", "_(\"global\")")
+       if self._language == "php":
+           endpoint = endpoint.replace("{", "_($").replace("}/", ")->")
+           endpoint = endpoint.replace("}", ")->")
+           endpoint = endpoint[1:]
+           endpoint = endpoint.replace("/", "()->")
+       seperator = ""
+       if self._language == "python":
+           seperator = "."
+       if self._language == "php":
+           if endpoint.endswith(">"):
+               seperator = ""
+           else:
+               seperator = "()->"
+       return endpoint + seperator + method
+
+    def generate_headers(self, response_code):
+        header = {}
+        header["X-Mock"] = int(response_code)
+        return header
+
+###############################################################################
+####### GENERATE USAGE.md
+###############################################################################
+
     def generate_docs(self):
         class_names = self.get_raw_class_names()
         generated_documentation = self.generate_documenation_title()
@@ -84,6 +153,75 @@ class CodeGenerator(object):
                         generated_documentation += self.generate_documentation_endpoint(endpoint, method)
 
         return generated_documentation.encode('ascii', 'ignore')
+
+    def generate_documenation_title(self):
+        t = self.env.get_template('documentation_title.jinja')
+        return t.render()
+
+    def generate_documentation_toc(self, class_names):
+        toc = ''
+        for key in sorted(class_names):
+            heading = self.generate_heading_name(key.upper().replace('_', ' '))
+            heading_link = heading.lower().replace(' ', '_')
+            toc += "* [" + heading + "]" + "(#" + heading_link + ")\n"
+        t = self.env.get_template('documentation_toc.jinja')
+        return t.render(toc=toc)
+
+    def generate_documentation_header(self, heading, heading_link):
+        t = self.env.get_template('documentation_header.jinja')
+        return t.render(heading=heading, heading_link=heading_link)
+
+    def generate_documentation_endpoint(self, endpoint, method):
+        t = self.env.get_template('documentation_endpoint.jinja')
+        title = self.swagger.get_endpoint_short_description(endpoint, method)
+        description = self.swagger.get_endpoint_description(endpoint, method)
+        api_call = self.generate_api_call(endpoint, method)
+        response_codes = self.swagger.get_response_codes(endpoint, method)
+        response_code = response_codes[0]
+        data = self.swagger.get_example_data(endpoint, method, response_code)
+        if data:
+            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
+        if self._language == "python":
+            try:
+                if "true" in data:
+                    data = data.replace("true", "True")
+                if "false" in data:
+                    data = data.replace("false", "False")
+            except TypeError, e:
+                pass
+        query_params = self.swagger.get_query_parameters(endpoint, method)
+        params = self.generate_params(response_code, query_params, mock=False)
+        url_params = self.generate_url_params(endpoint, None, True)
+        return t.render(title=title,
+                        description=description,
+                        endpoint=endpoint,
+                        method_title=method.upper(),
+                        method=method,
+                        api_call=api_call,
+                        params=params,
+                        url_params=url_params,
+                        data=data
+                        )
+
+    def generate_heading_name(self, heading_name):
+        #TODO: allow for customizations through the config file
+        return heading_name
+
+    def get_raw_class_names(self):
+        class_names = {}
+        for endpoint in sorted(self.swagger_json["paths"]):
+            split_endpoint = endpoint.split('/')
+            class_name = split_endpoint[1].capitalize()
+            try:
+                class_names[class_name].append(endpoint)
+            except KeyError, e:
+                class_names[class_name] = []
+                class_names[class_name].append(endpoint)
+        return class_names
+
+###############################################################################
+####### GENERATE EXAMPLES
+###############################################################################
 
     def generate_examples(self):
         class_names = self.get_class_names()
@@ -145,82 +283,11 @@ class CodeGenerator(object):
                         data=data
                         )
 
-    def generate_documenation_title(self):
-        t = self.env.get_template('documentation_title.jinja')
-        return t.render()
+###############################################################################
+####### UTILITY FUNCTIONS
+###############################################################################
 
-    def generate_documentation_toc(self, class_names):
-        toc = ''
-        for key in sorted(class_names):
-            heading = self.generate_heading_name(key.upper().replace('_', ' '))
-            heading_link = heading.lower().replace(' ', '_')
-            toc += "* [" + heading + "]" + "(#" + heading_link + ")\n"
-        t = self.env.get_template('documentation_toc.jinja')
-        return t.render(toc=toc)
-
-    def generate_documentation_header(self, heading, heading_link):
-        t = self.env.get_template('documentation_header.jinja')
-        return t.render(heading=heading, heading_link=heading_link)
-
-    def generate_documentation_endpoint(self, endpoint, method):
-        t = self.env.get_template('documentation_endpoint.jinja')
-        title = self.swagger.get_endpoint_short_description(endpoint, method)
-        description = self.swagger.get_endpoint_description(endpoint, method)
-        api_call = self.generate_api_call(endpoint, method)
-        response_codes = self.swagger.get_response_codes(endpoint, method)
-        response_code = response_codes[0]
-        data = self.swagger.get_example_data(endpoint, method, response_code)
-        if data:
-            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
-        if self._language == "python":
-            try:
-                if "true" in data:
-                    data = data.replace("true", "True")
-                if "false" in data:
-                    data = data.replace("false", "False")
-            except TypeError, e:
-                pass
-        query_params = self.swagger.get_query_parameters(endpoint, method)
-        params = self.generate_params(response_code, query_params, mock=False)
-        url_params = self.generate_url_params(endpoint, None, True)
-        return t.render(title=title,
-                        description=description,
-                        endpoint=endpoint,
-                        method_title=method.upper(),
-                        method=method,
-                        api_call=api_call,
-                        params=params,
-                        url_params=url_params,
-                        data=data
-                        )
-
-    def generate_test_class_header(self):
-        t = self.env.get_template('test_header.jinja')
-        return t.render()
-
-    def generate_test_class_function(self,
-                                    test_name,
-                                    endpoint,
-                                    method,
-                                    response_code,
-                                    api_call,
-                                    data=None,
-                                    params=None,
-                                    url_params=None,
-                                    headers=None
-                                    ):
-        t = self.env.get_template('test_class_function.jinja')
-        return t.render(test_name = test_name,
-                        endpoint = endpoint,
-                        method = method,
-                        response_code = response_code,
-                        api_call = api_call,
-                        data = data,
-                        params = params,
-                        url_params = url_params,
-                        headers = headers
-                        )
-
+    # Used in tests and examples
     def get_class_names(self):
         class_names = {}
         for endpoint in sorted(self.swagger_json["paths"]):
@@ -233,51 +300,7 @@ class CodeGenerator(object):
                 class_names[class_name].append(endpoint)
         return class_names
 
-    def get_raw_class_names(self):
-        class_names = {}
-        for endpoint in sorted(self.swagger_json["paths"]):
-            split_endpoint = endpoint.split('/')
-            class_name = split_endpoint[1].capitalize()
-            try:
-                class_names[class_name].append(endpoint)
-            except KeyError, e:
-                class_names[class_name] = []
-                class_names[class_name].append(endpoint)
-        return class_names
-
-    def generate_heading_name(self, heading_name):
-        #TODO: allow for customizations through the config file
-        return heading_name
-
-    def generate_test_name(self, endpoint, method):
-       endpoint = endpoint.replace("/", "_").replace("{", "_").replace("}", "_")
-       call = ""
-       if self._language == "python":
-           call = "(self):"
-       if self._language == "php":
-           call = "()"
-       return "test" + endpoint + "_" + method + call
-
-    def generate_api_call(self, endpoint, method):
-       if self._language == "python":
-           endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
-           # Account for Python reserved word
-           endpoint = endpoint.replace("global", "_(\"global\")")
-       if self._language == "php":
-           endpoint = endpoint.replace("{", "_($").replace("}/", ")->")
-           endpoint = endpoint.replace("}", ")->")
-           endpoint = endpoint[1:]
-           endpoint = endpoint.replace("/", "()->")
-       seperator = ""
-       if self._language == "python":
-           seperator = "."
-       if self._language == "php":
-           if endpoint.endswith(">"):
-               seperator = ""
-           else:
-               seperator = "()->"
-       return endpoint + seperator + method
-
+    # Used in tests, docs and examples
     # params should be formatted like: {"hello": "world", "bye": 2}
     def generate_params(self, response_code, params=None, mock=None):
         all_params = {}
@@ -295,11 +318,7 @@ class CodeGenerator(object):
             all_params = json.dumps(all_params)
         return all_params
 
-    def generate_headers(self, response_code):
-        header = {}
-        header["X-Mock"] = int(response_code)
-        return header
-
+    # Used in tests, docs and examples
     def generate_url_params(self, endpoint, value=None, docs=None):
         if value == None:
             value = "test_url_param"

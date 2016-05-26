@@ -46,3 +46,7 @@ This will populate the php/generated_files/examples folder
 python app.py php examples
 cp -R ./php/generated_files/examples/ <path-to>/sendgrid-php/examples/
 ```
+
+# Tests
+
+`python -m unittest discover -v`
