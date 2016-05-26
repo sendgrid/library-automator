@@ -47,6 +47,29 @@ python app.py php examples
 cp -R ./php/generated_files/examples/ <path-to>/sendgrid-php/examples/
 ```
 
+## Ruby
+
+### Generate Tests
+
+```bash
+python app.py ruby tests > ./ruby/generated_files/unit_tests.rb
+```
+
+### Generate Docs (Usage.md)
+
+```bash
+python app.py ruby usage > ./ruby/generated_files/USAGE.md
+cp ./ruby/generated_files/USAGE.md <path-to>/sendgrid-ruby/
+```
+
+### Generate Examples
+
+This will populate the ruby/generated_files/examples folder
+```bash
+python app.py ruby examples
+cp -R ./ruby/generated_files/examples/ <path-to>/sendgrid-ruby/examples/
+```
+
 # Tests
 
 `python -m unittest discover -v`

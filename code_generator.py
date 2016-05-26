@@ -56,6 +56,8 @@ class CodeGenerator(object):
                         url_params = self.generate_url_params(endpoint)
                         if self._language == "python":
                             headers = self.generate_headers(response_code)
+                        if self._language == "ruby":
+                            headers = json.dumps(self.generate_headers(response_code))
                         if self._language == "php":
                             headers = "X-Mock: " + response_code
                         if response_code != "default": # schema undefined in swagger
@@ -71,6 +73,8 @@ class CodeGenerator(object):
                                                                                       )
         if self._language == "php":
             generated_test_class += "}"
+        if self._language == "ruby":
+            generated_test_class += "end"
         return generated_test_class
 
     def generate_test_class_header(self):
@@ -110,6 +114,10 @@ class CodeGenerator(object):
        return "test" + endpoint + "_" + method + call
 
     def generate_api_call(self, endpoint, method):
+       if self._language == "ruby":
+           endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
+           # Account for Python reserved word
+           endpoint = endpoint.replace("mail.send", "mail._(\"send\")")
        if self._language == "python":
            endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
            # Account for Python reserved word
@@ -120,6 +128,8 @@ class CodeGenerator(object):
            endpoint = endpoint[1:]
            endpoint = endpoint.replace("/", "()->")
        seperator = ""
+       if self._language == "ruby":
+           seperator = "."
        if self._language == "python":
            seperator = "."
        if self._language == "php":
@@ -314,6 +324,8 @@ class CodeGenerator(object):
                 all_params[param] = params[param]
         if all_params == {}:
             all_params = None
+        if (self._language == "ruby") and (all_params != None):
+            all_params = json.dumps(all_params)
         if (self._language == "php") and (all_params != None):
             all_params = json.dumps(all_params)
         return all_params
@@ -326,12 +338,17 @@ class CodeGenerator(object):
         if endpoint.count('{') < 1:
             return None
         elif endpoint.count('{') == 1:
+            if self._language == "ruby":
+                return endpoint.split('{', 1)[-1].split('}')[0] + " = " + "\"" + value + "\""
             if self._language == "python":
                 return endpoint.split('{', 1)[-1].split('}')[0] + " = " + "\"" + value + "\""
             if self._language == "php":
                 return "$" + endpoint.split('{', 1)[-1].split('}')[0] + " = " + "\"" + value + "\""
         else:
             split_endpoint = endpoint.split('{')
+            if self._language == "ruby":
+                url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
+                url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
             if self._language == "python":
                 url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
                 url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
