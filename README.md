@@ -32,7 +32,17 @@ cp -R ./python/generated_files/examples/ <path-to>/sendgrid-python/examples/
 python app.py php tests > ./php/generated_files/unit_tests.php
 ```
 
+### Generate Docs (Usage.md)
+
 ```bash
 python app.py php usage > ./php/generated_files/USAGE.md
 cp ./php/generated_files/USAGE.md <path-to>/sendgrid-php/
+```
+
+### Generate Examples
+
+This will populate the php/generated_files/examples folder
+```bash
+python app.py php examples
+cp -R ./php/generated_files/examples/ <path-to>/sendgrid-php/examples/
 ```

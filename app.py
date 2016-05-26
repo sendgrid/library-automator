@@ -21,3 +21,5 @@ if "php" in args:
         print php_code_generator.generate_tests()
     if "usage" in args:
         print php_code_generator.generate_docs()
+    if "examples" in args:
+        php_code_generator.generate_examples()

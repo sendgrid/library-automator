@@ -96,7 +96,7 @@ class CodeGenerator(object):
                 suffix = ".py"
             if self._language == "php":
                 suffix = ".php"
-            file = open(str(newpath + '/' + key.lower() + '.py'), 'w')
+            file = open(str(newpath + '/' + key.lower() + suffix), 'w')
             generated_examples = self.generate_example_title()
             for endpoint in class_names[key]:
                 objects = self.swagger.get_endpoint_objects(endpoint)
@@ -120,6 +120,8 @@ class CodeGenerator(object):
         response_codes = self.swagger.get_response_codes(endpoint, method)
         response_code = response_codes[0]
         data = self.swagger.get_example_data(endpoint, method, response_code)
+        if data:
+            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint)
@@ -159,6 +161,8 @@ class CodeGenerator(object):
         response_codes = self.swagger.get_response_codes(endpoint, method)
         response_code = response_codes[0]
         data = self.swagger.get_example_data(endpoint, method, response_code)
+        if data:
+            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint, None, True)
