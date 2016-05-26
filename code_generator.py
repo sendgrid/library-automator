@@ -122,6 +122,13 @@ class CodeGenerator(object):
         data = self.swagger.get_example_data(endpoint, method, response_code)
         if data:
             data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
+        try:
+            if "true" in data:
+                data = data.replace("true", "True")
+            if "false" in data:
+                data = data.replace("false", "False")
+        except TypeError, e:
+            pass
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint)
@@ -163,6 +170,13 @@ class CodeGenerator(object):
         data = self.swagger.get_example_data(endpoint, method, response_code)
         if data:
             data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
+        try:
+            if "true" in data:
+                data = data.replace("true", "True")
+            if "false" in data:
+                data = data.replace("false", "False")
+        except TypeError, e:
+            pass
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint, None, True)
