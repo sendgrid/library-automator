@@ -161,7 +161,7 @@ class CodeGenerator(object):
         data = self.swagger.get_example_data(endpoint, method, response_code)
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
-        url_params = self.generate_url_params(endpoint)
+        url_params = self.generate_url_params(endpoint, None, True)
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
@@ -279,7 +279,7 @@ class CodeGenerator(object):
         header["X-Mock"] = int(response_code)
         return header
 
-    def generate_url_params(self, endpoint, value=None):
+    def generate_url_params(self, endpoint, value=None, docs=None):
         if value == None:
             value = "test_url_param"
             #TODO: grab these from stoplight, can override with config
@@ -297,7 +297,10 @@ class CodeGenerator(object):
                 url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
             if self._language == "php":
                 url_params = "$" + split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\";\n"
-                url_params += "        $" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+                if docs:
+                    url_params += "$" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+                else:
+                    url_params += "        $" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
             return url_params
 
     @property

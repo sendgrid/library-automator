@@ -13,7 +13,7 @@ cp ./python/generated_files/examples/unit_tests.md <path-to>/sendgrid-python/exa
 
 ```bash
 python app.py python usage > ./python/generated_files/USAGE.md
-cp ./python/generated_files/examples/USAGE.md <path-to>/sendgrid-python/examples/
+cp ./python/generated_files/USAGE.md <path-to>/sendgrid-python/
 ```
 
 ### Generate Examples
@@ -30,4 +30,9 @@ cp -R ./python/generated_files/examples/ <path-to>/sendgrid-python/examples/
 
 ```bash
 python app.py php tests > ./php/generated_files/unit_tests.php
+```
+
+```bash
+python app.py php usage > ./php/generated_files/USAGE.md
+cp ./php/generated_files/USAGE.md <path-to>/sendgrid-php/
 ```

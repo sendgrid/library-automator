@@ -19,4 +19,5 @@ if "php" in args:
     php_code_generator = CodeGenerator("php")
     if "tests" in args:
         print php_code_generator.generate_tests()
-
+    if "usage" in args:
+        print php_code_generator.generate_docs()
