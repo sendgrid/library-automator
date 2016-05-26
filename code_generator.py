@@ -36,13 +36,14 @@ class CodeGenerator(object):
                         response_codes = self.swagger.get_response_codes(endpoint, method)
                         response_code = response_codes[0]
                         data = self.swagger.get_example_data(endpoint, method, response_code)
-                        try:
-                            if "true" in data:
-                                data = data.replace("true", "True")
-                            if "false" in data:
-                                data = data.replace("false", "False")
-                        except TypeError, e:
-                            pass
+                        if self._language == "python":
+                            try:
+                                if "true" in data:
+                                    data = data.replace("true", "True")
+                                if "false" in data:
+                                    data = data.replace("false", "False")
+                            except TypeError, e:
+                                pass
                         if data:
                             data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
                         api_call = self.generate_api_call(endpoint, method)
@@ -122,13 +123,14 @@ class CodeGenerator(object):
         data = self.swagger.get_example_data(endpoint, method, response_code)
         if data:
             data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
-        try:
-            if "true" in data:
-                data = data.replace("true", "True")
-            if "false" in data:
-                data = data.replace("false", "False")
-        except TypeError, e:
-            pass
+        if self._language == "python":
+            try:
+                if "true" in data:
+                    data = data.replace("true", "True")
+                if "false" in data:
+                    data = data.replace("false", "False")
+            except TypeError, e:
+                pass
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint)
@@ -170,13 +172,14 @@ class CodeGenerator(object):
         data = self.swagger.get_example_data(endpoint, method, response_code)
         if data:
             data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
-        try:
-            if "true" in data:
-                data = data.replace("true", "True")
-            if "false" in data:
-                data = data.replace("false", "False")
-        except TypeError, e:
-            pass
+        if self._language == "python":
+            try:
+                if "true" in data:
+                    data = data.replace("true", "True")
+                if "false" in data:
+                    data = data.replace("false", "False")
+            except TypeError, e:
+                pass
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint, None, True)

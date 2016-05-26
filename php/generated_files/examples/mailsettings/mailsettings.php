@@ -10,7 +10,7 @@ $sg = new \SendGrid($apiKey);
 # GET /mail_settings #
 
 $query_params = json_decode('{"limit": 1, "offset": 1}');
-$response = $this->sg->client->mail_settings()->get(null, $query_params);
+$response = $sg->client->mail_settings()->get(null, $query_params);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -26,7 +26,7 @@ $request_body = json_decode('{
     "example.com"
   ]
 }');
-$response = $this->sg->client->mail_settings()->address_whitelist()->patch($request_body);
+$response = $sg->client->mail_settings()->address_whitelist()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -35,7 +35,7 @@ echo $response->responseHeaders();
 # Retrieve address whitelist mail settings #
 # GET /mail_settings/address_whitelist #
 
-$response = $this->sg->client->mail_settings()->address_whitelist()->get();
+$response = $sg->client->mail_settings()->address_whitelist()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -48,7 +48,7 @@ $request_body = json_decode('{
   "email": "email@example.com", 
   "enabled": false
 }');
-$response = $this->sg->client->mail_settings()->bcc()->patch($request_body);
+$response = $sg->client->mail_settings()->bcc()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -57,7 +57,7 @@ echo $response->responseHeaders();
 # Retrieve all BCC mail settings #
 # GET /mail_settings/bcc #
 
-$response = $this->sg->client->mail_settings()->bcc()->get();
+$response = $sg->client->mail_settings()->bcc()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -71,7 +71,7 @@ $request_body = json_decode('{
   "hard_bounces": 5, 
   "soft_bounces": 5
 }');
-$response = $this->sg->client->mail_settings()->bounce_purge()->patch($request_body);
+$response = $sg->client->mail_settings()->bounce_purge()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -80,7 +80,7 @@ echo $response->responseHeaders();
 # Retrieve bounce purge mail settings #
 # GET /mail_settings/bounce_purge #
 
-$response = $this->sg->client->mail_settings()->bounce_purge()->get();
+$response = $sg->client->mail_settings()->bounce_purge()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -94,7 +94,7 @@ $request_body = json_decode('{
   "html_content": "...", 
   "plain_content": "..."
 }');
-$response = $this->sg->client->mail_settings()->footer()->patch($request_body);
+$response = $sg->client->mail_settings()->footer()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -103,7 +103,7 @@ echo $response->responseHeaders();
 # Retrieve footer mail settings #
 # GET /mail_settings/footer #
 
-$response = $this->sg->client->mail_settings()->footer()->get();
+$response = $sg->client->mail_settings()->footer()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -116,7 +116,7 @@ $request_body = json_decode('{
   "email": "example@example.com", 
   "enabled": true
 }');
-$response = $this->sg->client->mail_settings()->forward_bounce()->patch($request_body);
+$response = $sg->client->mail_settings()->forward_bounce()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -125,7 +125,7 @@ echo $response->responseHeaders();
 # Retrieve forward bounce mail settings #
 # GET /mail_settings/forward_bounce #
 
-$response = $this->sg->client->mail_settings()->forward_bounce()->get();
+$response = $sg->client->mail_settings()->forward_bounce()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -138,7 +138,7 @@ $request_body = json_decode('{
   "email": "", 
   "enabled": false
 }');
-$response = $this->sg->client->mail_settings()->forward_spam()->patch($request_body);
+$response = $sg->client->mail_settings()->forward_spam()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -147,7 +147,7 @@ echo $response->responseHeaders();
 # Retrieve forward spam mail settings #
 # GET /mail_settings/forward_spam #
 
-$response = $this->sg->client->mail_settings()->forward_spam()->get();
+$response = $sg->client->mail_settings()->forward_spam()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -159,7 +159,7 @@ echo $response->responseHeaders();
 $request_body = json_decode('{
   "enabled": false
 }');
-$response = $this->sg->client->mail_settings()->plain_content()->patch($request_body);
+$response = $sg->client->mail_settings()->plain_content()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -168,7 +168,7 @@ echo $response->responseHeaders();
 # Retrieve plain content mail settings #
 # GET /mail_settings/plain_content #
 
-$response = $this->sg->client->mail_settings()->plain_content()->get();
+$response = $sg->client->mail_settings()->plain_content()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -182,7 +182,7 @@ $request_body = json_decode('{
   "max_score": 5, 
   "url": "url"
 }');
-$response = $this->sg->client->mail_settings()->spam_check()->patch($request_body);
+$response = $sg->client->mail_settings()->spam_check()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -191,7 +191,7 @@ echo $response->responseHeaders();
 # Retrieve spam check mail settings #
 # GET /mail_settings/spam_check #
 
-$response = $this->sg->client->mail_settings()->spam_check()->get();
+$response = $sg->client->mail_settings()->spam_check()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -204,7 +204,7 @@ $request_body = json_decode('{
   "enabled": true, 
   "html_content": "<% body %>"
 }');
-$response = $this->sg->client->mail_settings()->template()->patch($request_body);
+$response = $sg->client->mail_settings()->template()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -213,7 +213,7 @@ echo $response->responseHeaders();
 # Retrieve legacy template mail settings #
 # GET /mail_settings/template #
 
-$response = $this->sg->client->mail_settings()->template()->get();
+$response = $sg->client->mail_settings()->template()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();

@@ -9,7 +9,7 @@ $sg = new \SendGrid($apiKey);
 # Create a batch ID #
 # POST /mail/batch #
 
-$response = $this->sg->client->mail()->batch()->post();
+$response = $sg->client->mail()->batch()->post();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -19,7 +19,7 @@ echo $response->responseHeaders();
 # GET /mail/batch/{batch_id} #
 
 $batch_id = "test_url_param";
-$response = $this->sg->client->mail()->batch()->_($batch_id)->get();
+$response = $sg->client->mail()->batch()->_($batch_id)->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -171,7 +171,7 @@ $request_body = json_decode('{
     }
   }
 }');
-$response = $this->sg->client->mail()->send()->beta()->post($request_body);
+$response = $sg->client->mail()->send()->beta()->post($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();

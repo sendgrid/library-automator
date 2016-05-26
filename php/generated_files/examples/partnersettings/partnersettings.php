@@ -10,7 +10,7 @@ $sg = new \SendGrid($apiKey);
 # GET /partner_settings #
 
 $query_params = json_decode('{"limit": 1, "offset": 1}');
-$response = $this->sg->client->partner_settings()->get(null, $query_params);
+$response = $sg->client->partner_settings()->get(null, $query_params);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -24,7 +24,7 @@ $request_body = json_decode('{
   "enabled": true, 
   "license_key": ""
 }');
-$response = $this->sg->client->partner_settings()->new_relic()->patch($request_body);
+$response = $sg->client->partner_settings()->new_relic()->patch($request_body);
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
@@ -33,7 +33,7 @@ echo $response->responseHeaders();
 # Returns all New Relic partner settings. #
 # GET /partner_settings/new_relic #
 
-$response = $this->sg->client->partner_settings()->new_relic()->get();
+$response = $sg->client->partner_settings()->new_relic()->get();
 echo $response->statusCode();
 echo $response->responseBody();
 echo $response->responseHeaders();
