@@ -1,0 +1,30 @@
+import sendgrid
+import json
+from sendgrid import SendGridAPIClient
+from sendgrid.version import __version__
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+import os
+if os.environ.get('TRAVIS'):
+    host = os.environ.get('MOCK_HOST')
+else:
+    host = "http://localhost:4010"
+
+class UnitTests(unittest.TestCase):
+    def setUp(self):
+        self.host = host
+        self.path = '{0}{1}'.format(os.path.abspath(os.path.dirname(__file__)), '/..')
+        self.sg = sendgrid.SendGridAPIClient(host=host, path=self.path)
+
+    def test_apikey_init(self):
+        self.assertEqual(self.sg.apikey, os.environ.get('SENDGRID_API_KEY'))
+
+    def test_useragent(self):
+        useragent = '{0}{1}{2}'.format('sendgrid/', __version__, ';python')
+        self.assertEqual(self.sg.useragent, useragent)
+
+    def test_host(self):
+        self.assertEqual(self.sg.host, self.host)
+

@@ -1,0 +1,18 @@
+##################################################
+# {{ title }} #
+# {{ method_title }} {{ endpoint }} #
+
+{% if data and (method == "put" or method == "patch" or method == "post")  %}$request_body = json_decode('{{ data }}');
+{% endif %}
+{% if params %}$query_params = json_decode('{{ params }}');
+{% endif %}
+{% if url_params %}{{ url_params }};
+{% endif %}
+{% if headers %}$request_headers = array("{{ headers }}");
+{% endif %}
+$response = $sg->client->{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post" or method == "delete") %}$request_body{% else %}{% if headers or params %}null{% endif %}{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post" or method == "delete")) %}{% endif %}{% if params %}, $query_params{% else %}{% if headers %}, null{% endif %}{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post" or method == "delete") or params) %}{% endif %}, $request_headers{% endif %});
+echo $response->statusCode();
+echo $response->responseBody();
+echo $response->responseHeaders();
+
+

@@ -1,0 +1,19 @@
+## {{ title }}
+
+{{ description }}
+
+### {{ method_title }} {{ endpoint }}
+
+```python
+{% if data and (method == "put" or method == "patch" or method == "post")  %}data = {{ data }}
+{% endif %}
+{% if params %}params = {{ params }}
+{% endif %}
+{% if url_params %}{{ url_params }}
+{% endif %}
+response = sg.client{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post") %}request_body=data{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post")) %}, {% endif %}{% if params %}query_params=params{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post") or params) %}, {% endif %}request_headers=headers{% endif %})
+print response.status_code
+print response.response_body
+print response.response_headers
+```
+
