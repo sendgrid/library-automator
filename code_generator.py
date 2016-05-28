@@ -371,8 +371,8 @@ class CodeGenerator(object):
         if (self._language == "java") and (all_params != None):
             java_params = ""
             for key in all_params:
-                java_params += "queryParams.put(\"" + str(key) + "\", \""+ str(all_params[key]) + "\");\n    "
-            java_params = java_params[:-5]
+                java_params += "queryParams.put(\"" + str(key) + "\", \""+ str(all_params[key]) + "\");\n      "
+            java_params = java_params[:-7]
             return java_params
         return all_params
 
