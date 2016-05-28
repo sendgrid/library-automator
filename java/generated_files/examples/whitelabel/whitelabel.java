@@ -1,7 +1,15 @@
-require 'sendgrid-ruby'
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.sendgrid.Client;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
 
-sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 ##################################################
 # Create a domain whitelabel. #
@@ -9,13 +17,11 @@ sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/domains/";
+      request.endpoint = "whitelabel/domains";
       request.requestBody = "{\"automatic_security\":false,\"username\":\"john@example.com\",\"domain\":\"example.com\",\"default\":true,\"custom_spf\":true,\"ips\":[\"192.168.1.1\",\"192.168.1.2\"],\"subdomain\":\"news\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -33,13 +39,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/domains/";
+      request.endpoint = "whitelabel/domains";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("username", "test_string");
     queryParams.put("domain", "test_string");
@@ -63,13 +67,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/domains/default/";
+      request.endpoint = "whitelabel/domains/default";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -86,13 +88,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/domains/subuser/";
+      request.endpoint = "whitelabel/domains/subuser";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -109,13 +109,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "whitelabel/domains/subuser/";
+      request.endpoint = "whitelabel/domains/subuser";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -132,13 +130,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "whitelabel/domains/{domain_id}/";
+      request.endpoint = "whitelabel/domains/{domain_id}";
       request.requestBody = "{\"default\":false,\"custom_spf\":true}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -156,13 +152,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/domains/{domain_id}/";
+      request.endpoint = "whitelabel/domains/{domain_id}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -179,13 +173,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "whitelabel/domains/{domain_id}/";
+      request.endpoint = "whitelabel/domains/{domain_id}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -202,13 +194,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/domains/{domain_id}/subuser/";
+      request.endpoint = "whitelabel/domains/{domain_id}/subuser";
       request.requestBody = "{\"username\":\"jane@example.com\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -226,13 +216,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/domains/{id}/ips/";
+      request.endpoint = "whitelabel/domains/{id}/ips";
       request.requestBody = "{\"ip\":\"192.168.0.1\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -250,13 +238,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "whitelabel/domains/{id}/ips/{ip}/";
+      request.endpoint = "whitelabel/domains/{id}/ips/{ip}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -273,13 +259,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/domains/{id}/validate/";
+      request.endpoint = "whitelabel/domains/{id}/validate";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -296,13 +280,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/ips/";
+      request.endpoint = "whitelabel/ips";
       request.requestBody = "{\"ip\":\"192.168.1.1\",\"domain\":\"example.com\",\"subdomain\":\"email\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -320,13 +302,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/ips/";
+      request.endpoint = "whitelabel/ips";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("ip", "test_string");
     queryParams.put("limit", "1");
@@ -348,13 +328,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/ips/{id}/";
+      request.endpoint = "whitelabel/ips/{id}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -371,13 +349,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "whitelabel/ips/{id}/";
+      request.endpoint = "whitelabel/ips/{id}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -394,13 +370,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/ips/{id}/validate/";
+      request.endpoint = "whitelabel/ips/{id}/validate";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -417,13 +391,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/links/";
+      request.endpoint = "whitelabel/links";
       request.requestBody = "{\"default\":true,\"domain\":\"example.com\",\"subdomain\":\"mail\"}";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("limit", "1");
@@ -445,13 +417,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/links/";
+      request.endpoint = "whitelabel/links";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("limit", "1");
       request.queryParams = queryParams;
@@ -471,13 +441,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/links/default/";
+      request.endpoint = "whitelabel/links/default";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("domain", "test_string");
       request.queryParams = queryParams;
@@ -497,13 +465,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/links/subuser/";
+      request.endpoint = "whitelabel/links/subuser";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("username", "test_string");
       request.queryParams = queryParams;
@@ -523,13 +489,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "whitelabel/links/subuser/";
+      request.endpoint = "whitelabel/links/subuser";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("username", "test_string");
       request.queryParams = queryParams;
@@ -549,13 +513,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "whitelabel/links/{id}/";
+      request.endpoint = "whitelabel/links/{id}";
       request.requestBody = "{\"default\":true}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -573,13 +535,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "whitelabel/links/{id}/";
+      request.endpoint = "whitelabel/links/{id}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -596,13 +556,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "whitelabel/links/{id}/";
+      request.endpoint = "whitelabel/links/{id}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -619,13 +577,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/links/{id}/validate/";
+      request.endpoint = "whitelabel/links/{id}/validate";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -642,13 +598,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "whitelabel/links/{link_id}/subuser/";
+      request.endpoint = "whitelabel/links/{link_id}/subuser";
       request.requestBody = "{\"username\":\"jane@example.com\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);

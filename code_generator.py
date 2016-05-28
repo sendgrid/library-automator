@@ -40,8 +40,6 @@ class CodeGenerator(object):
                         response_codes = self.swagger.get_response_codes(endpoint, method)
                         response_code = response_codes[0]
                         raw_data = self.swagger.get_example_data(endpoint, method, response_code)
-                        if raw_data:
-                            raw_data = raw_data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
                         data = json.dumps(raw_data, indent=2, sort_keys=True)
                         if self._language == "java":
                             if raw_data:
@@ -56,6 +54,8 @@ class CodeGenerator(object):
                                     data = data.replace("false", "False")
                             except TypeError, e:
                                 pass
+                        if data:
+                            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
                         api_call = self.generate_api_call(endpoint, method)
                         query_params = self.swagger.get_query_parameters(endpoint, method)
                         params = self.generate_params(response_code, query_params, mock=False)
@@ -69,6 +69,7 @@ class CodeGenerator(object):
                         if self._language == "java":
                             headers = "\"X-Mock\" ," + "\"" + response_code + "\""
                             method = method.upper()
+                            api_call = api_call[:-1]
                         if response_code != "default": # schema undefined in swagger
                             generated_test_class += self.generate_test_class_function(test_name,
                                                                                       endpoint,
@@ -225,6 +226,8 @@ class CodeGenerator(object):
                 data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
             else:
                 data = None
+        if self._language == "java":
+            api_call = api_call[:-1]
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
@@ -317,6 +320,8 @@ class CodeGenerator(object):
                 data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
             else:
                 data = None
+        if self._language == "java":
+            api_call = api_call[:-1]
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,

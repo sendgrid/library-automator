@@ -1,7 +1,15 @@
-require 'sendgrid-ruby'
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.sendgrid.Client;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
 
-sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 ##################################################
 # Create Subuser #
@@ -9,13 +17,11 @@ sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "subusers/";
+      request.endpoint = "subusers";
       request.requestBody = "{\"username\":\"John@example.com\",\"ips\":[\"1.1.1.1\",\"2.2.2.2\"],\"password\":\"johns_password\",\"email\":\"John@example.com\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -33,13 +39,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "subusers/";
+      request.endpoint = "subusers";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("username", "test_string");
     queryParams.put("limit", "0");
@@ -61,13 +65,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "subusers/reputations/";
+      request.endpoint = "subusers/reputations";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("usernames", "test_string");
       request.queryParams = queryParams;
@@ -87,13 +89,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "subusers/stats/";
+      request.endpoint = "subusers/stats";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("end_date", "2016-04-01");
     queryParams.put("aggregated_by", "day");
@@ -118,13 +118,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "subusers/stats/monthly/";
+      request.endpoint = "subusers/stats/monthly";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("subuser", "test_string");
     queryParams.put("limit", "1");
@@ -149,13 +147,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "subusers/stats/sums/";
+      request.endpoint = "subusers/stats/sums";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("end_date", "2016-04-01");
     queryParams.put("aggregated_by", "day");
@@ -181,13 +177,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "subusers/{subuser_name}/";
+      request.endpoint = "subusers/{subuser_name}";
       request.requestBody = "{\"disabled\":false}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -205,13 +199,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "subusers/{subuser_name}/";
+      request.endpoint = "subusers/{subuser_name}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -228,13 +220,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PUT;
-      request.endpoint = "subusers/{subuser_name}/ips/";
+      request.endpoint = "subusers/{subuser_name}/ips";
       request.requestBody = "[\"127.0.0.1\"]";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -252,13 +242,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PUT;
-      request.endpoint = "subusers/{subuser_name}/monitor/";
+      request.endpoint = "subusers/{subuser_name}/monitor";
       request.requestBody = "{\"frequency\":500,\"email\":\"example@example.com\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -276,13 +264,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.POST;
-      request.endpoint = "subusers/{subuser_name}/monitor/";
+      request.endpoint = "subusers/{subuser_name}/monitor";
       request.requestBody = "{\"frequency\":50000,\"email\":\"example@example.com\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -300,13 +286,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "subusers/{subuser_name}/monitor/";
+      request.endpoint = "subusers/{subuser_name}/monitor";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -323,13 +307,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.DELETE;
-      request.endpoint = "subusers/{subuser_name}/monitor/";
+      request.endpoint = "subusers/{subuser_name}/monitor";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -346,13 +328,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "subusers/{subuser_name}/stats/monthly/";
+      request.endpoint = "subusers/{subuser_name}/stats/monthly";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("date", "test_string");
     queryParams.put("sort_by_direction", "asc");

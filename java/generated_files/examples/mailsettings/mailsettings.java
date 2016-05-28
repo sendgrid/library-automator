@@ -1,7 +1,15 @@
-require 'sendgrid-ruby'
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.sendgrid.Client;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
 
-sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 ##################################################
 # Retrieve all mail settings #
@@ -9,13 +17,11 @@ sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/";
+      request.endpoint = "mail_settings";
       Map<String,String> queryParams = new HashMap<String, String>();
       queryParams.put("limit", "1");
     queryParams.put("offset", "1");
@@ -36,13 +42,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/address_whitelist/";
+      request.endpoint = "mail_settings/address_whitelist";
       request.requestBody = "{\"list\":[\"email1@example.com\",\"example.com\"],\"enabled\":true}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -60,13 +64,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/address_whitelist/";
+      request.endpoint = "mail_settings/address_whitelist";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -83,13 +85,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/bcc/";
+      request.endpoint = "mail_settings/bcc";
       request.requestBody = "{\"enabled\":false,\"email\":\"email@example.com\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -107,13 +107,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/bcc/";
+      request.endpoint = "mail_settings/bcc";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -130,13 +128,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/bounce_purge/";
+      request.endpoint = "mail_settings/bounce_purge";
       request.requestBody = "{\"hard_bounces\":5,\"soft_bounces\":5,\"enabled\":true}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -154,13 +150,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/bounce_purge/";
+      request.endpoint = "mail_settings/bounce_purge";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -177,13 +171,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/footer/";
+      request.endpoint = "mail_settings/footer";
       request.requestBody = "{\"html_content\":\"...\",\"enabled\":true,\"plain_content\":\"...\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -201,13 +193,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/footer/";
+      request.endpoint = "mail_settings/footer";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -224,13 +214,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/forward_bounce/";
+      request.endpoint = "mail_settings/forward_bounce";
       request.requestBody = "{\"enabled\":true,\"email\":\"example@example.com\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -248,13 +236,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/forward_bounce/";
+      request.endpoint = "mail_settings/forward_bounce";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -271,13 +257,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/forward_spam/";
+      request.endpoint = "mail_settings/forward_spam";
       request.requestBody = "{\"enabled\":false,\"email\":\"\"}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -295,13 +279,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/forward_spam/";
+      request.endpoint = "mail_settings/forward_spam";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -318,13 +300,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/plain_content/";
+      request.endpoint = "mail_settings/plain_content";
       request.requestBody = "{\"enabled\":false}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -342,13 +322,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/plain_content/";
+      request.endpoint = "mail_settings/plain_content";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -365,13 +343,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/spam_check/";
+      request.endpoint = "mail_settings/spam_check";
       request.requestBody = "{\"url\":\"url\",\"max_score\":5,\"enabled\":true}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -389,13 +365,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/spam_check/";
+      request.endpoint = "mail_settings/spam_check";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -412,13 +386,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.PATCH;
-      request.endpoint = "mail_settings/template/";
+      request.endpoint = "mail_settings/template";
       request.requestBody = "{\"html_content\":\"<% body %>\",\"enabled\":true}";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
@@ -436,13 +408,11 @@ public class Example {
 
 public class Example {
   public static void main(String[] args) throws IOException {
-    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-    Request request = new Request();
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
       request.method = Method.GET;
-      request.endpoint = "mail_settings/template/";
+      request.endpoint = "mail_settings/template";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
