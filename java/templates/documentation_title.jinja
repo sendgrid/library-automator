@@ -3,10 +3,26 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 # INITIALIZATION
 
 ```ruby
-require 'sendgrid-ruby'
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.sendgrid.Client;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
-sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+public class Example {
+  public static void main(String[] args) throws IOException {
+    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+    // Add the example code here
+  }
+}
 ```
 
 

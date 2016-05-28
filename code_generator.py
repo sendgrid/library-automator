@@ -40,6 +40,8 @@ class CodeGenerator(object):
                         response_codes = self.swagger.get_response_codes(endpoint, method)
                         response_code = response_codes[0]
                         raw_data = self.swagger.get_example_data(endpoint, method, response_code)
+                        if raw_data:
+                            raw_data = raw_data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
                         data = json.dumps(raw_data, indent=2, sort_keys=True)
                         if self._language == "java":
                             if raw_data:
@@ -54,8 +56,6 @@ class CodeGenerator(object):
                                     data = data.replace("false", "False")
                             except TypeError, e:
                                 pass
-                        if data:
-                            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
                         api_call = self.generate_api_call(endpoint, method)
                         query_params = self.swagger.get_query_parameters(endpoint, method)
                         params = self.generate_params(response_code, query_params, mock=False)
@@ -203,7 +203,8 @@ class CodeGenerator(object):
         api_call = self.generate_api_call(endpoint, method)
         response_codes = self.swagger.get_response_codes(endpoint, method)
         response_code = response_codes[0]
-        data = self.swagger.get_example_data(endpoint, method, response_code)
+        raw_data = self.swagger.get_example_data(endpoint, method, response_code)
+        data = json.dumps(raw_data, indent=2, sort_keys=True)
         if data:
             data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
         if self._language == "python":
@@ -217,6 +218,13 @@ class CodeGenerator(object):
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint, None, True)
+        if self._language == "java":
+            method = method.upper()
+        if self._language == "java":
+            if raw_data:
+                data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
+            else:
+                data = None
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
