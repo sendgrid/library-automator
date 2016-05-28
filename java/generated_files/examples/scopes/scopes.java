@@ -1,6 +1,11 @@
+require 'sendgrid-ruby'
+
+
+sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+
 ##################################################
-# {{ title }} #
-# {{ method_title }} {{ endpoint }} #
+# Retrieve a list of scopes for which this user has access. #
+# GET /scopes #
 
 public class Example {
   public static void main(String[] args) throws IOException {
@@ -9,16 +14,8 @@ public class Example {
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
-      request.method = Method.{{ method }};
-      request.endpoint = "{{ api_call }}";
-      {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-      request.requestBody = {{ data }};
-      {% endif %}
-      {% if params %}
-      Map<String,String> queryParams = new HashMap<String, String>();
-      {{ params }}
-      request.queryParams = queryParams;
-      {% endif %}
+      request.method = Method.GET;
+      request.endpoint = "scopes/";
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -28,5 +25,4 @@ public class Example {
     }
   }
 }
-
 

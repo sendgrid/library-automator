@@ -1,6 +1,11 @@
+require 'sendgrid-ruby'
+
+
+sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+
 ##################################################
-# {{ title }} #
-# {{ method_title }} {{ endpoint }} #
+# Retrieve email statistics by browser.  #
+# GET /browsers/stats #
 
 public class Example {
   public static void main(String[] args) throws IOException {
@@ -9,16 +14,16 @@ public class Example {
     try {
       SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
       Request request = new Request();
-      request.method = Method.{{ method }};
-      request.endpoint = "{{ api_call }}";
-      {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-      request.requestBody = {{ data }};
-      {% endif %}
-      {% if params %}
+      request.method = Method.GET;
+      request.endpoint = "browsers/stats/";
       Map<String,String> queryParams = new HashMap<String, String>();
-      {{ params }}
+      queryParams.put("end_date", "2016-04-01");
+    queryParams.put("aggregated_by", "day");
+    queryParams.put("browsers", "test_string");
+    queryParams.put("limit", "test_string");
+    queryParams.put("offset", "test_string");
+    queryParams.put("start_date", "2016-01-01");
       request.queryParams = queryParams;
-      {% endif %}
       Response response = sg.api(request);
       System.out.println(response.statusCode);
       System.out.println(response.responseBody);
@@ -28,5 +33,4 @@ public class Example {
     }
   }
 }
-
 
