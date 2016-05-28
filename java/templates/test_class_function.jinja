@@ -3,7 +3,7 @@
     SendGrid sg = new SendGrid("SENDGRID_API_KEY");
     sg.addRequestHeader("X-Mock", "{{ response_code }}");
     if(System.getenv("TRAVIS") == "true") {
-      sg.setHost("MOCK_HOST");
+      sg.setHost(System.getenv("MOCK_HOST"));
     } else {
       sg.setHost("localhost:4010");
     }
