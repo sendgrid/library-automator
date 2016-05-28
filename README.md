@@ -70,6 +70,28 @@ python app.py ruby examples
 cp -R ./ruby/generated_files/examples/ <path-to>/sendgrid-ruby/examples/
 ```
 
+## Java
+
+### Generate Tests
+
+```bash
+python app.py java tests > ./java/generated_files/unit_tests.java
+```
+
+### Generate Docs (Usage.md)
+
+```bash
+python app.py java usage > ./java/generated_files/USAGE.md
+cp ./java/generated_files/USAGE.md <path-to>/sendgrid-java/
+```
+
+### Generate Examples
+
+This will populate the java/generated_files/examples folder
+```bash
+python app.py java examples
+cp -R ./java/generated_files/examples/ <path-to>/sendgrid-java/examples/
+
 # Tests
 
 `python -m unittest discover -v`

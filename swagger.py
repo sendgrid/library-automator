@@ -101,7 +101,7 @@ class Swagger(object):
                 data = self.swagger_json["paths"][endpoint][method]["parameters"][count]["schema"]["example"]
             except IndexError:
                 return None
-            return json.dumps(data, indent=2, sort_keys=True)
+            return data
         except KeyError, e:
             return None
 

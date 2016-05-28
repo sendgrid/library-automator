@@ -39,7 +39,13 @@ class CodeGenerator(object):
                         test_name = self.generate_test_name(endpoint, method)
                         response_codes = self.swagger.get_response_codes(endpoint, method)
                         response_code = response_codes[0]
-                        data = self.swagger.get_example_data(endpoint, method, response_code)
+                        raw_data = self.swagger.get_example_data(endpoint, method, response_code)
+                        data = json.dumps(raw_data, indent=2, sort_keys=True)
+                        if self._language == "java":
+                            if raw_data:
+                                data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
+                            else:
+                                data = None
                         if self._language == "python":
                             try:
                                 if "true" in data:
@@ -60,6 +66,9 @@ class CodeGenerator(object):
                             headers = json.dumps(self.generate_headers(response_code))
                         if self._language == "php":
                             headers = "X-Mock: " + response_code
+                        if self._language == "java":
+                            headers = "\"X-Mock\" ," + "\"" + response_code + "\""
+                            method = method.upper()
                         if response_code != "default": # schema undefined in swagger
                             generated_test_class += self.generate_test_class_function(test_name,
                                                                                       endpoint,
@@ -75,6 +84,8 @@ class CodeGenerator(object):
             generated_test_class += "}"
         if self._language == "ruby":
             generated_test_class += "end"
+        if self._language == "java":
+            generated_test_class += "}"
         return generated_test_class
 
     def generate_test_class_header(self):
@@ -127,6 +138,8 @@ class CodeGenerator(object):
            endpoint = endpoint.replace("}", ")->")
            endpoint = endpoint[1:]
            endpoint = endpoint.replace("/", "()->")
+       if self._language == "java":
+           endpoint = endpoint[1:] + "/"
        seperator = ""
        if self._language == "ruby":
            seperator = "."
@@ -137,6 +150,8 @@ class CodeGenerator(object):
                seperator = ""
            else:
                seperator = "()->"
+       if self._language == "java":
+           return endpoint
        return endpoint + seperator + method
 
     def generate_headers(self, response_code):
@@ -245,6 +260,10 @@ class CodeGenerator(object):
                 suffix = ".py"
             if self._language == "php":
                 suffix = ".php"
+            if self._language == "ruby":
+                suffix = ".rb"
+            if self._language == "java":
+                suffix = ".java"
             file = open(str(newpath + '/' + key.lower() + suffix), 'w')
             generated_examples = self.generate_example_title()
             for endpoint in class_names[key]:
@@ -328,6 +347,12 @@ class CodeGenerator(object):
             all_params = json.dumps(all_params)
         if (self._language == "php") and (all_params != None):
             all_params = json.dumps(all_params)
+        if (self._language == "java") and (all_params != None):
+            java_params = ""
+            for key in all_params:
+                java_params += "queryParams.put(\"" + str(key) + "\", \""+ str(all_params[key]) + "\");\n    "
+            java_params = java_params[:-5]
+            return java_params
         return all_params
 
     # Used in tests, docs and examples
@@ -346,6 +371,8 @@ class CodeGenerator(object):
                 return "$" + endpoint.split('{', 1)[-1].split('}')[0] + " = " + "\"" + value + "\""
         else:
             split_endpoint = endpoint.split('{')
+            if self._language == "java":
+                url_params = ""
             if self._language == "ruby":
                 url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
                 url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""

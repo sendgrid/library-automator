@@ -25,10 +25,19 @@ if "php" in args:
         php_code_generator.generate_examples()
 
 if "ruby" in args:
-    php_code_generator = CodeGenerator("ruby")
+    ruby_code_generator = CodeGenerator("ruby")
     if "tests" in args:
-        print php_code_generator.generate_tests()
+        print ruby_code_generator.generate_tests()
     if "usage" in args:
-        print php_code_generator.generate_docs()
+        print ruby_code_generator.generate_docs()
     if "examples" in args:
-        php_code_generator.generate_examples()
+        ruby_code_generator.generate_examples()
+
+if "java" in args:
+    java_code_generator = CodeGenerator("java")
+    if "tests" in args:
+        print java_code_generator.generate_tests()
+    if "usage" in args:
+        print java_code_generator.generate_docs()
+    if "examples" in args:
+        java_code_generator.generate_examples()
