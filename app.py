@@ -41,3 +41,12 @@ if "java" in args:
         print java_code_generator.generate_docs()
     if "examples" in args:
         java_code_generator.generate_examples()
+
+if "nodejs" in args:
+    nodejs_code_generator = CodeGenerator("nodejs")
+    if "tests" in args:
+        print nodejs_code_generator.generate_tests()
+    if "usage" in args:
+        print nodejs_code_generator.generate_docs()
+    if "examples" in args:
+        nodejs_code_generator.generate_examples()

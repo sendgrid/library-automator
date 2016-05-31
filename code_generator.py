@@ -70,6 +70,10 @@ class CodeGenerator(object):
                             headers = "\"X-Mock\" ," + "\"" + response_code + "\""
                             method = method.upper()
                             api_call = api_call[:-1]
+                        if self._language == "nodejs":
+                            headers = ""
+                            method = method.upper()
+                            api_call = "/v3/" + api_call[:-1]
                         if response_code != "default": # schema undefined in swagger
                             generated_test_class += self.generate_test_class_function(test_name,
                                                                                       endpoint,
@@ -141,6 +145,7 @@ class CodeGenerator(object):
            endpoint = endpoint.replace("/", "()->")
        if self._language == "java":
            endpoint = endpoint[1:] + "/"
+           return endpoint
        seperator = ""
        if self._language == "ruby":
            seperator = "."
@@ -151,7 +156,8 @@ class CodeGenerator(object):
                seperator = ""
            else:
                seperator = "()->"
-       if self._language == "java":
+       if self._language == "nodejs":
+           endpoint = endpoint[1:] + "/"
            return endpoint
        return endpoint + seperator + method
 
@@ -221,13 +227,18 @@ class CodeGenerator(object):
         url_params = self.generate_url_params(endpoint, None, True)
         if self._language == "java":
             method = method.upper()
-        if self._language == "java":
             if raw_data:
                 data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
             else:
                 data = None
-        if self._language == "java":
             api_call = api_call[:-1]
+        if self._language == "node.js":
+            method = method.upper()
+            if raw_data:
+                data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
+            else:
+                data = None
+            api_call = "/v3/" + api_call[:-1]
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
@@ -275,6 +286,8 @@ class CodeGenerator(object):
                 suffix = ".rb"
             if self._language == "java":
                 suffix = ".java"
+            if self._language == "nodejs":
+                suffix = ".js"
             file = open(str(newpath + '/' + key.lower() + suffix), 'w')
             generated_examples = self.generate_example_title()
             for endpoint in class_names[key]:
@@ -315,13 +328,18 @@ class CodeGenerator(object):
         url_params = self.generate_url_params(endpoint)
         if self._language == "java":
             method = method.upper()
-        if self._language == "java":
             if raw_data:
                 data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
             else:
                 data = None
-        if self._language == "java":
             api_call = api_call[:-1]
+        if self._language == "nodejs":
+            method = method.upper()
+            if raw_data:
+                data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
+            else:
+                data = None
+            api_call = "/v3/" + api_call[:-1]
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
@@ -374,6 +392,12 @@ class CodeGenerator(object):
                 java_params += "queryParams.put(\"" + str(key) + "\", \""+ str(all_params[key]) + "\");\n      "
             java_params = java_params[:-7]
             return java_params
+        if (self._language == "nodejs") and (all_params != None):
+            nodejs_params = ""
+            for key in all_params:
+                nodejs_params += "request.queryParams[\"" + str(key) + "\"] = '" + str(all_params[key]) + "'\n      "
+            nodejs_params = nodejs_params[:-7]
+            return nodejs_params
         return all_params
 
     # Used in tests, docs and examples
@@ -393,6 +417,8 @@ class CodeGenerator(object):
         else:
             split_endpoint = endpoint.split('{')
             if self._language == "java":
+                url_params = ""
+            if self._language == "nodejs":
                 url_params = ""
             if self._language == "ruby":
                 url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"

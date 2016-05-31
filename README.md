@@ -91,6 +91,30 @@ This will populate the java/generated_files/examples folder
 ```bash
 python app.py java examples
 cp -R ./java/generated_files/examples/ <path-to>/sendgrid-java/examples/
+```
+
+## Node.js
+
+### Generate Tests
+
+```bash
+python app.py nodejs tests > ./nodejs/generated_files/unit_tests.js
+```
+
+### Generate Docs (Usage.md)
+
+```bash
+python app.py nodejs usage > ./nodejs/generated_files/USAGE.md
+cp ./nodejs/generated_files/USAGE.md <path-to>/sendgrid-nodejs/
+```
+
+### Generate Examples
+
+This will populate the nodejs/generated_files/examples folder
+```bash
+python app.py nodejs examples
+cp -R ./nodejs/generated_files/examples/ <path-to>/sendgrid-nodejs/examples/
+```
 
 # Tests
 
