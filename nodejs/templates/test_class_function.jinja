@@ -12,7 +12,7 @@ describe('{{ test_name }}', function () {
   var emptyRequest = require('sendgrid-rest').request
   var request = JSON.parse(JSON.stringify(emptyRequest))
   {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-  var requestBody = {{ data }};
+  request.requestBody = {{ data }};
   {% endif %}
   {% if params %}
   {{ params }}

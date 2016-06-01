@@ -1,21 +1,16 @@
+var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
+
 ##################################################
-# {{ title }} #
-# {{ method_title }} {{ endpoint }} #
+# Retrieve a list of scopes for which this user has access. #
+# GET /scopes #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-{% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-request.requestBody = {{ data }};
-{% endif %}
-{% if params %}
-{{ params }}
-{% endif %}
-request.method = '{{ method }}'
-request.path = '{{ api_call }}'
+request.method = 'GET'
+request.path = '/v3/scopes'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.responseBody)
   console.log(response.responseHeaders)
 })
-
 

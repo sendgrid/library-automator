@@ -2,8 +2,11 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 
 # INITIALIZATION
 
-```javascript
-var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
+```ruby
+require 'sendgrid-ruby'
+
+
+sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
 ```
 
 

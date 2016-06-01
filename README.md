@@ -116,6 +116,29 @@ python app.py nodejs examples
 cp -R ./nodejs/generated_files/examples/ <path-to>/sendgrid-nodejs/examples/
 ```
 
+## Csharp
+
+### Generate Tests
+
+```bash
+python app.py csharp tests > ./csharp/generated_files/unit_tests.cs
+```
+
+### Generate Docs (Usage.md)
+
+```bash
+python app.py csharp usage > ./csharp/generated_files/USAGE.md
+cp ./csharp/generated_files/USAGE.md <path-to>/sendgrid-csharp/
+```
+
+### Generate Examples
+
+This will populate the csharp/generated_files/examples folder
+```bash
+python app.py csharp examples
+cp -R ./csharp/generated_files/examples/ <path-to>/sendgrid-csharp/examples/
+```
+
 # Tests
 
 `python -m unittest discover -v`

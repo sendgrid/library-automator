@@ -50,3 +50,12 @@ if "nodejs" in args:
         print nodejs_code_generator.generate_docs()
     if "examples" in args:
         nodejs_code_generator.generate_examples()
+
+if "csharp" in args:
+    csharp_code_generator = CodeGenerator("csharp")
+    if "tests" in args:
+        print csharp_code_generator.generate_tests()
+    if "usage" in args:
+        print csharp_code_generator.generate_docs()
+    if "examples" in args:
+        csharp_code_generator.generate_examples()

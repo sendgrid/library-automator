@@ -1,0 +1,21 @@
+        [Test]
+        public void {{ test_name }}()
+        {
+            string _apiKey = "SendGrid API Key";
+            var host = "https://e9sk3d3bfaikbpdq7.stoplight-proxy.io";
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            {% if data and (method == "put" or method == "patch" or method == "post" or method == "delete")  %}            string data = @"{{ data }}";
+            {% endif %}
+            {% if params %}            string queryParams = @"{{ params }}";
+            {% endif %}
+            {% if url_params %}            {{ url_params }}
+            {% endif %}
+            {% if headers %}            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            {{ headers }}
+            {% endif %}
+            dynamic response = sg.client{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post" or method == "delete") %}requestBody: data{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post" or method == "delete")) %}, {% endif %}{% if params %}queryParams: queryParams{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post" or method == "delete") or params) %}, {% endif %}requestHeaders: headers{% endif %});
+            Assert.AreEqual(response.StatusCode, {% if response_code == "200" %}HttpStatusCode.OK{% endif %}{% if response_code == "204" %}HttpStatusCode.NoContent{% endif %}{% if response_code == "201" %}HttpStatusCode.Created{% endif %}{% if response_code == "202" %}HttpStatusCode.Accepted{% endif %});
+        }
+
+
