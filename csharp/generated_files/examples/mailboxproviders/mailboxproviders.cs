@@ -21,4 +21,5 @@ dynamic response = sg.client.mailbox_providers.stats.get(queryParams: queryParam
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 

@@ -25,6 +25,7 @@ dynamic response = sg.client.whitelabel.domains.post(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # List all domain whitelabels. #
@@ -41,6 +42,7 @@ dynamic response = sg.client.whitelabel.domains.get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Get the default domain whitelabel. #
@@ -50,6 +52,7 @@ dynamic response = sg.client.whitelabel.domains._("default").get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # List the domain whitelabel associated with the given user. #
@@ -59,6 +62,7 @@ dynamic response = sg.client.whitelabel.domains.subuser.get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Disassociate a domain whitelabel from a given user. #
@@ -68,6 +72,7 @@ dynamic response = sg.client.whitelabel.domains.subuser.delete();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Update a domain whitelabel. #
@@ -82,6 +87,7 @@ dynamic response = sg.client.whitelabel.domains._(domain_id).patch(requestBody: 
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve a domain whitelabel. #
@@ -92,6 +98,7 @@ dynamic response = sg.client.whitelabel.domains._(domain_id).get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Delete a domain whitelabel. #
@@ -102,6 +109,7 @@ dynamic response = sg.client.whitelabel.domains._(domain_id).delete();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Associate a domain whitelabel with a given user. #
@@ -115,6 +123,7 @@ dynamic response = sg.client.whitelabel.domains._(domain_id).subuser.post(reques
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Add an IP to a domain whitelabel. #
@@ -128,6 +137,7 @@ dynamic response = sg.client.whitelabel.domains._(id).ips.post(requestBody: data
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Remove an IP from a domain whitelabel. #
@@ -139,6 +149,7 @@ dynamic response = sg.client.whitelabel.domains._(id).ips._(ip).delete();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Validate a domain whitelabel. #
@@ -149,6 +160,7 @@ dynamic response = sg.client.whitelabel.domains._(id).validate.post();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Create an IP whitelabel #
@@ -163,6 +175,7 @@ dynamic response = sg.client.whitelabel.ips.post(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve all IP whitelabels #
@@ -177,6 +190,7 @@ dynamic response = sg.client.whitelabel.ips.get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve an IP whitelabel #
@@ -187,6 +201,7 @@ dynamic response = sg.client.whitelabel.ips._(id).get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Delete an IP whitelabel #
@@ -197,6 +212,7 @@ dynamic response = sg.client.whitelabel.ips._(id).delete();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Validate an IP whitelabel #
@@ -207,6 +223,7 @@ dynamic response = sg.client.whitelabel.ips._(id).validate.post();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Create a Link Whitelabel #
@@ -225,6 +242,7 @@ dynamic response = sg.client.whitelabel.links.post(requestBody: data, queryParam
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve all link whitelabels #
@@ -237,6 +255,7 @@ dynamic response = sg.client.whitelabel.links.get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve a Default Link Whitelabel #
@@ -249,6 +268,7 @@ dynamic response = sg.client.whitelabel.links._("default").get(queryParams: quer
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve Associated Link Whitelabel #
@@ -261,6 +281,7 @@ dynamic response = sg.client.whitelabel.links.subuser.get(queryParams: queryPara
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Disassociate a Link Whitelabel #
@@ -273,6 +294,7 @@ dynamic response = sg.client.whitelabel.links.subuser.delete(queryParams: queryP
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Update a Link Whitelabel #
@@ -286,6 +308,7 @@ dynamic response = sg.client.whitelabel.links._(id).patch(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve a Link Whitelabel #
@@ -296,6 +319,7 @@ dynamic response = sg.client.whitelabel.links._(id).get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Delete a Link Whitelabel #
@@ -306,6 +330,7 @@ dynamic response = sg.client.whitelabel.links._(id).delete();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Validate a Link Whitelabel #
@@ -316,6 +341,7 @@ dynamic response = sg.client.whitelabel.links._(id).validate.post();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Associate a Link Whitelabel #
@@ -329,4 +355,5 @@ dynamic response = sg.client.whitelabel.links._(link_id).subuser.post(requestBod
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 

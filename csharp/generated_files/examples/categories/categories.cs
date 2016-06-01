@@ -18,6 +18,7 @@ dynamic response = sg.client.categories.get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve Email Statistics for Categories #
@@ -35,6 +36,7 @@ dynamic response = sg.client.categories.stats.get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
 ##################################################
 # Retrieve sums of email stats for each category [Needs: Stats object defined, has category ID?] #
@@ -53,4 +55,5 @@ dynamic response = sg.client.categories.stats.sums.get(queryParams: queryParams)
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.ResponseBody.ReadAsStringAsync().Result);
 Console.WriteLine(response.ResponseHeaders.ToString());
+Console.ReadLine();
 
