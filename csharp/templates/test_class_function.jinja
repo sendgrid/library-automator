@@ -2,7 +2,12 @@
         public void {{ test_name }}()
         {
             string _apiKey = "SendGrid API Key";
-            var host = "https://e9sk3d3bfaikbpdq7.stoplight-proxy.io";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             {% if data and (method == "put" or method == "patch" or method == "post" or method == "delete")  %}            string data = @"{{ data }}";
             {% endif %}

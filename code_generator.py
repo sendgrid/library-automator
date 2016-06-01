@@ -164,8 +164,6 @@ class CodeGenerator(object):
            seperator = "."
        if self._language == "csharp":
            seperator = "."
-           endpoint = endpoint.replace("event", "_(\"event\")")
-           endpoint = endpoint.replace("default", "_(\"default\")")
        if self._language == "php":
            if endpoint.endswith(">"):
                seperator = ""
@@ -239,7 +237,7 @@ class CodeGenerator(object):
                 pass
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False, caller="docs")
-        url_params = self.generate_url_params(endpoint, None, True)
+        url_params = self.generate_url_params(endpoint, None, True, "docs")
         if self._language == "java":
             method = method.upper()
             if raw_data:
@@ -247,6 +245,13 @@ class CodeGenerator(object):
             else:
                 data = None
             api_call = api_call[:-1]
+        if self._language == "csharp":
+            if raw_data:
+                data = json.dumps(raw_data, indent=2, sort_keys=True).replace('"', "'")
+            else:
+                data = None
+            api_call = api_call.replace("event", "_(\"event\")")
+            api_call = api_call.replace("default", "_(\"default\")")
         if self._language == "nodejs":
             method = method.upper()
             api_call = "/v3/" + api_call[:-1]
@@ -338,7 +343,7 @@ class CodeGenerator(object):
                 pass
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
-        url_params = self.generate_url_params(endpoint)
+        url_params = self.generate_url_params(endpoint, None, None, "examples")
         if self._language == "java":
             method = method.upper()
             if raw_data:
@@ -353,6 +358,13 @@ class CodeGenerator(object):
             else:
                 data = None
             api_call = "/v3/" + api_call[:-1]
+        if self._language == "csharp":
+            if raw_data:
+                data = json.dumps(raw_data, indent=2, sort_keys=True).replace('"', "'")
+            else:
+                data = None
+            api_call = api_call.replace("event", "_(\"event\")")
+            api_call = api_call.replace("default", "_(\"default\")")
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
@@ -419,7 +431,7 @@ class CodeGenerator(object):
         return all_params
 
     # Used in tests, docs and examples
-    def generate_url_params(self, endpoint, value=None, docs=None):
+    def generate_url_params(self, endpoint, value=None, docs=None, caller=None):
         if value == None:
             value = "test_url_param"
             #TODO: grab these from stoplight, can override with config
@@ -445,7 +457,10 @@ class CodeGenerator(object):
                 url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
             if self._language == "csharp":
                 url_params = "var " + split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\";\n"
-                url_params += "            var " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\";"
+                if (caller == "docs") or (caller == "examples"):
+                    url_params += "var " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\";"
+                else:
+                    url_params += "            var " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\";"
             if self._language == "python":
                 url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
                 url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""

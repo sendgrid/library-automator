@@ -2,11 +2,14 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 
 # INITIALIZATION
 
-```ruby
-require 'sendgrid-ruby'
+```csharp
+using System;
+using SendGrid.Helpers.Mail;
+using System.Collections.Generic;
+using System.Net;
 
-
-sg = SendGrid::API.new(api_key: ENV['SENDGRID_API_KEY'])
+string _apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
+dynamic sg = new SendGrid.SendGridAPIClient(_apiKey);
 ```
 
 
