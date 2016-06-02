@@ -139,6 +139,29 @@ python app.py csharp examples
 cp -R ./csharp/generated_files/examples/ <path-to>/sendgrid-csharp/examples/
 ```
 
+## Go
+
+### Generate Tests
+
+```bash
+python app.py go tests > ./go/generated_files/unit_tests.go
+```
+
+### Generate Docs (Usage.md)
+
+```bash
+python app.py go usage > ./go/generated_files/USAGE.md
+cp ./go/generated_files/USAGE.md <path-to>/sendgrid-go/
+```
+
+### Generate Examples
+
+This will populate the go/generated_files/examples folder
+```bash
+python app.py go examples
+cp -R ./go/generated_files/examples/ <path-to>/sendgrid-go/examples/
+```
+
 # Tests
 
 `python -m unittest discover -v`

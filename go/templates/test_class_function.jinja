@@ -1,0 +1,28 @@
+func Test_{{ test_name }}(t *testing.T){
+  apiKey := "SENDGRID_APIKEY"
+  host := ""
+  if (os.Getenv("TRAVIS") == "true") {
+    host = os.Getenv("MOCK_HOST")
+  } else {
+    host = "https://localhost:4010"
+  }
+  request := GetRequest(apiKey, "{{ api_call }}", host, "v3")
+  request.Method = "{{ method }}"
+  {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
+  request.RequestBody = []byte(` {{ data }}`)
+  {% endif %}
+  {% if params %}
+  queryParams := make(map[string]string)
+  {{ params }}request.QueryParams = queryParams
+  {% endif %}
+  request.RequestHeaders["X-Mock"] = "{{ response_code }}"
+  response, err := API(request)
+  if err != nil {
+		fmt.Println(err)
+	}
+  if response.StatusCode != {{ response_code }} {
+		t.Error("Wrong status code returned")
+	}
+}
+
+

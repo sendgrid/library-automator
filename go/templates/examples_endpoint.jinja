@@ -1,0 +1,23 @@
+##################################################
+# {{ title }} #
+# {{ method_title }} {{ endpoint }} #
+
+request := sendgrid.GetRequest(apiKey, "{{ api_call }}", host, "v3")
+request.Method = "{{ method }}"
+{% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
+request.RequestBody = []byte(` {{ data }}`)
+{% endif %}
+{% if params %}
+queryParams := make(map[string]string)
+{{ params }}request.QueryParams = queryParams
+{% endif %}
+response, err := sendgrid.API(request)
+if err != nil {
+  fmt.Println(err)
+} else {
+  fmt.Println(response.StatusCode)
+  fmt.Println(response.ResponseBody)
+  fmt.Println(response.ResponseHeaders)
+}
+
+

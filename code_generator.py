@@ -41,11 +41,10 @@ class CodeGenerator(object):
                         response_code = response_codes[0]
                         raw_data = self.swagger.get_example_data(endpoint, method, response_code)
                         data = json.dumps(raw_data, indent=2, sort_keys=True)
-                        if self._language == "java":
-                            if raw_data:
-                                data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
-                            else:
-                                data = None
+                        api_call = self.generate_api_call(endpoint, method)
+                        query_params = self.swagger.get_query_parameters(endpoint, method)
+                        params = self.generate_params(response_code, query_params, mock=False)
+                        url_params = self.generate_url_params(endpoint)
                         if self._language == "python":
                             try:
                                 if "true" in data:
@@ -54,13 +53,6 @@ class CodeGenerator(object):
                                     data = data.replace("false", "False")
                             except TypeError, e:
                                 pass
-                        if data:
-                            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
-                        api_call = self.generate_api_call(endpoint, method)
-                        query_params = self.swagger.get_query_parameters(endpoint, method)
-                        params = self.generate_params(response_code, query_params, mock=False)
-                        url_params = self.generate_url_params(endpoint)
-                        if self._language == "python":
                             headers = self.generate_headers(response_code)
                         if self._language == "ruby":
                             headers = json.dumps(self.generate_headers(response_code))
@@ -74,6 +66,10 @@ class CodeGenerator(object):
                         if self._language == "php":
                             headers = "X-Mock: " + response_code
                         if self._language == "java":
+                            if raw_data:
+                                data = json.dumps(json.dumps(raw_data, separators=(',', ':')))
+                            else:
+                                data = None
                             headers = "\"X-Mock\" ," + "\"" + response_code + "\""
                             method = method.upper()
                             api_call = api_call[:-1]
@@ -81,6 +77,16 @@ class CodeGenerator(object):
                             headers = ""
                             method = method.upper()
                             api_call = "/v3/" + api_call[:-1]
+                        if self._language == "go":
+                            headers = ""
+                            method = method.upper()
+                            api_call = "/" + api_call[:-1]
+                            if raw_data:
+                                pass
+                            else:
+                                data = None
+                        if data:
+                            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
                         if response_code != "default": # schema undefined in swagger
                             generated_test_class += self.generate_test_class_function(test_name,
                                                                                       endpoint,
@@ -139,37 +145,36 @@ class CodeGenerator(object):
        return "test" + endpoint + "_" + method + call
 
     def generate_api_call(self, endpoint, method):
+       seperator = ""
        if self._language == "ruby":
            endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
            # Account for Python reserved word
            endpoint = endpoint.replace("mail.send", "mail._(\"send\")")
+           seperator = "."
        if self._language == "python":
            endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
            # Account for Python reserved word
            endpoint = endpoint.replace("global", "_(\"global\")")
+           seperator = "."
        if self._language == "csharp":
            endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
+           seperator = "."
        if self._language == "php":
            endpoint = endpoint.replace("{", "_($").replace("}/", ")->")
            endpoint = endpoint.replace("}", ")->")
            endpoint = endpoint[1:]
            endpoint = endpoint.replace("/", "()->")
-       if self._language == "java":
-           endpoint = endpoint[1:] + "/"
-           return endpoint
-       seperator = ""
-       if self._language == "ruby":
-           seperator = "."
-       if self._language == "python":
-           seperator = "."
-       if self._language == "csharp":
-           seperator = "."
-       if self._language == "php":
            if endpoint.endswith(">"):
                seperator = ""
            else:
                seperator = "()->"
+       if self._language == "java":
+           endpoint = endpoint[1:] + "/"
+           return endpoint
        if self._language == "nodejs":
+           endpoint = endpoint[1:] + "/"
+           return endpoint
+       if self._language == "go":
            endpoint = endpoint[1:] + "/"
            return endpoint
        return endpoint + seperator + method
@@ -225,8 +230,9 @@ class CodeGenerator(object):
         response_code = response_codes[0]
         raw_data = self.swagger.get_example_data(endpoint, method, response_code)
         data = json.dumps(raw_data, indent=2, sort_keys=True)
-        if data:
-            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
+        query_params = self.swagger.get_query_parameters(endpoint, method)
+        params = self.generate_params(response_code, query_params, mock=False, caller="docs")
+        url_params = self.generate_url_params(endpoint, None, True, "docs")
         if self._language == "python":
             try:
                 if "true" in data:
@@ -235,9 +241,6 @@ class CodeGenerator(object):
                     data = data.replace("false", "False")
             except TypeError, e:
                 pass
-        query_params = self.swagger.get_query_parameters(endpoint, method)
-        params = self.generate_params(response_code, query_params, mock=False, caller="docs")
-        url_params = self.generate_url_params(endpoint, None, True, "docs")
         if self._language == "java":
             method = method.upper()
             if raw_data:
@@ -255,6 +258,15 @@ class CodeGenerator(object):
         if self._language == "nodejs":
             method = method.upper()
             api_call = "/v3/" + api_call[:-1]
+        if self._language == "go":
+            method = method.upper()
+            api_call = "/" + api_call[:-1]
+            if raw_data:
+                pass
+            else:
+                data = None
+        if data:
+            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
@@ -306,6 +318,8 @@ class CodeGenerator(object):
                 suffix = ".js"
             if self._language == "csharp":
                 suffix = ".cs"
+            if self._language == "go":
+                suffix = ".go"
             file = open(str(newpath + '/' + key.lower() + suffix), 'w')
             generated_examples = self.generate_example_title()
             for endpoint in class_names[key]:
@@ -331,8 +345,9 @@ class CodeGenerator(object):
         response_code = response_codes[0]
         raw_data = self.swagger.get_example_data(endpoint, method, response_code)
         data = json.dumps(raw_data, indent=2, sort_keys=True)
-        if data:
-            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
+        query_params = self.swagger.get_query_parameters(endpoint, method)
+        params = self.generate_params(response_code, query_params, mock=False)
+        url_params = self.generate_url_params(endpoint, None, None, "examples")
         if self._language == "python":
             try:
                 if "true" in data:
@@ -341,9 +356,6 @@ class CodeGenerator(object):
                     data = data.replace("false", "False")
             except TypeError, e:
                 pass
-        query_params = self.swagger.get_query_parameters(endpoint, method)
-        params = self.generate_params(response_code, query_params, mock=False)
-        url_params = self.generate_url_params(endpoint, None, None, "examples")
         if self._language == "java":
             method = method.upper()
             if raw_data:
@@ -358,6 +370,13 @@ class CodeGenerator(object):
             else:
                 data = None
             api_call = "/v3/" + api_call[:-1]
+        if self._language == "go":
+            method = method.upper()
+            if raw_data:
+                pass
+            else:
+                data = None
+            api_call = "/" + api_call[:-1]
         if self._language == "csharp":
             if raw_data:
                 data = json.dumps(raw_data, indent=2, sort_keys=True).replace('"', "'")
@@ -365,6 +384,8 @@ class CodeGenerator(object):
                 data = None
             api_call = api_call.replace("event", "_(\"event\")")
             api_call = api_call.replace("default", "_(\"default\")")
+        if data:
+            data = data.replace("<img src='cid:ii_139db99fdb5c3704'>", "<img src=[CID GOES HERE]>")
         return t.render(title=title,
                         description=description,
                         endpoint=endpoint,
@@ -428,6 +449,14 @@ class CodeGenerator(object):
             else:
                 nodejs_params = nodejs_params[:-3]
             return nodejs_params
+        if (self._language == "go") and (all_params != None):
+            go_params = ""
+            for key in all_params:
+                if caller == "examples":
+                    go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n  "
+                else:
+                    go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n"
+            return go_params
         return all_params
 
     # Used in tests, docs and examples
@@ -451,6 +480,8 @@ class CodeGenerator(object):
             if self._language == "java":
                 url_params = ""
             if self._language == "nodejs":
+                url_params = ""
+            if self._language == "go":
                 url_params = ""
             if self._language == "ruby":
                 url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"

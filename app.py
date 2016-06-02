@@ -59,3 +59,12 @@ if "csharp" in args:
         print csharp_code_generator.generate_docs()
     if "examples" in args:
         csharp_code_generator.generate_examples()
+
+if "go" in args:
+    go_code_generator = CodeGenerator("go")
+    if "tests" in args:
+        print go_code_generator.generate_tests()
+    if "usage" in args:
+        print go_code_generator.generate_docs()
+    if "examples" in args:
+        go_code_generator.generate_examples()
