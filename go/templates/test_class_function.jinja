@@ -6,7 +6,7 @@ func Test_{{ test_name }}(t *testing.T){
   } else {
     host = "http://localhost:4010"
   }
-  request := GetRequest(apiKey, "{{ api_call }}", host, "v3")
+  request := GetRequest(apiKey, "/v3{{ api_call }}", host)
   request.Method = "{{ method }}"
   {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
   request.Body = []byte(` {{ data }}`)

@@ -5,7 +5,7 @@
 func {{ func_title }}() {
   apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
   host := "https://api.sendgrid.com"
-  request := sendgrid.GetRequest(apiKey, "{{ api_call }}", host, "v3")
+  request := sendgrid.GetRequest(apiKey, "/v3{{ api_call }}", host)
   request.Method = "{{ method }}"
   {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
   request.Body = []byte(` {{ data }}`)
