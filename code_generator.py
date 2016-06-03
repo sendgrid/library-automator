@@ -43,7 +43,7 @@ class CodeGenerator(object):
                         data = json.dumps(raw_data, indent=2, sort_keys=True)
                         api_call = self.generate_api_call(endpoint, method)
                         query_params = self.swagger.get_query_parameters(endpoint, method)
-                        params = self.generate_params(response_code, query_params, mock=False)
+                        params = self.generate_params(response_code, query_params, mock=False, caller="test")
                         url_params = self.generate_url_params(endpoint)
                         if self._language == "python":
                             try:
@@ -465,6 +465,8 @@ class CodeGenerator(object):
             go_params = ""
             for key in all_params:
                 if caller == "examples":
+                    go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n  "
+                if caller == "test":
                     go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n  "
                 else:
                     go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n"

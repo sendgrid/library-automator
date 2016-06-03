@@ -4,18 +4,18 @@ func Test_{{ test_name }}(t *testing.T){
   if (os.Getenv("TRAVIS") == "true") {
     host = os.Getenv("MOCK_HOST")
   } else {
-    host = "https://localhost:4010"
+    host = "http://localhost:4010"
   }
   request := GetRequest(apiKey, "{{ api_call }}", host, "v3")
   request.Method = "{{ method }}"
   {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-  request.RequestBody = []byte(` {{ data }}`)
+  request.Body = []byte(` {{ data }}`)
   {% endif %}
   {% if params %}
   queryParams := make(map[string]string)
   {{ params }}request.QueryParams = queryParams
   {% endif %}
-  request.RequestHeaders["X-Mock"] = "{{ response_code }}"
+  request.Headers["X-Mock"] = "{{ response_code }}"
   response, err := API(request)
   if err != nil {
 		fmt.Println(err)
