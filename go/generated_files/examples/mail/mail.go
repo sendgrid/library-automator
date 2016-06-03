@@ -1,52 +1,59 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/sendgrid/sendgrid-go"
 	"os"
 )
 
-apiKey := "SENDGRID_APIKEY"
-host = "https://api.sendgrid.com"
+///////////////////////////////////////////////////
+// Create a batch ID
+// POST /mail/batch
 
-##################################################
-# Create a batch ID #
-# POST /mail/batch #
-
-request := sendgrid.GetRequest(apiKey, "/mail/batch", host, "v3")
-request.Method = "POST"
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+func CreateabatchID() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/mail/batch", host, "v3")
+  request.Method = "POST"
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Validate batch ID #
-# GET /mail/batch/{batch_id} #
+///////////////////////////////////////////////////
+// Validate batch ID
+// GET /mail/batch/{batch_id}
 
-request := sendgrid.GetRequest(apiKey, "/mail/batch/{batch_id}", host, "v3")
-request.Method = "GET"
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+func ValidatebatchID() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/mail/batch/{batch_id}", host, "v3")
+  request.Method = "GET"
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# v3 Mail Send Beta #
-# POST /mail/send/beta #
+///////////////////////////////////////////////////
+// v3 Mail Send Beta
+// POST /mail/send/beta
 
-request := sendgrid.GetRequest(apiKey, "/mail/send/beta", host, "v3")
-request.Method = "POST"
-request.RequestBody = []byte(` {
+func v3MailSendBeta() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/mail/send/beta", host, "v3")
+  request.Method = "POST"
+  request.RequestBody = []byte(` {
   "asm": {
     "group_id": 1, 
     "groups_to_display": [
@@ -189,12 +196,16 @@ request.RequestBody = []byte(` {
     }
   }
 }`)
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
+func main() {
+    // add your function calls here
+}

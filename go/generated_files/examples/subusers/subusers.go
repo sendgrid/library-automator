@@ -1,22 +1,21 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/sendgrid/sendgrid-go"
 	"os"
 )
 
-apiKey := "SENDGRID_APIKEY"
-host = "https://api.sendgrid.com"
+///////////////////////////////////////////////////
+// Create Subuser
+// POST /subusers
 
-##################################################
-# Create Subuser #
-# POST /subusers #
-
-request := sendgrid.GetRequest(apiKey, "/subusers", host, "v3")
-request.Method = "POST"
-request.RequestBody = []byte(` {
+func CreateSubuser() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers", host, "v3")
+  request.Method = "POST"
+  request.RequestBody = []byte(` {
   "email": "John@example.com", 
   "ips": [
     "1.1.1.1", 
@@ -25,107 +24,127 @@ request.RequestBody = []byte(` {
   "password": "johns_password", 
   "username": "John@example.com"
 }`)
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# List all Subusers #
-# GET /subusers #
+///////////////////////////////////////////////////
+// List all Subusers
+// GET /subusers
 
-request := sendgrid.GetRequest(apiKey, "/subusers", host, "v3")
-request.Method = "GET"
-queryParams := make(map[string]string)
-queryParams["username"] = "test_string"
+func ListallSubusers() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers", host, "v3")
+  request.Method = "GET"
+  queryParams := make(map[string]string)
+  queryParams["username"] = "test_string"
 queryParams["limit"] = "0"
 queryParams["offset"] = "0"
 request.QueryParams = queryParams
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Retrieve Subuser Reputations #
-# GET /subusers/reputations #
+///////////////////////////////////////////////////
+// Retrieve Subuser Reputations
+// GET /subusers/reputations
 
-request := sendgrid.GetRequest(apiKey, "/subusers/reputations", host, "v3")
-request.Method = "GET"
-queryParams := make(map[string]string)
-queryParams["usernames"] = "test_string"
+func RetrieveSubuserReputations() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/reputations", host, "v3")
+  request.Method = "GET"
+  queryParams := make(map[string]string)
+  queryParams["usernames"] = "test_string"
 request.QueryParams = queryParams
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Retrieve email statistics for your subusers. #
-# GET /subusers/stats #
+///////////////////////////////////////////////////
+// Retrieve email statistics for your subusers.
+// GET /subusers/stats
 
-request := sendgrid.GetRequest(apiKey, "/subusers/stats", host, "v3")
-request.Method = "GET"
-queryParams := make(map[string]string)
-queryParams["end_date"] = "2016-04-01"
+func Retrieveemailstatisticsforyoursubusers() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/stats", host, "v3")
+  request.Method = "GET"
+  queryParams := make(map[string]string)
+  queryParams["end_date"] = "2016-04-01"
 queryParams["aggregated_by"] = "day"
 queryParams["limit"] = "1"
 queryParams["offset"] = "1"
 queryParams["start_date"] = "2016-01-01"
 queryParams["subusers"] = "test_string"
 request.QueryParams = queryParams
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Retrieve monthly stats for all subusers #
-# GET /subusers/stats/monthly #
+///////////////////////////////////////////////////
+// Retrieve monthly stats for all subusers
+// GET /subusers/stats/monthly
 
-request := sendgrid.GetRequest(apiKey, "/subusers/stats/monthly", host, "v3")
-request.Method = "GET"
-queryParams := make(map[string]string)
-queryParams["subuser"] = "test_string"
+func Retrievemonthlystatsforallsubusers() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/stats/monthly", host, "v3")
+  request.Method = "GET"
+  queryParams := make(map[string]string)
+  queryParams["subuser"] = "test_string"
 queryParams["limit"] = "1"
 queryParams["sort_by_metric"] = "test_string"
 queryParams["offset"] = "1"
 queryParams["date"] = "test_string"
 queryParams["sort_by_direction"] = "asc"
 request.QueryParams = queryParams
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-#  Retrieve the totals for each email statistic metric for all subusers. #
-# GET /subusers/stats/sums #
+///////////////////////////////////////////////////
+//  Retrieve the totals for each email statistic metric for all subusers.
+// GET /subusers/stats/sums
 
-request := sendgrid.GetRequest(apiKey, "/subusers/stats/sums", host, "v3")
-request.Method = "GET"
-queryParams := make(map[string]string)
-queryParams["end_date"] = "2016-04-01"
+func Retrievethetotalsforeachemailstatisticmetricforallsubusers() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/stats/sums", host, "v3")
+  request.Method = "GET"
+  queryParams := make(map[string]string)
+  queryParams["end_date"] = "2016-04-01"
 queryParams["aggregated_by"] = "day"
 queryParams["limit"] = "1"
 queryParams["sort_by_metric"] = "test_string"
@@ -133,153 +152,189 @@ queryParams["offset"] = "1"
 queryParams["start_date"] = "2016-01-01"
 queryParams["sort_by_direction"] = "asc"
 request.QueryParams = queryParams
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Enable/disable a subuser #
-# PATCH /subusers/{subuser_name} #
+///////////////////////////////////////////////////
+// Enable/disable a subuser
+// PATCH /subusers/{subuser_name}
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}", host, "v3")
-request.Method = "PATCH"
-request.RequestBody = []byte(` {
+func Enabledisableasubuser() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}", host, "v3")
+  request.Method = "PATCH"
+  request.RequestBody = []byte(` {
   "disabled": false
 }`)
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Delete a subuser #
-# DELETE /subusers/{subuser_name} #
+///////////////////////////////////////////////////
+// Delete a subuser
+// DELETE /subusers/{subuser_name}
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}", host, "v3")
-request.Method = "DELETE"
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+func Deleteasubuser() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}", host, "v3")
+  request.Method = "DELETE"
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Update IPs assigned to a subuser #
-# PUT /subusers/{subuser_name}/ips #
+///////////////////////////////////////////////////
+// Update IPs assigned to a subuser
+// PUT /subusers/{subuser_name}/ips
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/ips", host, "v3")
-request.Method = "PUT"
-request.RequestBody = []byte(` [
+func UpdateIPsassignedtoasubuser() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/ips", host, "v3")
+  request.Method = "PUT"
+  request.RequestBody = []byte(` [
   "127.0.0.1"
 ]`)
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Update Monitor Settings for a subuser #
-# PUT /subusers/{subuser_name}/monitor #
+///////////////////////////////////////////////////
+// Update Monitor Settings for a subuser
+// PUT /subusers/{subuser_name}/monitor
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
-request.Method = "PUT"
-request.RequestBody = []byte(` {
+func UpdateMonitorSettingsforasubuser() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
+  request.Method = "PUT"
+  request.RequestBody = []byte(` {
   "email": "example@example.com", 
   "frequency": 500
 }`)
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Create monitor settings #
-# POST /subusers/{subuser_name}/monitor #
+///////////////////////////////////////////////////
+// Create monitor settings
+// POST /subusers/{subuser_name}/monitor
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
-request.Method = "POST"
-request.RequestBody = []byte(` {
+func Createmonitorsettings() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
+  request.Method = "POST"
+  request.RequestBody = []byte(` {
   "email": "example@example.com", 
   "frequency": 50000
 }`)
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Retrieve monitor settings for a subuser #
-# GET /subusers/{subuser_name}/monitor #
+///////////////////////////////////////////////////
+// Retrieve monitor settings for a subuser
+// GET /subusers/{subuser_name}/monitor
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
-request.Method = "GET"
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+func Retrievemonitorsettingsforasubuser() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
+  request.Method = "GET"
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Delete monitor settings #
-# DELETE /subusers/{subuser_name}/monitor #
+///////////////////////////////////////////////////
+// Delete monitor settings
+// DELETE /subusers/{subuser_name}/monitor
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
-request.Method = "DELETE"
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+func Deletemonitorsettings() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/monitor", host, "v3")
+  request.Method = "DELETE"
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
-##################################################
-# Retrieve the monthly email statistics for a single subuser #
-# GET /subusers/{subuser_name}/stats/monthly #
+///////////////////////////////////////////////////
+// Retrieve the monthly email statistics for a single subuser
+// GET /subusers/{subuser_name}/stats/monthly
 
-request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/stats/monthly", host, "v3")
-request.Method = "GET"
-queryParams := make(map[string]string)
-queryParams["date"] = "test_string"
+func Retrievethemonthlyemailstatisticsforasinglesubuser() {
+  apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
+  host := "https://api.sendgrid.com"
+  request := sendgrid.GetRequest(apiKey, "/subusers/{subuser_name}/stats/monthly", host, "v3")
+  request.Method = "GET"
+  queryParams := make(map[string]string)
+  queryParams["date"] = "test_string"
 queryParams["sort_by_direction"] = "asc"
 queryParams["limit"] = "0"
 queryParams["sort_by_metric"] = "test_string"
 queryParams["offset"] = "1"
 request.QueryParams = queryParams
-response, err := sendgrid.API(request)
-if err != nil {
-  fmt.Println(err)
-} else {
-  fmt.Println(response.StatusCode)
-  fmt.Println(response.ResponseBody)
-  fmt.Println(response.ResponseHeaders)
+  response, err := sendgrid.API(request)
+  if err != nil {
+    fmt.Println(err)
+  } else {
+    fmt.Println(response.StatusCode)
+    fmt.Println(response.ResponseBody)
+    fmt.Println(response.ResponseHeaders)
+  }
 }
 
+func main() {
+    // add your function calls here
+}

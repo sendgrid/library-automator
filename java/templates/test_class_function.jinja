@@ -12,7 +12,7 @@
     request.method = Method.{{ method }};
     request.endpoint = "{{ api_call }}";
     {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-    request.requestBody = {{ data }};
+    request.body = {{ data }};
     {% endif %}
     {% if params %}
     Map<String,String> queryParams = new HashMap<String, String>();

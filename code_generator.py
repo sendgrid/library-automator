@@ -327,6 +327,10 @@ class CodeGenerator(object):
                 for method in objects:
                     if method != "parameters":
                         generated_examples += self.generate_examples_endpoint(endpoint, method)
+            if self._language == "go":
+                generated_examples += "func main() {\n"
+                generated_examples += "    // add your function calls here\n"
+                generated_examples += "}\n"
             file.write(generated_examples.encode('ascii', 'ignore'))
             file.close()
             print generated_examples
@@ -339,6 +343,7 @@ class CodeGenerator(object):
     def generate_examples_endpoint(self, endpoint, method):
         t = self.env.get_template('examples_endpoint.jinja')
         title = self.swagger.get_endpoint_short_description(endpoint, method)
+        func_title = ""
         description = self.swagger.get_endpoint_description(endpoint, method)
         api_call = self.generate_api_call(endpoint, method)
         response_codes = self.swagger.get_response_codes(endpoint, method)
@@ -377,6 +382,12 @@ class CodeGenerator(object):
             else:
                 data = None
             api_call = "/" + api_call[:-1]
+            func_title = title.replace(" ", "")
+            func_title = func_title.replace("&", "")
+            func_title = func_title.replace(".", "")
+            func_title = func_title.replace("/", "")
+            func_title = func_title.replace("[Needs:Statsobjectdefined,hascategoryID?]", "")
+            func_title = func_title.replace("'", "")
         if self._language == "csharp":
             if raw_data:
                 data = json.dumps(raw_data, indent=2, sort_keys=True).replace('"', "'")
@@ -394,7 +405,8 @@ class CodeGenerator(object):
                         api_call=api_call,
                         params=params,
                         url_params=url_params,
-                        data=data
+                        data=data,
+                        func_title=func_title
                         )
 
 ###############################################################################
