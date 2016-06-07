@@ -1,15 +1,13 @@
 var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
 
 ##################################################
-# Retrieve all mail settings #
-# GET /mail_settings #
+# Get a user's account information. #
+# GET /user/account #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
 request.method = 'GET'
-request.path = '/v3/mail_settings'
+request.path = '/v3/user/account'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -17,246 +15,264 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Update address whitelist mail settings #
-# PATCH /mail_settings/address_whitelist #
+# Retrieve your credit balance #
+# GET /user/credits #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/user/credits'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update your account email address #
+# PUT /user/email #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
+  "email": "example@example.com"
+};
+request.method = 'PUT'
+request.path = '/v3/user/email'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve your account email address #
+# GET /user/email #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/user/email'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update your password #
+# PUT /user/password #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "new_password": "new_password", 
+  "old_password": "old_password"
+};
+request.method = 'PUT'
+request.path = '/v3/user/password'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update a user's profile #
+# PATCH /user/profile #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "city": "Orange", 
+  "first_name": "Example", 
+  "last_name": "User"
+};
+request.method = 'PATCH'
+request.path = '/v3/user/profile'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Get a user's profile #
+# GET /user/profile #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/user/profile'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Cancel or pause a scheduled send #
+# POST /user/scheduled_sends #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "batch_id": "YOUR_BATCH_ID", 
+  "status": "pause"
+};
+request.method = 'POST'
+request.path = '/v3/user/scheduled_sends'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve all scheduled sends #
+# GET /user/scheduled_sends #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/user/scheduled_sends'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update user scheduled send information #
+# PATCH /user/scheduled_sends/{batch_id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "status": "pause"
+};
+request.method = 'PATCH'
+request.path = '/v3/user/scheduled_sends/{batch_id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve scheduled send #
+# GET /user/scheduled_sends/{batch_id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/user/scheduled_sends/{batch_id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Delete a cancellation or pause of a scheduled send #
+# DELETE /user/scheduled_sends/{batch_id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'DELETE'
+request.path = '/v3/user/scheduled_sends/{batch_id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update Enforced TLS settings #
+# PATCH /user/settings/enforced_tls #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "require_tls": true, 
+  "require_valid_cert": false
+};
+request.method = 'PATCH'
+request.path = '/v3/user/settings/enforced_tls'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve current Enforced TLS settings. #
+# GET /user/settings/enforced_tls #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/user/settings/enforced_tls'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update your username #
+# PUT /user/username #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "username": "test_username"
+};
+request.method = 'PUT'
+request.path = '/v3/user/username'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve your username #
+# GET /user/username #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/user/username'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update Event Notification Settings #
+# PATCH /user/webhooks/event/settings #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "bounce": true, 
+  "click": true, 
+  "deferred": true, 
+  "delivered": true, 
+  "dropped": true, 
   "enabled": true, 
-  "list": [
-    "email1@example.com", 
-    "example.com"
-  ]
-};
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/address_whitelist'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve address whitelist mail settings #
-# GET /mail_settings/address_whitelist #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/mail_settings/address_whitelist'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update BCC mail settings #
-# PATCH /mail_settings/bcc #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "email": "email@example.com", 
-  "enabled": false
-};
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/bcc'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all BCC mail settings #
-# GET /mail_settings/bcc #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/mail_settings/bcc'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update bounce purge mail settings #
-# PATCH /mail_settings/bounce_purge #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "enabled": true, 
-  "hard_bounces": 5, 
-  "soft_bounces": 5
-};
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/bounce_purge'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve bounce purge mail settings #
-# GET /mail_settings/bounce_purge #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/mail_settings/bounce_purge'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update footer mail settings #
-# PATCH /mail_settings/footer #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "enabled": true, 
-  "html_content": "...", 
-  "plain_content": "..."
-};
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/footer'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve footer mail settings #
-# GET /mail_settings/footer #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/mail_settings/footer'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update forward bounce mail settings #
-# PATCH /mail_settings/forward_bounce #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "email": "example@example.com", 
-  "enabled": true
-};
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/forward_bounce'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve forward bounce mail settings #
-# GET /mail_settings/forward_bounce #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/mail_settings/forward_bounce'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update forward spam mail settings #
-# PATCH /mail_settings/forward_spam #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "email": "", 
-  "enabled": false
-};
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/forward_spam'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve forward spam mail settings #
-# GET /mail_settings/forward_spam #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/mail_settings/forward_spam'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update plain content mail settings #
-# PATCH /mail_settings/plain_content #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "enabled": false
-};
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/plain_content'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve plain content mail settings #
-# GET /mail_settings/plain_content #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/mail_settings/plain_content'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update spam check mail settings #
-# PATCH /mail_settings/spam_check #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "enabled": true, 
-  "max_score": 5, 
+  "group_resubscribe": true, 
+  "group_unsubscribe": true, 
+  "open": true, 
+  "processed": true, 
+  "spam_report": true, 
+  "unsubscribe": true, 
   "url": "url"
 };
 request.method = 'PATCH'
-request.path = '/v3/mail_settings/spam_check'
+request.path = '/v3/user/webhooks/event/settings'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -264,13 +280,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve spam check mail settings #
-# GET /mail_settings/spam_check #
+# Retrieve Event Webhook settings #
+# GET /user/webhooks/event/settings #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/mail_settings/spam_check'
+request.path = '/v3/user/webhooks/event/settings'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -278,17 +294,16 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Update template mail settings #
-# PATCH /mail_settings/template #
+# Test Event Notification Settings  #
+# POST /user/webhooks/event/test #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "enabled": true, 
-  "html_content": "<% body %>"
+  "url": "url"
 };
-request.method = 'PATCH'
-request.path = '/v3/mail_settings/template'
+request.method = 'POST'
+request.path = '/v3/user/webhooks/event/test'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -296,13 +311,32 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve legacy template mail settings #
-# GET /mail_settings/template #
+# Retrieve Parse Webhook settings #
+# GET /user/webhooks/parse/settings #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/mail_settings/template'
+request.path = '/v3/user/webhooks/parse/settings'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieves Inbound Parse Webhook statistics. #
+# GET /user/webhooks/parse/stats #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["aggregated_by"] = 'day'
+  request.queryParams["limit"] = 'test_string'
+  request.queryParams["start_date"] = '2016-01-01'
+  request.queryParams["end_date"] = '2016-04-01'
+  request.queryParams["offset"] = 'test_string'
+request.method = 'GET'
+request.path = '/v3/user/webhooks/parse/stats'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)

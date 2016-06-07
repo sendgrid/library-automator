@@ -1,443 +1,25 @@
 var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
 
 ##################################################
-# Create a Custom Field #
-# POST /contactdb/custom_fields #
+# Create a domain whitelabel. #
+# POST /whitelabel/domains #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "name": "pet", 
-  "type": "text"
-};
-request.method = 'POST'
-request.path = '/v3/contactdb/custom_fields'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all custom fields #
-# GET /contactdb/custom_fields #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/custom_fields'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve a Custom Field #
-# GET /contactdb/custom_fields/{custom_field_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/custom_fields/{custom_field_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Delete a Custom Field #
-# DELETE /contactdb/custom_fields/{custom_field_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/contactdb/custom_fields/{custom_field_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Create a List #
-# POST /contactdb/lists #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "name": "your list name"
-};
-request.method = 'POST'
-request.path = '/v3/contactdb/lists'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all lists #
-# GET /contactdb/lists #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/lists'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Delete Multiple lists #
-# DELETE /contactdb/lists #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = [
-  1, 
-  2, 
-  3, 
-  4
-];
-request.method = 'DELETE'
-request.path = '/v3/contactdb/lists'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update a List #
-# PATCH /contactdb/lists/{list_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "name": "newlistname"
-};
-request.queryParams["list_id"] = '0'
-request.method = 'PATCH'
-request.path = '/v3/contactdb/lists/{list_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve a single list #
-# GET /contactdb/lists/{list_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["list_id"] = '0'
-request.method = 'GET'
-request.path = '/v3/contactdb/lists/{list_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Delete a List #
-# DELETE /contactdb/lists/{list_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["delete_contacts"] = 'true'
-request.method = 'DELETE'
-request.path = '/v3/contactdb/lists/{list_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Add Multiple Recipients to a List #
-# POST /contactdb/lists/{list_id}/recipients #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = [
-  "recipient_id1", 
-  "recipient_id2"
-];
-request.method = 'POST'
-request.path = '/v3/contactdb/lists/{list_id}/recipients'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all recipients on a List #
-# GET /contactdb/lists/{list_id}/recipients #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["page"] = '1'
-  request.queryParams["page_size"] = '1'
-  request.queryParams["list_id"] = '0'
-request.method = 'GET'
-request.path = '/v3/contactdb/lists/{list_id}/recipients'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Add a Single Recipient to a List #
-# POST /contactdb/lists/{list_id}/recipients/{recipient_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'POST'
-request.path = '/v3/contactdb/lists/{list_id}/recipients/{recipient_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Delete a Single Recipient from a Single List #
-# DELETE /contactdb/lists/{list_id}/recipients/{recipient_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["recipient_id"] = '0'
-  request.queryParams["list_id"] = '0'
-request.method = 'DELETE'
-request.path = '/v3/contactdb/lists/{list_id}/recipients/{recipient_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Update Recipient #
-# PATCH /contactdb/recipients #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = [
-  {
-    "email": "jones@example.com", 
-    "first_name": "Guy", 
-    "last_name": "Jones"
-  }
-];
-request.method = 'PATCH'
-request.path = '/v3/contactdb/recipients'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Add recipients #
-# POST /contactdb/recipients #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = [
-  {
-    "age": 25, 
-    "email": "example@example.com", 
-    "first_name": "", 
-    "last_name": "User"
-  }, 
-  {
-    "age": 25, 
-    "email": "example2@example.com", 
-    "first_name": "Example", 
-    "last_name": "User"
-  }
-];
-request.method = 'POST'
-request.path = '/v3/contactdb/recipients'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve recipients #
-# GET /contactdb/recipients #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["page"] = '1'
-  request.queryParams["page_size"] = '1'
-request.method = 'GET'
-request.path = '/v3/contactdb/recipients'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Delete Recipient #
-# DELETE /contactdb/recipients #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = [
-  "recipient_id1", 
-  "recipient_id2"
-];
-request.method = 'DELETE'
-request.path = '/v3/contactdb/recipients'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve the count of billable recipients #
-# GET /contactdb/recipients/billable_count #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/recipients/billable_count'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve a Count of Recipients #
-# GET /contactdb/recipients/count #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/recipients/count'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve recipients matching search criteria #
-# GET /contactdb/recipients/search #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["{field_name}"] = 'test_string'
-request.method = 'GET'
-request.path = '/v3/contactdb/recipients/search'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve a single recipient #
-# GET /contactdb/recipients/{recipient_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/recipients/{recipient_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Delete a Recipient #
-# DELETE /contactdb/recipients/{recipient_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/contactdb/recipients/{recipient_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve the lists that a recipient is on #
-# GET /contactdb/recipients/{recipient_id}/lists #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/recipients/{recipient_id}/lists'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve reserved fields #
-# GET /contactdb/reserved_fields #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/contactdb/reserved_fields'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Create a Segment #
-# POST /contactdb/segments #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "conditions": [
-    {
-      "and_or": "", 
-      "field": "last_name", 
-      "operator": "eq", 
-      "value": "Miller"
-    }, 
-    {
-      "and_or": "and", 
-      "field": "last_clicked", 
-      "operator": "gt", 
-      "value": "01/02/2015"
-    }, 
-    {
-      "and_or": "or", 
-      "field": "clicks.campaign_identifier", 
-      "operator": "eq", 
-      "value": "513"
-    }
+  "automatic_security": false, 
+  "custom_spf": true, 
+  "default": true, 
+  "domain": "example.com", 
+  "ips": [
+    "192.168.1.1", 
+    "192.168.1.2"
   ], 
-  "list_id": 4, 
-  "name": "Last Name Miller"
+  "subdomain": "news", 
+  "username": "john@example.com"
 };
 request.method = 'POST'
-request.path = '/v3/contactdb/segments'
+request.path = '/v3/whitelabel/domains'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -445,13 +27,32 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all segments #
-# GET /contactdb/segments #
+# List all domain whitelabels. #
+# GET /whitelabel/domains #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["username"] = 'test_string'
+  request.queryParams["domain"] = 'test_string'
+  request.queryParams["exclude_subusers"] = 'true'
+  request.queryParams["limit"] = '1'
+  request.queryParams["offset"] = '1'
+request.method = 'GET'
+request.path = '/v3/whitelabel/domains'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Get the default domain whitelabel. #
+# GET /whitelabel/domains/default #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/contactdb/segments'
+request.path = '/v3/whitelabel/domains/default'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -459,26 +60,45 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Update a segment #
-# PATCH /contactdb/segments/{segment_id} #
+# List the domain whitelabel associated with the given user. #
+# GET /whitelabel/domains/subuser #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/whitelabel/domains/subuser'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Disassociate a domain whitelabel from a given user. #
+# DELETE /whitelabel/domains/subuser #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'DELETE'
+request.path = '/v3/whitelabel/domains/subuser'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update a domain whitelabel. #
+# PATCH /whitelabel/domains/{domain_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "conditions": [
-    {
-      "and_or": "", 
-      "field": "last_name", 
-      "operator": "eq", 
-      "value": "Miller"
-    }
-  ], 
-  "list_id": 5, 
-  "name": "The Millers"
+  "custom_spf": true, 
+  "default": false
 };
-request.queryParams["segment_id"] = 'test_string'
 request.method = 'PATCH'
-request.path = '/v3/contactdb/segments/{segment_id}'
+request.path = '/v3/whitelabel/domains/{domain_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -486,14 +106,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve a segment #
-# GET /contactdb/segments/{segment_id} #
+# Retrieve a domain whitelabel. #
+# GET /whitelabel/domains/{domain_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["segment_id"] = '0'
 request.method = 'GET'
-request.path = '/v3/contactdb/segments/{segment_id}'
+request.path = '/v3/whitelabel/domains/{domain_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -501,14 +120,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Delete a segment #
-# DELETE /contactdb/segments/{segment_id} #
+# Delete a domain whitelabel. #
+# DELETE /whitelabel/domains/{domain_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["delete_contacts"] = 'true'
 request.method = 'DELETE'
-request.path = '/v3/contactdb/segments/{segment_id}'
+request.path = '/v3/whitelabel/domains/{domain_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -516,15 +134,296 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve recipients on a segment #
-# GET /contactdb/segments/{segment_id}/recipients #
+# Associate a domain whitelabel with a given user. #
+# POST /whitelabel/domains/{domain_id}/subuser #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["page"] = '1'
-  request.queryParams["page_size"] = '1'
+request.body = {
+  "username": "jane@example.com"
+};
+request.method = 'POST'
+request.path = '/v3/whitelabel/domains/{domain_id}/subuser'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Add an IP to a domain whitelabel. #
+# POST /whitelabel/domains/{id}/ips #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "ip": "192.168.0.1"
+};
+request.method = 'POST'
+request.path = '/v3/whitelabel/domains/{id}/ips'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Remove an IP from a domain whitelabel. #
+# DELETE /whitelabel/domains/{id}/ips/{ip} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'DELETE'
+request.path = '/v3/whitelabel/domains/{id}/ips/{ip}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Validate a domain whitelabel. #
+# POST /whitelabel/domains/{id}/validate #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'POST'
+request.path = '/v3/whitelabel/domains/{id}/validate'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Create an IP whitelabel #
+# POST /whitelabel/ips #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "domain": "example.com", 
+  "ip": "192.168.1.1", 
+  "subdomain": "email"
+};
+request.method = 'POST'
+request.path = '/v3/whitelabel/ips'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve all IP whitelabels #
+# GET /whitelabel/ips #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["ip"] = 'test_string'
+  request.queryParams["limit"] = '1'
+  request.queryParams["offset"] = '1'
 request.method = 'GET'
-request.path = '/v3/contactdb/segments/{segment_id}/recipients'
+request.path = '/v3/whitelabel/ips'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve an IP whitelabel #
+# GET /whitelabel/ips/{id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/whitelabel/ips/{id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Delete an IP whitelabel #
+# DELETE /whitelabel/ips/{id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'DELETE'
+request.path = '/v3/whitelabel/ips/{id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Validate an IP whitelabel #
+# POST /whitelabel/ips/{id}/validate #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'POST'
+request.path = '/v3/whitelabel/ips/{id}/validate'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Create a Link Whitelabel #
+# POST /whitelabel/links #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "default": true, 
+  "domain": "example.com", 
+  "subdomain": "mail"
+};
+request.queryParams["limit"] = '1'
+  request.queryParams["offset"] = '1'
+request.method = 'POST'
+request.path = '/v3/whitelabel/links'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve all link whitelabels #
+# GET /whitelabel/links #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["limit"] = '1'
+request.method = 'GET'
+request.path = '/v3/whitelabel/links'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve a Default Link Whitelabel #
+# GET /whitelabel/links/default #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["domain"] = 'test_string'
+request.method = 'GET'
+request.path = '/v3/whitelabel/links/default'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve Associated Link Whitelabel #
+# GET /whitelabel/links/subuser #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["username"] = 'test_string'
+request.method = 'GET'
+request.path = '/v3/whitelabel/links/subuser'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Disassociate a Link Whitelabel #
+# DELETE /whitelabel/links/subuser #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["username"] = 'test_string'
+request.method = 'DELETE'
+request.path = '/v3/whitelabel/links/subuser'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update a Link Whitelabel #
+# PATCH /whitelabel/links/{id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "default": true
+};
+request.method = 'PATCH'
+request.path = '/v3/whitelabel/links/{id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve a Link Whitelabel #
+# GET /whitelabel/links/{id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/whitelabel/links/{id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Delete a Link Whitelabel #
+# DELETE /whitelabel/links/{id} #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'DELETE'
+request.path = '/v3/whitelabel/links/{id}'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Validate a Link Whitelabel #
+# POST /whitelabel/links/{id}/validate #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'POST'
+request.path = '/v3/whitelabel/links/{id}/validate'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Associate a Link Whitelabel #
+# POST /whitelabel/links/{link_id}/subuser #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "username": "jane@example.com"
+};
+request.method = 'POST'
+request.path = '/v3/whitelabel/links/{link_id}/subuser'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)

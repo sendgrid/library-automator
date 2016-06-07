@@ -1,32 +1,15 @@
 var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
 
 ##################################################
-# Create a Group #
-# POST /asm/groups #
+# Retrieve Tracking Settings #
+# GET /tracking_settings #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "description": "A group description", 
-  "is_default": false, 
-  "name": "A group name"
-};
-request.method = 'POST'
-request.path = '/v3/asm/groups'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all suppression groups associated with the user. #
-# GET /asm/groups #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["limit"] = '1'
+  request.queryParams["offset"] = '1'
 request.method = 'GET'
-request.path = '/v3/asm/groups'
+request.path = '/v3/tracking_settings'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -34,18 +17,16 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Update a suppression group. #
-# PATCH /asm/groups/{group_id} #
+# Update Click Tracking Settings #
+# PATCH /tracking_settings/click #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "description": "Suggestions for items our users might like.", 
-  "id": 103, 
-  "name": "Item Suggestions"
+  "enabled": true
 };
 request.method = 'PATCH'
-request.path = '/v3/asm/groups/{group_id}'
+request.path = '/v3/tracking_settings/click'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -53,13 +34,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Get information on a single suppression group. #
-# GET /asm/groups/{group_id} #
+# Retrieve Click Track Settings #
+# GET /tracking_settings/click #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/asm/groups/{group_id}'
+request.path = '/v3/tracking_settings/click'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -67,33 +48,21 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Delete a suppression group. #
-# DELETE /asm/groups/{group_id} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/asm/groups/{group_id}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Add suppressions to a suppression group #
-# POST /asm/groups/{group_id}/suppressions #
+# Update Google Analytics Settings #
+# PATCH /tracking_settings/google_analytics #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "recipient_emails": [
-    "test1@example.com", 
-    "test2@example.com"
-  ]
+  "enabled": true, 
+  "utm_campaign": "website", 
+  "utm_content": "", 
+  "utm_medium": "email", 
+  "utm_source": "sendgrid.com", 
+  "utm_term": ""
 };
-request.method = 'POST'
-request.path = '/v3/asm/groups/{group_id}/suppressions'
+request.method = 'PATCH'
+request.path = '/v3/tracking_settings/google_analytics'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -101,13 +70,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all suppressions for a suppression group #
-# GET /asm/groups/{group_id}/suppressions #
+# Retrieve Google Analytics Settings #
+# GET /tracking_settings/google_analytics #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/asm/groups/{group_id}/suppressions'
+request.path = '/v3/tracking_settings/google_analytics'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -115,33 +84,16 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Delete a suppression from a suppression group #
-# DELETE /asm/groups/{group_id}/suppressions/{email} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/asm/groups/{group_id}/suppressions/{email}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Add recipient addresses to the global suppression group. #
-# POST /asm/suppressions/global #
+# Update Open Tracking Settings #
+# PATCH /tracking_settings/open #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "recipient_emails": [
-    "test1@example.com", 
-    "test2@example.com"
-  ]
+  "enabled": true
 };
-request.method = 'POST'
-request.path = '/v3/asm/suppressions/global'
+request.method = 'PATCH'
+request.path = '/v3/tracking_settings/open'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -149,13 +101,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve a Global Suppression #
-# GET /asm/suppressions/global/{email} #
+# Get Open Tracking Settings #
+# GET /tracking_settings/open #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/asm/suppressions/global/{email}'
+request.path = '/v3/tracking_settings/open'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -163,13 +115,35 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Delete a Global Suppression #
-# DELETE /asm/suppressions/global/{email} #
+# Update Subscription Tracking Settings #
+# PATCH /tracking_settings/subscription #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/asm/suppressions/global/{email}'
+request.body = {
+  "enabled": true, 
+  "html_content": "html content", 
+  "landing": "landing page html", 
+  "plain_content": "text content", 
+  "replace": "replacement tag", 
+  "url": "url"
+};
+request.method = 'PATCH'
+request.path = '/v3/tracking_settings/subscription'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve Subscription Tracking Settings #
+# GET /tracking_settings/subscription #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/tracking_settings/subscription'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)

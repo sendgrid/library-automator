@@ -1,49 +1,16 @@
 var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
 
 ##################################################
-# Retrieve all IP addresses #
-# GET /ips #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.queryParams["subuser"] = 'test_string'
-  request.queryParams["ip"] = 'test_string'
-  request.queryParams["limit"] = '1'
-  request.queryParams["exclude_whitelabels"] = 'true'
-  request.queryParams["offset"] = '1'
-request.method = 'GET'
-request.path = '/v3/ips'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all assigned IPs #
-# GET /ips/assigned #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/ips/assigned'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Create an IP pool. #
-# POST /ips/pools #
+# Create a transactional template. #
+# POST /templates #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "name": "marketing"
+  "name": "example_name"
 };
 request.method = 'POST'
-request.path = '/v3/ips/pools'
+request.path = '/v3/templates'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -51,13 +18,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all IP pools. #
-# GET /ips/pools #
+# Retrieve all transactional templates. #
+# GET /templates #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/ips/pools'
+request.path = '/v3/templates'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -65,16 +32,16 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Update an IP pools name. #
-# PUT /ips/pools/{pool_name} #
+# Edit a transactional template. #
+# PATCH /templates/{template_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "name": "new_pool_name"
+  "name": "new_example_name"
 };
-request.method = 'PUT'
-request.path = '/v3/ips/pools/{pool_name}'
+request.method = 'PATCH'
+request.path = '/v3/templates/{template_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -82,13 +49,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all IPs in a specified pool. #
-# GET /ips/pools/{pool_name} #
+# Retrieve a single transactional template. #
+# GET /templates/{template_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/ips/pools/{pool_name}'
+request.path = '/v3/templates/{template_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -96,13 +63,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Delete an IP pool. #
-# DELETE /ips/pools/{pool_name} #
+# Delete a template. #
+# DELETE /templates/{template_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'DELETE'
-request.path = '/v3/ips/pools/{pool_name}'
+request.path = '/v3/templates/{template_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -110,16 +77,21 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Add an IP address to a pool #
-# POST /ips/pools/{pool_name}/ips #
+# Create a new transactional template version. #
+# POST /templates/{template_id}/versions #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "ip": "0.0.0.0"
+  "active": 1, 
+  "html_content": "<%body%>", 
+  "name": "example_version_name", 
+  "plain_content": "<%body%>", 
+  "subject": "<%subject%>", 
+  "template_id": "ddb96bbc-9b92-425e-8979-99464621b543"
 };
 request.method = 'POST'
-request.path = '/v3/ips/pools/{pool_name}/ips'
+request.path = '/v3/templates/{template_id}/versions'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -127,30 +99,20 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Remove an IP address from a pool. #
-# DELETE /ips/pools/{pool_name}/ips/{ip} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/ips/pools/{pool_name}/ips/{ip}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Add an IP to warmup #
-# POST /ips/warmup #
+# Edit a transactional template version. #
+# PATCH /templates/{template_id}/versions/{version_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "ip": "0.0.0.0"
+  "active": 1, 
+  "html_content": "<%body%>", 
+  "name": "updated_example_name", 
+  "plain_content": "<%body%>", 
+  "subject": "<%subject%>"
 };
-request.method = 'POST'
-request.path = '/v3/ips/warmup'
+request.method = 'PATCH'
+request.path = '/v3/templates/{template_id}/versions/{version_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -158,13 +120,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all IPs currently in warmup #
-# GET /ips/warmup #
+# Retrieve a specific transactional template version. #
+# GET /templates/{template_id}/versions/{version_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'GET'
-request.path = '/v3/ips/warmup'
+request.path = '/v3/templates/{template_id}/versions/{version_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -172,27 +134,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve warmup status for a specific IP address #
-# GET /ips/warmup/{ip_address} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/ips/warmup/{ip_address}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Remove an IP from warmup #
-# DELETE /ips/warmup/{ip_address} #
+# Delete a transactional template version. #
+# DELETE /templates/{template_id}/versions/{version_id} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'DELETE'
-request.path = '/v3/ips/warmup/{ip_address}'
+request.path = '/v3/templates/{template_id}/versions/{version_id}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -200,13 +148,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all IP pools an IP address belongs to #
-# GET /ips/{ip_address} #
+# Activate a transactional template version. #
+# POST /templates/{template_id}/versions/{version_id}/activate #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/ips/{ip_address}'
+request.method = 'POST'
+request.path = '/v3/templates/{template_id}/versions/{version_id}/activate'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)

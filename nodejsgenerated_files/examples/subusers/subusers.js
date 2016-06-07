@@ -1,18 +1,94 @@
 var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
 
 ##################################################
-# Retrieve all IP addresses #
-# GET /ips #
+# Create Subuser #
+# POST /subusers #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = {
+  "email": "John@example.com", 
+  "ips": [
+    "1.1.1.1", 
+    "2.2.2.2"
+  ], 
+  "password": "johns_password", 
+  "username": "John@example.com"
+};
+request.method = 'POST'
+request.path = '/v3/subusers'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# List all Subusers #
+# GET /subusers #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["username"] = 'test_string'
+  request.queryParams["limit"] = '0'
+  request.queryParams["offset"] = '0'
+request.method = 'GET'
+request.path = '/v3/subusers'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve Subuser Reputations #
+# GET /subusers/reputations #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["usernames"] = 'test_string'
+request.method = 'GET'
+request.path = '/v3/subusers/reputations'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve email statistics for your subusers. #
+# GET /subusers/stats #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["end_date"] = '2016-04-01'
+  request.queryParams["aggregated_by"] = 'day'
+  request.queryParams["limit"] = '1'
+  request.queryParams["offset"] = '1'
+  request.queryParams["start_date"] = '2016-01-01'
+  request.queryParams["subusers"] = 'test_string'
+request.method = 'GET'
+request.path = '/v3/subusers/stats'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Retrieve monthly stats for all subusers #
+# GET /subusers/stats/monthly #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.queryParams["subuser"] = 'test_string'
-  request.queryParams["ip"] = 'test_string'
   request.queryParams["limit"] = '1'
-  request.queryParams["exclude_whitelabels"] = 'true'
+  request.queryParams["sort_by_metric"] = 'test_string'
   request.queryParams["offset"] = '1'
+  request.queryParams["date"] = 'test_string'
+  request.queryParams["sort_by_direction"] = 'asc'
 request.method = 'GET'
-request.path = '/v3/ips'
+request.path = '/v3/subusers/stats/monthly'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -20,13 +96,20 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all assigned IPs #
-# GET /ips/assigned #
+#  Retrieve the totals for each email statistic metric for all subusers. #
+# GET /subusers/stats/sums #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["end_date"] = '2016-04-01'
+  request.queryParams["aggregated_by"] = 'day'
+  request.queryParams["limit"] = '1'
+  request.queryParams["sort_by_metric"] = 'test_string'
+  request.queryParams["offset"] = '1'
+  request.queryParams["start_date"] = '2016-01-01'
+  request.queryParams["sort_by_direction"] = 'asc'
 request.method = 'GET'
-request.path = '/v3/ips/assigned'
+request.path = '/v3/subusers/stats/sums'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -34,16 +117,16 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Create an IP pool. #
-# POST /ips/pools #
+# Enable/disable a subuser #
+# PATCH /subusers/{subuser_name} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "name": "marketing"
+  "disabled": false
 };
-request.method = 'POST'
-request.path = '/v3/ips/pools'
+request.method = 'PATCH'
+request.path = '/v3/subusers/{subuser_name}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -51,13 +134,13 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all IP pools. #
-# GET /ips/pools #
+# Delete a subuser #
+# DELETE /subusers/{subuser_name} #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/ips/pools'
+request.method = 'DELETE'
+request.path = '/v3/subusers/{subuser_name}'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -65,16 +148,34 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Update an IP pools name. #
-# PUT /ips/pools/{pool_name} #
+# Update IPs assigned to a subuser #
+# PUT /subusers/{subuser_name}/ips #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.body = [
+  "127.0.0.1"
+];
+request.method = 'PUT'
+request.path = '/v3/subusers/{subuser_name}/ips'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Update Monitor Settings for a subuser #
+# PUT /subusers/{subuser_name}/monitor #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "name": "new_pool_name"
+  "email": "example@example.com", 
+  "frequency": 500
 };
 request.method = 'PUT'
-request.path = '/v3/ips/pools/{pool_name}'
+request.path = '/v3/subusers/{subuser_name}/monitor'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -82,44 +183,17 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Retrieve all IPs in a specified pool. #
-# GET /ips/pools/{pool_name} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/ips/pools/{pool_name}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Delete an IP pool. #
-# DELETE /ips/pools/{pool_name} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/ips/pools/{pool_name}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Add an IP address to a pool #
-# POST /ips/pools/{pool_name}/ips #
+# Create monitor settings #
+# POST /subusers/{subuser_name}/monitor #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.body = {
-  "ip": "0.0.0.0"
+  "email": "example@example.com", 
+  "frequency": 50000
 };
 request.method = 'POST'
-request.path = '/v3/ips/pools/{pool_name}/ips'
+request.path = '/v3/subusers/{subuser_name}/monitor'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -127,13 +201,27 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Remove an IP address from a pool. #
-# DELETE /ips/pools/{pool_name}/ips/{ip} #
+# Retrieve monitor settings for a subuser #
+# GET /subusers/{subuser_name}/monitor #
+
+var emptyRequest = require('sendgrid-rest').request
+var request = JSON.parse(JSON.stringify(emptyRequest))
+request.method = 'GET'
+request.path = '/v3/subusers/{subuser_name}/monitor'
+sg.API(request, function (response) {
+  console.log(response.statusCode)
+  console.log(response.body)
+  console.log(response.headers)
+})
+
+##################################################
+# Delete monitor settings #
+# DELETE /subusers/{subuser_name}/monitor #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
 request.method = 'DELETE'
-request.path = '/v3/ips/pools/{pool_name}/ips/{ip}'
+request.path = '/v3/subusers/{subuser_name}/monitor'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
@@ -141,72 +229,18 @@ sg.API(request, function (response) {
 })
 
 ##################################################
-# Add an IP to warmup #
-# POST /ips/warmup #
+# Retrieve the monthly email statistics for a single subuser #
+# GET /subusers/{subuser_name}/stats/monthly #
 
 var emptyRequest = require('sendgrid-rest').request
 var request = JSON.parse(JSON.stringify(emptyRequest))
-request.body = {
-  "ip": "0.0.0.0"
-};
-request.method = 'POST'
-request.path = '/v3/ips/warmup'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all IPs currently in warmup #
-# GET /ips/warmup #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
+request.queryParams["date"] = 'test_string'
+  request.queryParams["sort_by_direction"] = 'asc'
+  request.queryParams["limit"] = '0'
+  request.queryParams["sort_by_metric"] = 'test_string'
+  request.queryParams["offset"] = '1'
 request.method = 'GET'
-request.path = '/v3/ips/warmup'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve warmup status for a specific IP address #
-# GET /ips/warmup/{ip_address} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/ips/warmup/{ip_address}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Remove an IP from warmup #
-# DELETE /ips/warmup/{ip_address} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'DELETE'
-request.path = '/v3/ips/warmup/{ip_address}'
-sg.API(request, function (response) {
-  console.log(response.statusCode)
-  console.log(response.body)
-  console.log(response.headers)
-})
-
-##################################################
-# Retrieve all IP pools an IP address belongs to #
-# GET /ips/{ip_address} #
-
-var emptyRequest = require('sendgrid-rest').request
-var request = JSON.parse(JSON.stringify(emptyRequest))
-request.method = 'GET'
-request.path = '/v3/ips/{ip_address}'
+request.path = '/v3/subusers/{subuser_name}/stats/monthly'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
