@@ -64,6 +64,13 @@ class CodeGenerator(object):
                             else:
                                 data = None
                         if self._language == "php":
+                            try:
+                                if "True" in data:
+                                    data = data.replace("True", "true")
+                                if "False" in data:
+                                    data = data.replace("False", "false")
+                            except TypeError, e:
+                                pass
                             headers = "X-Mock: " + response_code
                         if self._language == "java":
                             if raw_data:
