@@ -523,10 +523,13 @@ class CodeGenerator(object):
                     url_params += "            var " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\";"
             if self._language == "python":
                 url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
-                url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+                if (caller == "docs") or (caller == "examples"):
+                    url_params += "" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+                else:
+                    url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
             if self._language == "php":
                 url_params = "$" + split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\";\n"
-                if docs:
+                if (caller == "docs") or (caller == "examples"):
                     url_params += "$" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
                 else:
                     url_params += "        $" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
