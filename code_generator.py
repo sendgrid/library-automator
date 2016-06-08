@@ -269,6 +269,10 @@ class CodeGenerator(object):
         if self._language == "nodejs":
             method = method.upper()
             api_call = "/v3/" + api_call[:-1]
+            if raw_data:
+                pass
+            else:
+                data = None
         if self._language == "go":
             method = method.upper()
             api_call = "/" + api_call[:-1]
@@ -468,7 +472,7 @@ class CodeGenerator(object):
             for key in all_params:
                 nodejs_params += "request.queryParams[\"" + str(key) + "\"] = '" + str(all_params[key]) + "'\n  "
             if caller == "docs":
-                nodejs_params = nodejs_params[:-2]
+                nodejs_params = nodejs_params[:-3]
             else:
                 nodejs_params = nodejs_params[:-3]
             return nodejs_params
