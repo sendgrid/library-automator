@@ -5,7 +5,7 @@
 ### {{ method_title }} {{ endpoint }}
 
 ```javascript
-  var request = sg.emptyRequest
+  var request = sg.emptyRequest()
   {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
   request.body = {{ data }};
   {% endif %}
