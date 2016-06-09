@@ -1,12 +1,14 @@
   @Test
   public void {{ test_name }}() throws IOException {
-    SendGrid sg = new SendGrid("SENDGRID_API_KEY");
-    sg.addRequestHeader("X-Mock", "{{ response_code }}");
+    SendGrid sg = null;
     if(System.getenv("TRAVIS") != null && Boolean.parseBoolean(System.getenv("TRAVIS"))) {
+      sg = new SendGrid("SENDGRID_API_KEY");
       sg.setHost(System.getenv("MOCK_HOST"));
     } else {
+      sg = new SendGrid("SENDGRID_API_KEY", true);
       sg.setHost("localhost:4010");
     }
+    sg.addRequestHeader("X-Mock", "{{ response_code }}");
 
     Request request = new Request();
     request.method = Method.{{ method }};
