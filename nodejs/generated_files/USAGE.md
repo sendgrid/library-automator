@@ -46,6 +46,7 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 ### GET /access_settings/activity
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["limit"] = '1'
@@ -68,6 +69,7 @@ IP Access Management allows you to control which IP addresses can be used to acc
 For more information, please see our [User Guide](http://sendgrid.com/docs/User_Guide/Settings/ip_access_management.html).
 
 ### POST /access_settings/whitelist
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -102,6 +104,7 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 ### GET /access_settings/whitelist
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -123,6 +126,7 @@ IP Access Management allows you to control which IP addresses can be used to acc
 For more information, please see our [User Guide](http://sendgrid.com/docs/User_Guide/Settings/ip_access_management.html).
 
 ### DELETE /access_settings/whitelist
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -153,6 +157,7 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 ### GET /access_settings/whitelist/{rule_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -174,6 +179,7 @@ IP Access Management allows you to control which IP addresses can be used to acc
 For more information, please see our [User Guide](http://sendgrid.com/docs/User_Guide/Settings/ip_access_management.html).
 
 ### DELETE /access_settings/whitelist/{rule_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -202,6 +208,7 @@ See the [API Key Permissions List](https://sendgrid.com/docs/API_Reference/Web_A
 
 ### POST /api_keys
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -228,6 +235,7 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 
 ### GET /api_keys
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -249,6 +257,7 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 
 
 ### PUT /api_keys/{api_key_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -283,6 +292,7 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 
 ### PATCH /api_keys/{api_key_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -303,6 +313,7 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 If the API Key ID does not exist an HTTP 404 will be returned.
 
 ### GET /api_keys/{api_key_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -330,6 +341,7 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 
 ### DELETE /api_keys/{api_key_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -355,6 +367,7 @@ Each user can create up to 25 different suppression groups.
 
 ### POST /asm/groups
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -378,6 +391,7 @@ This endpoint will return information for each group ID that you include in your
 
 ### GET /asm/groups
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["id"] = '1'
@@ -400,6 +414,7 @@ The **name** and **description** of the unsubscribe group will be visible by rec
 Each user can create up to 25 different suppression groups.
 
 ### PATCH /asm/groups/{group_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -428,6 +443,7 @@ Each user can create up to 25 different suppression groups.
 
 ### GET /asm/groups/{group_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -452,6 +468,7 @@ Each user can create up to 25 different suppression groups.
 
 ### DELETE /asm/groups/{group_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -471,6 +488,7 @@ If you attempt to add suppressions to a group that has been deleted or does not 
 Suppressions are recipient email addresses that are added to [unsubscribe groups](https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html). Once a recipient's address is on the suppressions list for an unsubscribe group, they will not receive any emails that are tagged with that unsubscribe group.
 
 ### POST /asm/groups/{group_id}/suppressions
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -496,6 +514,7 @@ Suppressions are recipient email addresses that are added to [unsubscribe groups
 
 ### GET /asm/groups/{group_id}/suppressions
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -513,6 +532,7 @@ Suppressions are recipient email addresses that are added to [unsubscribe groups
 Suppressions are recipient email addresses that are added to [unsubscribe groups](https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html). Once a recipient's address is on the suppressions list for an unsubscribe group, they will not receive any emails that are tagged with that unsubscribe group.
 
 ### DELETE /asm/groups/{group_id}/suppressions/{email}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -532,6 +552,7 @@ Suppressions are email addresses that can be added to [groups](https://sendgrid.
 
 ### GET /asm/suppressions
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -549,6 +570,7 @@ Suppressions are email addresses that can be added to [groups](https://sendgrid.
 A global suppression (or global unsubscribe) is an email address of a recipient who does not want to receive any of your messages. A globally suppressed recipient will be removed from any email you send. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/global_unsubscribes.html).
 
 ### POST /asm/suppressions/global
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -576,6 +598,7 @@ A global suppression (or global unsubscribe) is an email address of a recipient 
 
 ### GET /asm/suppressions/global/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -594,6 +617,7 @@ A global suppression (or global unsubscribe) is an email address of a recipient 
 
 ### DELETE /asm/suppressions/global/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -611,6 +635,7 @@ A global suppression (or global unsubscribe) is an email address of a recipient 
 Suppressions are email addresses that can be added to [groups](https://sendgrid.com/docs/API_Reference/Web_API_v3/Suppression_Management/groups.html) to prevent certain types of emails from being delivered to those addresses.
 
 ### GET /asm/suppressions/{email}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -634,6 +659,7 @@ Suppressions are email addresses that can be added to [groups](https://sendgrid.
 Advanced Stats provide a more in-depth view of your email statistics and the actions taken by your recipients. You can segment these statistics by geographic location, device type, client type, browser, and mailbox provider. For more information about statistics, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/index.html).
 
 ### GET /browsers/stats
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -667,6 +693,7 @@ For more information:
 * [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
 
 ### POST /campaigns
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -712,6 +739,7 @@ For more information:
 
 ### GET /campaigns
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["limit"] = '0'
@@ -733,6 +761,7 @@ For more information:
 * [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
 
 ### PATCH /campaigns/{campaign_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -765,6 +794,7 @@ For more information:
 
 ### GET /campaigns/{campaign_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -787,6 +817,7 @@ For more information:
 
 ### DELETE /campaigns/{campaign_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -806,6 +837,7 @@ For more information:
 * [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
 
 ### PATCH /campaigns/{campaign_id}/schedules
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -830,6 +862,7 @@ For more information:
 
 ### POST /campaigns/{campaign_id}/schedules
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -852,6 +885,7 @@ For more information:
 * [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
 
 ### GET /campaigns/{campaign_id}/schedules
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -876,6 +910,7 @@ For more information:
 
 ### DELETE /campaigns/{campaign_id}/schedules
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -898,6 +933,7 @@ For more information:
 
 ### POST /campaigns/{campaign_id}/schedules/now
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'POST'
@@ -919,6 +955,7 @@ For more information:
 * [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
 
 ### POST /campaigns/{campaign_id}/schedules/test
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -944,6 +981,7 @@ Categories can help organize your email analytics by enabling you to tag emails 
 
 ### GET /categories
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["category"] = 'test_string'
@@ -966,6 +1004,7 @@ If you do not define any query parameters, this endpoint will return a sum for e
 Categories allow you to group your emails together according to broad topics that you define. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/categories.html). 
 
 ### GET /categories/stats
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -992,6 +1031,7 @@ If you do not define any query parameters, this endpoint will return a sum for e
 Categories allow you to group your emails together according to broad topics that you define. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/categories.html). 
 
 ### GET /categories/stats/sums
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1023,6 +1063,7 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ### GET /clients/stats
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["aggregated_by"] = 'day'
@@ -1052,6 +1093,7 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ### GET /clients/{client_type}/stats
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["aggregated_by"] = 'day'
@@ -1076,6 +1118,7 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ### POST /contactdb/custom_fields
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -1098,6 +1141,7 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ### GET /contactdb/custom_fields
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -1115,6 +1159,7 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
 
 ### GET /contactdb/custom_fields/{custom_field_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1134,6 +1179,7 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ### DELETE /contactdb/custom_fields/{custom_field_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -1151,6 +1197,7 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
 
 ### POST /contactdb/lists
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1173,6 +1220,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### GET /contactdb/lists
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -1190,6 +1238,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
 
 ### DELETE /contactdb/lists
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1216,6 +1265,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### PATCH /contactdb/lists/{list_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -1238,6 +1288,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### GET /contactdb/lists/{list_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["list_id"] = '0'
@@ -1256,6 +1307,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
 
 ### DELETE /contactdb/lists/{list_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1277,6 +1329,7 @@ Adds existing recipients to a list, passing in the recipient IDs to add. Recipie
 The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
 
 ### POST /contactdb/lists/{list_id}/recipients
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1300,6 +1353,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### GET /contactdb/lists/{list_id}/recipients
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["page"] = '1'
@@ -1321,6 +1375,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### POST /contactdb/lists/{list_id}/recipients/{recipient_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'POST'
@@ -1338,6 +1393,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
 
 ### DELETE /contactdb/lists/{list_id}/recipients/{recipient_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1362,6 +1418,7 @@ It is of note that you can add custom field data as parameters on recipient obje
 The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
 
 ### PATCH /contactdb/recipients
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1389,6 +1446,7 @@ It is of note that you can add custom field data as a parameter on this endpoint
 The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
 
 ### POST /contactdb/recipients
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1425,6 +1483,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### GET /contactdb/recipients
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["page"] = '1'
@@ -1446,6 +1505,7 @@ The body of an API call to this endpoint must include an array of recipient IDs 
 The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
 
 ### DELETE /contactdb/recipients
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1471,6 +1531,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### GET /contactdb/recipients/billable_count
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -1488,6 +1549,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
 
 ### GET /contactdb/recipients/count
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1516,6 +1578,7 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ### GET /contactdb/recipients/search
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["{field_name}"] = 'test_string'
@@ -1535,6 +1598,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### GET /contactdb/recipients/{recipient_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -1552,6 +1616,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
 
 ### DELETE /contactdb/recipients/{recipient_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1573,6 +1638,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 ### GET /contactdb/recipients/{recipient_id}/lists
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -1590,6 +1656,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
 
 ### GET /contactdb/reserved_fields
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1628,6 +1695,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 For more information about segments in Marketing Campaigns, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/lists.html#-Create-a-Segment).
 
 ### POST /contactdb/segments
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1673,6 +1741,7 @@ For more information about segments in Marketing Campaigns, please see our [User
 
 ### GET /contactdb/segments
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -1692,6 +1761,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 For more information about segments in Marketing Campaigns, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/lists.html#-Create-a-Segment).
 
 ### PATCH /contactdb/segments/{segment_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1726,6 +1796,7 @@ For more information about segments in Marketing Campaigns, please see our [User
 
 ### GET /contactdb/segments/{segment_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["segment_id"] = '0'
@@ -1749,6 +1820,7 @@ For more information about segments in Marketing Campaigns, please see our [User
 
 ### DELETE /contactdb/segments/{segment_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["delete_contacts"] = 'true'
@@ -1769,6 +1841,7 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 For more information about segments in Marketing Campaigns, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/lists.html#-Create-a-Segment).
 
 ### GET /contactdb/segments/{segment_id}/recipients
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1804,6 +1877,7 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 ### GET /devices/stats
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["aggregated_by"] = 'day'
@@ -1831,6 +1905,7 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 Advanced Stats provide a more in-depth view of your email statistics and the actions taken by your recipients. You can segment these statistics by geographic location, device type, client type, browser, and mailbox provider. For more information about statistics, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/index.html).
 
 ### GET /geo/stats
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1861,6 +1936,7 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 
 ### GET /ips
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["subuser"] = 'test_string'
@@ -1883,6 +1959,7 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 A single IP address or a range of IP addresses may be dedicated to an account in order to send email for multiple domains. The reputation of this IP is based on the aggregate performance of all the senders who use it.
 
 ### GET /ips/assigned
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1907,6 +1984,7 @@ IP pools can only be used with whitelabeled IP addresses.
 If an IP pool is NOT specified for an email, it will use any IP available, including ones in pools.
 
 ### POST /ips/pools
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1933,6 +2011,7 @@ If an IP pool is NOT specified for an email, it will use any IP available, inclu
 
 ### GET /ips/pools
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -1954,6 +2033,7 @@ IP pools can only be used with whitelabeled IP addresses.
 If an IP pool is NOT specified for an email, it will use any IP available, including ones in pools.
 
 ### PUT /ips/pools/{pool_name}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -1980,6 +2060,7 @@ If an IP pool is NOT specified for an email, it will use any IP available, inclu
 
 ### GET /ips/pools/{pool_name}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2002,6 +2083,7 @@ If an IP pool is NOT specified for an email, it will use any IP available, inclu
 
 ### DELETE /ips/pools/{pool_name}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -2021,6 +2103,7 @@ You can add the same IP address to multiple pools. It may take up to 60 seconds 
 A single IP address or a range of IP addresses may be dedicated to an account in order to send email for multiple domains. The reputation of this IP is based on the aggregate performance of all the senders who use it.
 
 ### POST /ips/pools/{pool_name}/ips
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2045,6 +2128,7 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 
 ### DELETE /ips/pools/{pool_name}/ips/{ip}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -2064,6 +2148,7 @@ SendGrid can automatically warm up dedicated IP addresses by limiting the amount
 For more general information about warming up IPs, please see our [Classroom](https://sendgrid.com/docs/Classroom/Deliver/Delivery_Introduction/warming_up_ips.html).
 
 ### POST /ips/warmup
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2088,6 +2173,7 @@ For more general information about warming up IPs, please see our [Classroom](ht
 
 ### GET /ips/warmup
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2107,6 +2193,7 @@ SendGrid can automatically warm up dedicated IP addresses by limiting the amount
 For more general information about warming up IPs, please see our [Classroom](https://sendgrid.com/docs/Classroom/Deliver/Delivery_Introduction/warming_up_ips.html).
 
 ### GET /ips/warmup/{ip_address}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2128,6 +2215,7 @@ For more general information about warming up IPs, please see our [Classroom](ht
 
 ### DELETE /ips/warmup/{ip_address}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -2147,6 +2235,7 @@ The same IP address can be added to multiple IP pools.
 A single IP address or a range of IP addresses may be dedicated to an account in order to send email for multiple domains. The reputation of this IP is based on the aggregate performance of all the senders who use it.
 
 ### GET /ips/{ip_address}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2173,6 +2262,7 @@ More Information:
 
 ### POST /mail/batch
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'POST'
@@ -2194,6 +2284,7 @@ More Information:
 * [Scheduling Parameters > Batch ID](https://sendgrid.com/docs/API_Reference/SMTP_API/scheduling_parameters.html)
 
 ### GET /mail/batch/{batch_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2217,6 +2308,8 @@ For an overview of the v3 Mail Send endpoint, please visit our [v3 API Reference
 For more detailed information about how to use the v3 Mail Send endpoint, please visit our [Classroom](https://sendgrid.com/docs/Classroom/Send/v3_Mail_Send/index.html).
 
 ### POST /mail/send/beta
+
+// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/blob/v3beta/lib/helpers/mail/README.md).
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2382,6 +2475,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["limit"] = '1'
@@ -2403,6 +2497,7 @@ The address whitelist setting whitelists a specified email address or domain for
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/address_whitelist
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2431,6 +2526,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/address_whitelist
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2450,6 +2546,7 @@ When the BCC mail setting is enabled, SendGrid will automatically send a blind c
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/bcc
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2475,6 +2572,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/bcc
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2494,6 +2592,7 @@ This setting allows you to set a schedule for SendGrid to automatically delete c
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/bounce_purge
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2520,6 +2619,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/bounce_purge
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2539,6 +2639,7 @@ The footer setting will insert a custom footer at the bottom of the text and HTM
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/footer
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2565,6 +2666,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/footer
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2584,6 +2686,7 @@ Activating this setting allows you to specify an email address to which bounce r
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/forward_bounce
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2609,6 +2712,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/forward_bounce
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2628,6 +2732,7 @@ Enabling the forward spam setting allows you to specify an email address to whic
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/forward_spam
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2653,6 +2758,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/forward_spam
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2672,6 +2778,7 @@ The plain content setting will automatically convert any plain text emails that 
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/plain_content
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2696,6 +2803,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/plain_content
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2715,6 +2823,7 @@ The spam checker filter notifies you when emails are detected that exceed a pred
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/spam_check
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2741,6 +2850,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/spam_check
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2762,6 +2872,7 @@ The legacy email template setting wraps an HTML template around your email conte
 Mail settings allow you to tell SendGrid specific things to do to every email that you send to your recipients over SendGrids [Web API](https://sendgrid.com/docs/API_Reference/Web_API/mail.html) or [SMTP Relay](https://sendgrid.com/docs/API_Reference/SMTP_API/index.html).
 
 ### PATCH /mail_settings/template
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2789,6 +2900,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 ### GET /mail_settings/template
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2811,6 +2923,7 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 Advanced Stats provide a more in-depth view of your email statistics and the actions taken by your recipients. You can segment these statistics by geographic location, device type, client type, browser, and mailbox provider. For more information about statistics, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/index.html).
 
 ### GET /mailbox_providers/stats
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2839,6 +2952,7 @@ Our partner settings allow you to integrate your SendGrid account with our partn
 
 ### GET /partner_settings
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["limit"] = '1'
@@ -2860,6 +2974,7 @@ Our partner settings allow you to integrate your SendGrid account with our partn
 By integrating with New Relic, you can send your SendGrid email statistics to your New Relic Dashboard. If you enable this setting, your stats will be sent to New Relic every 5 minutes. You will need your New Relic License Key to enable this setting. For more information, please see our [Classroom](https://sendgrid.com/docs/Classroom/Track/Collecting_Data/new_relic.html).
 
 ### PATCH /partner_settings/new_relic
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2886,6 +3001,7 @@ By integrating with New Relic, you can send your SendGrid email statistics to yo
 
 ### GET /partner_settings/new_relic
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2907,6 +3023,7 @@ API Keys can be used to authenticate the use of [SendGrids v3 Web API](https://s
 
 ### GET /scopes
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -2927,6 +3044,7 @@ API Keys can be used to authenticate the use of [SendGrids v3 Web API](https://s
 Parent accounts will see aggregated stats for their account and all subuser accounts. Subuser accounts will only see their own stats.
 
 ### GET /stats
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2956,6 +3074,7 @@ For more information about Subusers:
 * [Classroom > How do I add more subusers to my account?](https://sendgrid.com/docs/Classroom/Basics/Account/how_do_i_add_more_subusers_to_my_account.html)
 
 ### POST /subusers
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -2987,6 +3106,7 @@ For more information about Subusers:
 
 ### GET /subusers
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["username"] = 'test_string'
@@ -3007,6 +3127,7 @@ Subuser sender reputations give a good idea how well a sender is doing with rega
 This endpoint allows you to request the reputations for your subusers.
 
 ### GET /subusers/reputations
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3030,6 +3151,7 @@ While you can always view the statistics for all email activity on your account,
 For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/subuser.html).
 
 ### GET /subusers/stats
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3060,6 +3182,7 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 
 ### GET /subusers/stats/monthly
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["subuser"] = 'test_string'
@@ -3086,6 +3209,7 @@ While you can always view the statistics for all email activity on your account,
 For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/subuser.html).
 
 ### GET /subusers/stats/sums
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3115,6 +3239,7 @@ For more information about Subusers:
 
 ### PATCH /subusers/{subuser_name}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -3139,6 +3264,7 @@ For more information about Subusers:
 
 ### DELETE /subusers/{subuser_name}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -3160,6 +3286,7 @@ More information:
 
 ### PUT /subusers/{subuser_name}/ips
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = [
@@ -3178,6 +3305,7 @@ More information:
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
 
 ### PUT /subusers/{subuser_name}/monitor
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3199,6 +3327,7 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 
 ### POST /subusers/{subuser_name}/monitor
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -3219,6 +3348,7 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 
 ### GET /subusers/{subuser_name}/monitor
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -3234,6 +3364,7 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
 
 ### DELETE /subusers/{subuser_name}/monitor
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3257,6 +3388,7 @@ When using the `sort_by_metric` to sort your stats by a specific metric, you can
 For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/subuser.html).
 
 ### GET /subusers/{subuser_name}/stats/monthly
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3285,6 +3417,7 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/blocks.html).
 
 ### GET /suppression/blocks
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3315,6 +3448,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 ### DELETE /suppression/blocks
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -3342,6 +3476,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 ### GET /suppression/blocks/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -3361,6 +3496,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/blocks.html).
 
 ### DELETE /suppression/blocks/{email}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3384,6 +3520,7 @@ For more information see:
 * [Glossary > Bounces](https://sendgrid.com/docs/Glossary/Bounces.html)
 
 ### GET /suppression/bounces
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3412,6 +3549,7 @@ For more information see:
 Note: the `delete_all` and `emails` parameters should be used independently of each other as they have different purposes.
 
 ### DELETE /suppression/bounces
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3444,6 +3582,7 @@ For more information see:
 
 ### GET /suppression/bounces/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -3468,6 +3607,7 @@ For more information see:
 
 ### DELETE /suppression/bounces/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["email_address"] = 'example@example.com'
@@ -3490,6 +3630,7 @@ Examples include addresses without the @ sign or addresses that include certain 
 For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/invalid_emails.html).
 
 ### GET /suppression/invalid_emails
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3522,6 +3663,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 ### DELETE /suppression/invalid_emails
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -3551,6 +3693,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 ### GET /suppression/invalid_emails/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -3573,6 +3716,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 ### DELETE /suppression/invalid_emails/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -3592,6 +3736,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
 
 ### GET /suppression/spam_report/{email}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3613,6 +3758,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 ### DELETE /suppression/spam_report/{email}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -3632,6 +3778,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
 
 ### GET /suppression/spam_reports
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3662,6 +3809,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 ### DELETE /suppression/spam_reports
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -3686,6 +3834,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 A global suppression (or global unsubscribe) is an email address of a recipient who does not want to receive any of your messages. A globally suppressed recipient will be removed from any email you send. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/global_unsubscribes.html).
 
 ### GET /suppression/unsubscribes
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3714,6 +3863,7 @@ Transactional templates are templates created specifically for transactional ema
 
 ### POST /templates
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -3737,6 +3887,7 @@ Transactional templates are templates created specifically for transactional ema
 
 ### GET /templates
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -3757,6 +3908,7 @@ Transactional templates are templates created specifically for transactional ema
 
 
 ### PATCH /templates/{template_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3782,6 +3934,7 @@ Transactional templates are templates created specifically for transactional ema
 
 ### GET /templates/{template_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -3803,6 +3956,7 @@ Transactional templates are templates created specifically for transactional ema
 
 ### DELETE /templates/{template_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -3823,6 +3977,7 @@ For more information about transactional templates, please see our [User Guide](
 
 
 ### POST /templates/{template_id}/versions
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3858,6 +4013,7 @@ For more information about transactional templates, please see our [User Guide](
 
 ### PATCH /templates/{template_id}/versions/{version_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -3891,6 +4047,7 @@ For more information about transactional templates, please see our [User Guide](
 
 ### GET /templates/{template_id}/versions/{version_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -3916,6 +4073,7 @@ For more information about transactional templates, please see our [User Guide](
 | version_id | string | The ID of the template version |
 
 ### DELETE /templates/{template_id}/versions/{version_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -3944,6 +4102,7 @@ For more information about transactional templates, please see our [User Guide](
 
 ### POST /templates/{template_id}/versions/{version_id}/activate
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'POST'
@@ -3967,6 +4126,7 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 ### GET /tracking_settings
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["limit"] = '1'
@@ -3988,6 +4148,7 @@ You can track a variety of the actions your recipients may take when interacting
 For more information about tracking, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/tracking.html).
 
 ### PATCH /tracking_settings/click
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4012,6 +4173,7 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 ### GET /tracking_settings/click
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4035,6 +4197,7 @@ You can track a variety of the actions your recipients may take when interacting
 For more information about tracking, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/tracking.html).
 
 ### PATCH /tracking_settings/google_analytics
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4068,6 +4231,7 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 ### GET /tracking_settings/google_analytics
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4089,6 +4253,7 @@ You can track a variety of the actions your recipients may take when interacting
 For more information about tracking, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/tracking.html).
 
 ### PATCH /tracking_settings/open
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4115,6 +4280,7 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 ### GET /tracking_settings/open
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4136,6 +4302,7 @@ You can track a variety of the actions your recipients may take when interacting
 For more information about tracking, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/tracking.html).
 
 ### PATCH /tracking_settings/subscription
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4167,6 +4334,7 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 ### GET /tracking_settings/subscription
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4194,6 +4362,7 @@ For more information about your user profile:
 
 ### GET /user/account
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4211,6 +4380,7 @@ For more information about your user profile:
 Your monthly credit allotment limits the number of emails you may send before incurring overage charges. For more information about credits and billing, please visit our [Clssroom](https://sendgrid.com/docs/Classroom/Basics/Billing/billing_info_and_faqs.html).
 
 ### GET /user/credits
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4233,6 +4403,7 @@ For more information about your user profile:
 * [SendGrid Account Settings](https://sendgrid.com/docs/User_Guide/Settings/account.html)
 
 ### PUT /user/email
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4259,6 +4430,7 @@ For more information about your user profile:
 
 ### GET /user/email
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4280,6 +4452,7 @@ For more information about your user profile:
 * [SendGrid Account Settings](https://sendgrid.com/docs/User_Guide/Settings/account.html)
 
 ### PUT /user/password
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4309,6 +4482,7 @@ It should be noted that any one or more of the parameters can be updated via the
 
 ### PATCH /user/profile
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -4334,6 +4508,7 @@ For more information about your user profile:
 
 ### GET /user/profile
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4354,6 +4529,7 @@ be returned.
 The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
 
 ### POST /user/scheduled_sends
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4377,6 +4553,7 @@ The Cancel Scheduled Sends feature allows the customer to cancel a scheduled sen
 
 ### GET /user/scheduled_sends
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4394,6 +4571,7 @@ The Cancel Scheduled Sends feature allows the customer to cancel a scheduled sen
 The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
 
 ### PATCH /user/scheduled_sends/{batch_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4416,6 +4594,7 @@ The Cancel Scheduled Sends feature allows the customer to cancel a scheduled sen
 
 ### GET /user/scheduled_sends/{batch_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4433,6 +4612,7 @@ The Cancel Scheduled Sends feature allows the customer to cancel a scheduled sen
 The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
 
 ### DELETE /user/scheduled_sends/{batch_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4453,6 +4633,7 @@ The Enforced TLS settings specify whether or not the recipient is required to su
 **Note:** If either setting is enabled and the recipient does not support TLS or have a valid certificate, we drop the message and send a block event with TLS required but not supported as the description.
 
 ### PATCH /user/settings/enforced_tls
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4478,6 +4659,7 @@ The Enforced TLS settings specify whether or not the recipient is required to su
 
 ### GET /user/settings/enforced_tls
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4499,6 +4681,7 @@ For more information about your user profile:
 * [SendGrid Account Settings](https://sendgrid.com/docs/User_Guide/Settings/account.html)
 
 ### PUT /user/username
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4525,6 +4708,7 @@ For more information about your user profile:
 
 ### GET /user/username
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4546,6 +4730,7 @@ SendGrids Event Webhook will notify a URL of your choice via HTTP POST with info
 Common uses of this data are to remove unsubscribes, react to spam reports, determine unengaged recipients, identify bounced email addresses, or create advanced analytics of your email program.
 
 ### PATCH /user/webhooks/event/settings
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4584,6 +4769,7 @@ Common uses of this data are to remove unsubscribes, react to spam reports, dete
 
 ### GET /user/webhooks/event/settings
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4603,6 +4789,7 @@ SendGrids Event Webhook will notify a URL of your choice via HTTP POST with info
 Common uses of this data are to remove unsubscribes, react to spam reports, determine unengaged recipients, identify bounced email addresses, or create advanced analytics of your email program.
 
 ### POST /user/webhooks/event/test
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4625,6 +4812,7 @@ SendGrid can parse the attachments and contents of incoming emails. The Parse AP
 
 ### GET /user/webhooks/parse/settings
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4644,6 +4832,7 @@ SendGrid's Inbound Parse Webhook allows you to parse the contents and attachment
 There are a number of pre-made integrations for the SendGrid Parse Webhook which make processing events easy. You can find these integrations in the [Library Index](https://sendgrid.com/docs/Integrate/libraries.html#-Webhook-Libraries).
 
 ### GET /user/webhooks/parse/stats
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4676,6 +4865,7 @@ A domain whitelabel allows you to remove the via or sent on behalf of message th
 For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
 
 ### POST /whitelabel/domains
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4710,6 +4900,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ### GET /whitelabel/domains
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["username"] = 'test_string'
@@ -4740,6 +4931,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ### GET /whitelabel/domains/default
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4766,6 +4958,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 | username | string  | Username of the subuser to find associated whitelabels for. |
 
 ### GET /whitelabel/domains/subuser
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4794,6 +4987,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ### DELETE /whitelabel/domains/subuser
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -4813,6 +5007,7 @@ A domain whitelabel allows you to remove the via or sent on behalf of message th
 For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
 
 ### PATCH /whitelabel/domains/{domain_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4839,6 +5034,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ### GET /whitelabel/domains/{domain_id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -4858,6 +5054,7 @@ A domain whitelabel allows you to remove the via or sent on behalf of message th
 For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
 
 ### DELETE /whitelabel/domains/{domain_id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4886,6 +5083,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ### POST /whitelabel/domains/{domain_id}/subuser
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.body = {
@@ -4913,6 +5111,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 | id | integer  | ID of the domain to which you are adding an IP |
 
 ### POST /whitelabel/domains/{id}/ips
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -4943,6 +5142,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ### DELETE /whitelabel/domains/{id}/ips/{ip}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -4968,6 +5168,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 ### POST /whitelabel/domains/{id}/validate
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'POST'
@@ -4989,6 +5190,7 @@ A IP whitelabel consists of a subdomain and domain that will be used to generate
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html).
 
 ### POST /whitelabel/ips
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -5017,6 +5219,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ### GET /whitelabel/ips
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["ip"] = 'test_string'
@@ -5040,6 +5243,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ### GET /whitelabel/ips/{id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -5059,6 +5263,7 @@ A IP whitelabel consists of a subdomain and domain that will be used to generate
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html).
 
 ### DELETE /whitelabel/ips/{id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -5080,6 +5285,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ### POST /whitelabel/ips/{id}/validate
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'POST'
@@ -5099,6 +5305,7 @@ Email link whitelabels allow all of the click-tracked links you send in your ema
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
 
 ### POST /whitelabel/links
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -5126,6 +5333,7 @@ Email link whitelabels allow all of the click-tracked links you send in your ema
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
 
 ### GET /whitelabel/links
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -5155,6 +5363,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ### GET /whitelabel/links/default
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["domain"] = 'test_string'
@@ -5179,6 +5388,7 @@ Email link whitelabels allow all of the click-tracked links you send in your ema
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
 
 ### GET /whitelabel/links/subuser
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -5205,6 +5415,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ### DELETE /whitelabel/links/subuser
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.queryParams["username"] = 'test_string'
@@ -5225,6 +5436,7 @@ Email link whitelabels allow all of the click-tracked links you send in your ema
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
 
 ### PATCH /whitelabel/links/{id}
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -5249,6 +5461,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ### GET /whitelabel/links/{id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'GET'
@@ -5269,6 +5482,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 ### DELETE /whitelabel/links/{id}
 
+
 ```javascript
   var request = sg.emptyRequest()
   request.method = 'DELETE'
@@ -5288,6 +5502,7 @@ Email link whitelabels allow all of the click-tracked links you send in your ema
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
 
 ### POST /whitelabel/links/{id}/validate
+
 
 ```javascript
   var request = sg.emptyRequest()
@@ -5312,6 +5527,7 @@ Email link whitelabels allow all of the click-tracked links you send in your ema
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
 
 ### POST /whitelabel/links/{link_id}/subuser
+
 
 ```javascript
   var request = sg.emptyRequest()

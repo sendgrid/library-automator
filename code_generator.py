@@ -472,11 +472,14 @@ class CodeGenerator(object):
         if (self._language == "nodejs") and (all_params != None):
             nodejs_params = ""
             for key in all_params:
-                nodejs_params += "request.queryParams[\"" + str(key) + "\"] = '" + str(all_params[key]) + "'\n  "
+                if caller == "examples":
+                    nodejs_params += "request.queryParams[\"" + str(key) + "\"] = '" + str(all_params[key]) + "'\n  "
+                else:
+                    nodejs_params += "request.queryParams[\"" + str(key) + "\"] = '" + str(all_params[key]) + "'\n  "
             if caller == "docs":
                 nodejs_params = nodejs_params[:-3]
             else:
-                nodejs_params = nodejs_params[:-3]
+                nodejs_params = nodejs_params[:-1]
             return nodejs_params
         if (self._language == "go") and (all_params != None):
             go_params = ""
