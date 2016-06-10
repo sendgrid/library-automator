@@ -170,6 +170,7 @@ class CodeGenerator(object):
        if self._language == "csharp":
            endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
            endpoint = endpoint.replace("event", "_(\"event\")")
+           endpoint = endpoint.replace("default", "_(\"default\")")
            seperator = "."
        if self._language == "php":
            endpoint = endpoint.replace("{", "_($").replace("}/", ")->")
