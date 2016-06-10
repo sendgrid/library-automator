@@ -498,7 +498,7 @@ class CodeGenerator(object):
                     go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n  "
                 if caller == "test":
                     go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n  "
-                else:
+                if caller == "docs":
                     go_params += "queryParams[\"" + str(key) + "\"] = \"" + str(all_params[key]) + "\"\n"
             return go_params
         return all_params

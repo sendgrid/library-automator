@@ -3,6 +3,9 @@
 {{ description }}
 
 ### {{ method_title }} {{ endpoint }}
+{% if endpoint == "/mail/send/beta" %}
+This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-go/blob/v3beta/helpers/mail/README.md).
+{% endif %}
 
 ```go
 request := sendgrid.GetRequest(apiKey, "/v3{{ api_call }}", host)
@@ -23,4 +26,5 @@ if err != nil {
   fmt.Println(response.Headers)
 }
 ```
+
 
