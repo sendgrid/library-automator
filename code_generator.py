@@ -275,6 +275,11 @@ class CodeGenerator(object):
                 pass
             else:
                 data = None
+        if self._language == "ruby":
+            if raw_data:
+                pass
+            else:
+                data = None
         if self._language == "go":
             method = method.upper()
             api_call = "/" + api_call[:-1]
@@ -370,6 +375,11 @@ class CodeGenerator(object):
         query_params = self.swagger.get_query_parameters(endpoint, method)
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint, None, None, "examples")
+        if self._language == "ruby":
+            if raw_data:
+                pass
+            else:
+                data = None
         if self._language == "python":
             try:
                 if "true" in data:
@@ -519,7 +529,10 @@ class CodeGenerator(object):
                 url_params = ""
             if self._language == "ruby":
                 url_params = split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\"\n"
-                url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+                if (caller == "docs") or (caller == "examples"):
+                    url_params += "" + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
+                else:
+                    url_params += "        " + split_endpoint[2].split('}')[0] + " = " + "\"" + value + "\""
             if self._language == "csharp":
                 url_params = "var " + split_endpoint[1].split('}')[0] + " = " + "\"" + value + "\";\n"
                 if (caller == "docs") or (caller == "examples"):
