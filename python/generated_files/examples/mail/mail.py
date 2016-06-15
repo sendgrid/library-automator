@@ -9,8 +9,7 @@ sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 # Create a batch ID #
 # POST /mail/batch #
 
-data = null
-response = sg.client.mail.batch.post(request_body=data)
+response = sg.client.mail.batch.post()
 print(response.status_code)
 print(response.body)
 print(response.headers)
@@ -28,7 +27,6 @@ print(response.headers)
 ##################################################
 # v3 Mail Send Beta #
 # POST /mail/send/beta #
-# This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-python/blob/v3beta/sendgrid/helpers/mail/README.md).
 
 data = {
   "asm": {

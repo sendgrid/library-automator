@@ -121,7 +121,14 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 
 ```python
-response = sg.client.access_settings.whitelist.delete()
+data = {
+  "ids": [
+    1, 
+    2, 
+    3
+  ]
+}
+response = sg.client.access_settings.whitelist.delete(request_body=data)
 print response.status_code
 print response.body
 print response.headers
@@ -809,9 +816,8 @@ For more information:
 
 
 ```python
-data = null
 campaign_id = "test_url_param"
-response = sg.client.campaigns._(campaign_id).schedules.now.post(request_body=data)
+response = sg.client.campaigns._(campaign_id).schedules.now.post()
 print response.status_code
 print response.body
 print response.headers
@@ -1052,7 +1058,13 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```python
-response = sg.client.contactdb.lists.delete()
+data = [
+  1, 
+  2, 
+  3, 
+  4
+]
+response = sg.client.contactdb.lists.delete(request_body=data)
 print response.status_code
 print response.body
 print response.headers
@@ -1161,10 +1173,9 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```python
-data = null
 list_id = "test_url_param"
 recipient_id = "test_url_param"
-response = sg.client.contactdb.lists._(list_id).recipients._(recipient_id).post(request_body=data)
+response = sg.client.contactdb.lists._(list_id).recipients._(recipient_id).post()
 print response.status_code
 print response.body
 print response.headers
@@ -1275,7 +1286,11 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```python
-response = sg.client.contactdb.recipients.delete()
+data = [
+  "recipient_id1", 
+  "recipient_id2"
+]
+response = sg.client.contactdb.recipients.delete(request_body=data)
 print response.status_code
 print response.body
 print response.headers
@@ -1909,8 +1924,7 @@ More Information:
 
 
 ```python
-data = null
-response = sg.client.mail.batch.post(request_body=data)
+response = sg.client.mail.batch.post()
 print response.status_code
 print response.body
 print response.headers
@@ -1948,7 +1962,6 @@ For more detailed information about how to use the v3 Mail Send endpoint, please
 
 ### POST /mail/send/beta
 
-This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-python/blob/v3beta/sendgrid/helpers/mail/README.md).
 
 ```python
 data = {
@@ -2897,7 +2910,14 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```python
-response = sg.client.suppression.blocks.delete()
+data = {
+  "delete_all": False, 
+  "emails": [
+    "example1@example.com", 
+    "example2@example.com"
+  ]
+}
+response = sg.client.suppression.blocks.delete(request_body=data)
 print response.status_code
 print response.body
 print response.headers
@@ -2977,7 +2997,14 @@ Note: the `delete_all` and `emails` parameters should be used independently of e
 
 
 ```python
-response = sg.client.suppression.bounces.delete()
+data = {
+  "delete_all": True, 
+  "emails": [
+    "example@example.com", 
+    "example2@example.com"
+  ]
+}
+response = sg.client.suppression.bounces.delete(request_body=data)
 print response.status_code
 print response.body
 print response.headers
@@ -3066,7 +3093,14 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```python
-response = sg.client.suppression.invalid_emails.delete()
+data = {
+  "delete_all": False, 
+  "emails": [
+    "example1@example.com", 
+    "example2@example.com"
+  ]
+}
+response = sg.client.suppression.invalid_emails.delete(request_body=data)
 print response.status_code
 print response.body
 print response.headers
@@ -3182,7 +3216,14 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```python
-response = sg.client.suppression.spam_reports.delete()
+data = {
+  "delete_all": False, 
+  "emails": [
+    "example1@example.com", 
+    "example2@example.com"
+  ]
+}
+response = sg.client.suppression.spam_reports.delete(request_body=data)
 print response.status_code
 print response.body
 print response.headers
@@ -3431,10 +3472,9 @@ For more information about transactional templates, please see our [User Guide](
 
 
 ```python
-data = null
 template_id = "test_url_param"
 version_id = "test_url_param"
-response = sg.client.templates._(template_id).versions._(version_id).activate.post(request_body=data)
+response = sg.client.templates._(template_id).versions._(version_id).activate.post()
 print response.status_code
 print response.body
 print response.headers
@@ -4333,9 +4373,8 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```python
-data = null
 id = "test_url_param"
-response = sg.client.whitelabel.domains._(id).validate.post(request_body=data)
+response = sg.client.whitelabel.domains._(id).validate.post()
 print response.status_code
 print response.body
 print response.headers
@@ -4432,9 +4471,8 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```python
-data = null
 id = "test_url_param"
-response = sg.client.whitelabel.ips._(id).validate.post(request_body=data)
+response = sg.client.whitelabel.ips._(id).validate.post()
 print response.status_code
 print response.body
 print response.headers
@@ -4618,9 +4656,8 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```python
-data = null
 id = "test_url_param"
-response = sg.client.whitelabel.links._(id).validate.post(request_body=data)
+response = sg.client.whitelabel.links._(id).validate.post()
 print response.status_code
 print response.body
 print response.headers

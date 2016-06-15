@@ -254,6 +254,10 @@ class CodeGenerator(object):
                     data = data.replace("false", "False")
             except TypeError, e:
                 pass
+            if raw_data:
+                pass
+            else:
+                data = None
         if self._language == "java":
             method = method.upper()
             if raw_data:
@@ -398,6 +402,10 @@ class CodeGenerator(object):
                     data = data.replace("false", "False")
             except TypeError, e:
                 pass
+            if raw_data:
+                pass
+            else:
+                data = None
         if self._language == "java":
             method = method.upper()
             if raw_data:
