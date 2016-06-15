@@ -5,7 +5,7 @@
 // This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-php/blob/master/lib/helpers/mail/README.md).
 {% endif %}
 
-{% if data and (method == "put" or method == "patch" or method == "post")  %}$request_body = json_decode('{{ data }}');
+{% if data and (method == "put" or method == "patch" or method == "post" or method == "delete")  %}$request_body = json_decode('{{ data }}');
 {% endif %}
 {% if params %}$query_params = json_decode('{{ params }}');
 {% endif %}

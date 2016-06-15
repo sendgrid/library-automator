@@ -10,8 +10,7 @@ $sg = new \SendGrid($apiKey);
 // Create a batch ID #
 // POST /mail/batch #
 
-$request_body = json_decode('null');
-$response = $sg->client->mail()->batch()->post($request_body);
+$response = $sg->client->mail()->batch()->post();
 echo $response->statusCode();
 echo $response->body();
 echo $response->headers();
@@ -29,7 +28,6 @@ echo $response->headers();
 ////////////////////////////////////////////////////
 // v3 Mail Send Beta #
 // POST /mail/send/beta #
-// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-php/blob/v3beta/lib/helpers/mail/README.md).
 
 $request_body = json_decode('{
   "asm": {

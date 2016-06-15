@@ -280,6 +280,11 @@ class CodeGenerator(object):
                 pass
             else:
                 data = None
+        if self._language == "php":
+            if raw_data:
+                pass
+            else:
+                data = None
         if self._language == "go":
             method = method.upper()
             api_call = "/" + api_call[:-1]
@@ -376,6 +381,11 @@ class CodeGenerator(object):
         params = self.generate_params(response_code, query_params, mock=False)
         url_params = self.generate_url_params(endpoint, None, None, "examples")
         if self._language == "ruby":
+            if raw_data:
+                pass
+            else:
+                data = None
+        if self._language == "php":
             if raw_data:
                 pass
             else:
