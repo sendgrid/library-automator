@@ -1,6 +1,5 @@
 using System;
-using SendGrid.Helpers.Mail;
-using System.Collections.Generic;
+using SendGrid.Helpers.Mail; // If you are using the Mail Helper
 
 string _apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 dynamic sg = new SendGrid.SendGridAPIClient(_apiKey);
@@ -29,7 +28,6 @@ Console.ReadLine();
 ////////////////////////////////////////////////////////
 // v3 Mail Send Beta
 // POST /mail/send/beta
-# This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-csharp/blob/v3beta/SendGrid/SendGrid/Helpers/Mail/README.md).
 
 string data = @"{
   'asm': {

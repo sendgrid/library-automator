@@ -1,6 +1,5 @@
 using System;
-using SendGrid.Helpers.Mail;
-using System.Collections.Generic;
+using SendGrid.Helpers.Mail; // If you are using the Mail Helper
 
 string _apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 dynamic sg = new SendGrid.SendGridAPIClient(_apiKey);
@@ -213,7 +212,7 @@ string data = @"{
   'unsubscribe': true, 
   'url': 'url'
 }";
-dynamic response = sg.client.user.webhooks._("event").settings.patch(requestBody: data);
+dynamic response = sg.client.user.webhooks._("_("event")").settings.patch(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
@@ -223,7 +222,7 @@ Console.ReadLine();
 // Retrieve Event Webhook settings
 // GET /user/webhooks/event/settings
 
-dynamic response = sg.client.user.webhooks._("event").settings.get();
+dynamic response = sg.client.user.webhooks._("_("event")").settings.get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
@@ -236,7 +235,7 @@ Console.ReadLine();
 string data = @"{
   'url': 'url'
 }";
-dynamic response = sg.client.user.webhooks._("event").test.post(requestBody: data);
+dynamic response = sg.client.user.webhooks._("_("event")").test.post(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());

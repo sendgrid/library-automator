@@ -4,8 +4,7 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 
 ```csharp
 using System;
-using SendGrid.Helpers.Mail;
-using System.Collections.Generic;
+using SendGrid.Helpers.Mail; // If you are using the Mail Helper
 
 string _apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 dynamic sg = new SendGrid.SendGridAPIClient(_apiKey);
@@ -2232,7 +2231,6 @@ For more detailed information about how to use the v3 Mail Send endpoint, please
 
 ### POST /mail/send/beta
 
-This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-csharp/blob/v3beta/SendGrid/SendGrid/Helpers/Mail/README.md).
 
 ```csharp
 string data = @"{
@@ -4552,7 +4550,7 @@ string data = @"{
   'unsubscribe': true, 
   'url': 'url'
 }";
-dynamic response = sg.client.user.webhooks._("event").settings.patch(requestBody: data);
+dynamic response = sg.client.user.webhooks._("_("event")").settings.patch(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
@@ -4573,7 +4571,7 @@ Common uses of this data are to remove unsubscribes, react to spam reports, dete
 
 
 ```csharp
-dynamic response = sg.client.user.webhooks._("event").settings.get();
+dynamic response = sg.client.user.webhooks._("_("event")").settings.get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
@@ -4595,7 +4593,7 @@ Common uses of this data are to remove unsubscribes, react to spam reports, dete
 string data = @"{
   'url': 'url'
 }";
-dynamic response = sg.client.user.webhooks._("event").test.post(requestBody: data);
+dynamic response = sg.client.user.webhooks._("_("event")").test.post(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
@@ -4727,7 +4725,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```csharp
-dynamic response = sg.client.whitelabel.domains._("default").get();
+dynamic response = sg.client.whitelabel.domains._("_("default")").get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
@@ -5145,7 +5143,7 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 string queryParams = @"{
   'domain': 'test_string'
 }";
-dynamic response = sg.client.whitelabel.links._("default").get(queryParams: queryParams);
+dynamic response = sg.client.whitelabel.links._("_("default")").get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());

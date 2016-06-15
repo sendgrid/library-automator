@@ -1,6 +1,5 @@
 using System;
-using SendGrid.Helpers.Mail;
-using System.Collections.Generic;
+using SendGrid.Helpers.Mail; // If you are using the Mail Helper
 
 string _apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
 dynamic sg = new SendGrid.SendGridAPIClient(_apiKey);
@@ -48,7 +47,7 @@ Console.ReadLine();
 // Get the default domain whitelabel.
 // GET /whitelabel/domains/default
 
-dynamic response = sg.client.whitelabel.domains._("default").get();
+dynamic response = sg.client.whitelabel.domains._("_("default")").get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
@@ -264,7 +263,7 @@ Console.ReadLine();
 string queryParams = @"{
   'domain': 'test_string'
 }";
-dynamic response = sg.client.whitelabel.links._("default").get(queryParams: queryParams);
+dynamic response = sg.client.whitelabel.links._("_("default")").get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
