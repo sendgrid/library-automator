@@ -6,11 +6,7 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.sendgrid.Client;
-import com.sendgrid.Method;
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.SendGrid;
+import com.sendgrid.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -2574,7 +2570,6 @@ For more detailed information about how to use the v3 Mail Send endpoint, please
 
 ### POST /mail/send/beta
 
-This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-java/blob/v3beta/src/main/java/com/sendgrid/helpers/README.md).
 
 ```java
   try {
