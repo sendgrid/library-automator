@@ -3,7 +3,7 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 # INITIALIZATION
 
 ```javascript
-var sg = require('../lib/sendgrid.js').SendGrid(process.env.SENDGRID_API_KEY)
+var sg = require('sendgrid').SendGrid(process.env.SENDGRID_API_KEY)
 ```
 
 # Table of Contents
@@ -2309,7 +2309,7 @@ For more detailed information about how to use the v3 Mail Send endpoint, please
 
 ### POST /mail/send/beta
 
-// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/blob/v3beta/lib/helpers/mail/README.md).
+// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/blob/master/lib/helpers/mail/README.md).
 
 ```javascript
   var request = sg.emptyRequest()

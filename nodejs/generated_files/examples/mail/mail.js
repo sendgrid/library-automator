@@ -1,4 +1,4 @@
-var sg = require('sendgrid-nodejs').SendGrid(process.env.SENDGRID_API_KEY)
+var sg = require('sendgrid').SendGrid(process.env.SENDGRID_API_KEY)
 
 ///////////////////////////////////////////////////
 // Create a batch ID
@@ -32,7 +32,6 @@ sg.API(request, function (response) {
 // v3 Mail Send Beta
 // POST /mail/send/beta
 
-// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/blob/v3beta/lib/helpers/mail/README.md).
 
 var request = sg.emptyRequest()
 request.body = {
