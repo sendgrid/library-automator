@@ -46,13 +46,17 @@ class CodeGenerator(object):
                         params = self.generate_params(response_code, query_params, mock=False, caller="test")
                         url_params = self.generate_url_params(endpoint)
                         if self._language == "python":
-                            try:
-                                if "true" in data:
-                                    data = data.replace("true", "True")
-                                if "false" in data:
-                                    data = data.replace("false", "False")
-                            except TypeError, e:
-                                pass
+                            if raw_data:
+                                try:
+                                    if "true" in data:
+                                        data = data.replace("true", "True")
+                                    if "false" in data:
+                                        data = data.replace("false", "False")
+                                except TypeError, e:
+                                    pass
+                            else:
+                                data = None
+
                             headers = self.generate_headers(response_code)
                         if self._language == "ruby":
                             headers = json.dumps(self.generate_headers(response_code))

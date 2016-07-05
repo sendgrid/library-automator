@@ -25,8 +25,9 @@ print(response.body)
 print(response.headers)
 
 ##################################################
-# v3 Mail Send Beta #
-# POST /mail/send/beta #
+# v3 Mail Send #
+# POST /mail/send #
+# This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-python/blob/master/sendgrid/helpers/mail/README.md).
 
 data = {
   "asm": {
@@ -117,13 +118,8 @@ data = {
       "send_at": 1409348513, 
       "subject": "Hello, World!", 
       "substitutions": {
-        "sub": {
-          "%name%": [
-            "John", 
-            "Jane", 
-            "Sam"
-          ]
-        }
+        "id": "substitutions", 
+        "type": "object"
       }, 
       "to": [
         {
@@ -171,7 +167,7 @@ data = {
     }
   }
 }
-response = sg.client.mail.send.beta.post(request_body=data)
+response = sg.client.mail.send.post(request_body=data)
 print(response.status_code)
 print(response.body)
 print(response.headers)
