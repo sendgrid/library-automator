@@ -24,8 +24,9 @@ puts response.body
 puts response.headers
 
 ##################################################
-# v3 Mail Send Beta #
-# POST /mail/send/beta #
+# v3 Mail Send #
+# POST /mail/send #
+# This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-ruby/blob/master/lib/helpers/mail/README.md).
 
 data = JSON.parse('{
   "asm": {
@@ -116,13 +117,8 @@ data = JSON.parse('{
       "send_at": 1409348513, 
       "subject": "Hello, World!", 
       "substitutions": {
-        "sub": {
-          "%name%": [
-            "John", 
-            "Jane", 
-            "Sam"
-          ]
-        }
+        "id": "substitutions", 
+        "type": "object"
       }, 
       "to": [
         {
@@ -170,7 +166,7 @@ data = JSON.parse('{
     }
   }
 }')
-response = sg.client.mail._("send").beta.post(request_body: data)
+response = sg.client.mail._("send").post(request_body: data)
 puts response.status_code
 puts response.body
 puts response.headers

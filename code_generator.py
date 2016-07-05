@@ -59,6 +59,10 @@ class CodeGenerator(object):
 
                             headers = self.generate_headers(response_code)
                         if self._language == "ruby":
+                            if raw_data:
+                                pass
+                            else:
+                                data = None
                             headers = json.dumps(self.generate_headers(response_code))
                         if self._language == "csharp":
                             headers = self.generate_headers(response_code)
