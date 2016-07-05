@@ -34,6 +34,9 @@ func TestGetRequest(t *testing.T) {
 	if request.Headers["User-Agent"] != "sendgrid/"+Version+";go" {
 		t.Error("Wrong User Agent")
 	}
+	if request.Headers["Accept"] != "application/json" {
+		t.Error("Wrong Accept header")
+	}
 }
 
 

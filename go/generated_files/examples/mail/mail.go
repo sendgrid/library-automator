@@ -45,14 +45,14 @@ func ValidatebatchID() {
 }
 
 ///////////////////////////////////////////////////
-// v3 Mail Send Beta
-// POST /mail/send/beta
-// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-go/blob/v3beta/helpers/mail/README.md).
+// v3 Mail Send
+// POST /mail/send
+// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-go/blob/master/helpers/mail/README.md).
 
-func v3MailSendBeta() {
+func v3MailSend() {
   apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
   host := "https://api.sendgrid.com"
-  request := sendgrid.GetRequest(apiKey, "/v3/mail/send/beta", host)
+  request := sendgrid.GetRequest(apiKey, "/v3/mail/send", host)
   request.Method = "POST"
   request.Body = []byte(` {
   "asm": {
@@ -143,13 +143,8 @@ func v3MailSendBeta() {
       "send_at": 1409348513, 
       "subject": "Hello, World!", 
       "substitutions": {
-        "sub": {
-          "%name%": [
-            "John", 
-            "Jane", 
-            "Sam"
-          ]
-        }
+        "id": "substitutions", 
+        "type": "object"
       }, 
       "to": [
         {
