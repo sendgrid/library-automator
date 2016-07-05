@@ -26,8 +26,9 @@ Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// v3 Mail Send Beta
-// POST /mail/send/beta
+// v3 Mail Send
+// POST /mail/send
+// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-csharp/blob/master/SendGrid/SendGrid/Helpers/Mail/README.md).
 
 string data = @"{
   'asm': {
@@ -118,13 +119,8 @@ string data = @"{
       'send_at': 1409348513, 
       'subject': 'Hello, World!', 
       'substitutions': {
-        'sub': {
-          '%name%': [
-            'John', 
-            'Jane', 
-            'Sam'
-          ]
-        }
+        'id': 'substitutions', 
+        'type': 'object'
       }, 
       'to': [
         {
@@ -172,7 +168,7 @@ string data = @"{
     }
   }
 }";
-dynamic response = sg.client.mail.send.beta.post(requestBody: data);
+dynamic response = sg.client.mail.send.post(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());

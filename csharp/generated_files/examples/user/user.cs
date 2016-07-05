@@ -242,10 +242,64 @@ Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// Retrieve Parse Webhook settings
+// Create a parse setting
+// POST /user/webhooks/parse/settings
+
+string data = @"{
+  'hostname': 'myhostname.com', 
+  'send_raw': false, 
+  'spam_check': true, 
+  'url': 'http://email.myhosthame.com'
+}";
+dynamic response = sg.client.user.webhooks.parse.settings.post(requestBody: data);
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Retrieve all parse settings
 // GET /user/webhooks/parse/settings
 
 dynamic response = sg.client.user.webhooks.parse.settings.get();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Update a parse setting
+// PATCH /user/webhooks/parse/settings/{hostname}
+
+string data = @"{
+  'send_raw': true, 
+  'spam_check': false, 
+  'url': 'http://newdomain.com/parse'
+}";
+var hostname = "test_url_param";
+dynamic response = sg.client.user.webhooks.parse.settings._(hostname).patch(requestBody: data);
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Retrieve a specific parse setting
+// GET /user/webhooks/parse/settings/{hostname}
+
+var hostname = "test_url_param";
+dynamic response = sg.client.user.webhooks.parse.settings._(hostname).get();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Delete a parse setting
+// DELETE /user/webhooks/parse/settings/{hostname}
+
+var hostname = "test_url_param";
+dynamic response = sg.client.user.webhooks.parse.settings._(hostname).delete();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());

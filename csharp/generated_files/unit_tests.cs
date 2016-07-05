@@ -373,6 +373,107 @@ namespace UnitTest
         }
 
         [Test]
+        public void test_alerts_post()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            string data = @"{
+  'email_to': 'example@example.com', 
+  'frequency': 'daily', 
+  'type': 'stats_notification'
+}";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "201");
+            dynamic response = sg.client.alerts.post(requestBody: data, requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+        }
+
+        [Test]
+        public void test_alerts_get()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "200");
+            dynamic response = sg.client.alerts.get(requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void test_alerts__alert_id__patch()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            string data = @"{
+  'email_to': 'example@example.com'
+}";
+            var alert_id = "test_url_param";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "200");
+            dynamic response = sg.client.alerts._(alert_id).patch(requestBody: data, requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void test_alerts__alert_id__get()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            var alert_id = "test_url_param";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "200");
+            dynamic response = sg.client.alerts._(alert_id).get(requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void test_alerts__alert_id__delete()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            var alert_id = "test_url_param";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "204");
+            dynamic response = sg.client.alerts._(alert_id).delete(requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
+        }
+
+        [Test]
         public void test_api_keys_post()
         {
             string _apiKey = "SendGrid API Key";
@@ -385,6 +486,7 @@ namespace UnitTest
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string data = @"{
   'name': 'My API Key', 
+  'sample': 'data', 
   'scopes': [
     'mail.send', 
     'alerts.create', 
@@ -409,10 +511,13 @@ namespace UnitTest
                 host = "http://localhost:4010";
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            string queryParams = @"{
+  'limit': 1
+}";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
-            dynamic response = sg.client.api_keys.get(requestHeaders: headers);
+            dynamic response = sg.client.api_keys.get(queryParams: queryParams, requestHeaders: headers);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
 
@@ -653,6 +758,32 @@ namespace UnitTest
         }
 
         [Test]
+        public void test_asm_groups__group_id__suppressions_search_post()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            string data = @"{
+  'recipient_emails': [
+    'exists1@example.com', 
+    'exists2@example.com', 
+    'doesnotexists@example.com'
+  ]
+}";
+            var group_id = "test_url_param";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "200");
+            dynamic response = sg.client.asm.groups._(group_id).suppressions.search.post(requestBody: data, requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
         public void test_asm_groups__group_id__suppressions__email__delete()
         {
             string _apiKey = "SendGrid API Key";
@@ -847,8 +978,8 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
-  'limit': 0, 
-  'offset': 0
+  'limit': 1, 
+  'offset': 1
 }";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -1325,7 +1456,7 @@ namespace UnitTest
   'name': 'newlistname'
 }";
             string queryParams = @"{
-  'list_id': 0
+  'list_id': 1
 }";
             var list_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
@@ -1347,7 +1478,7 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
-  'list_id': 0
+  'list_id': 1
 }";
             var list_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
@@ -1414,7 +1545,7 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
-  'list_id': 0, 
+  'list_id': 1, 
   'page': 1, 
   'page_size': 1
 }";
@@ -1458,8 +1589,8 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
-  'list_id': 0, 
-  'recipient_id': 0
+  'list_id': 1, 
+  'recipient_id': 1
 }";
             var list_id = "test_url_param";
             var recipient_id = "test_url_param";
@@ -1619,6 +1750,7 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
+  '%7Bfield_name%7D': 'test_string', 
   '{field_name}': 'test_string'
 }";
             Dictionary<String, String> headers = new Dictionary<String, String>();
@@ -1809,7 +1941,7 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
-  'segment_id': 0
+  'segment_id': 1
 }";
             var segment_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
@@ -2233,7 +2365,7 @@ namespace UnitTest
         }
 
         [Test]
-        public void test_mail_send_beta_post()
+        public void test_mail_send_post()
         {
             string _apiKey = "SendGrid API Key";
             string host = "";
@@ -2332,13 +2464,8 @@ namespace UnitTest
       'send_at': 1409348513, 
       'subject': 'Hello, World!', 
       'substitutions': {
-        'sub': {
-          '%name%': [
-            'John', 
-            'Jane', 
-            'Sam'
-          ]
-        }
+        'id': 'substitutions', 
+        'type': 'object'
       }, 
       'to': [
         {
@@ -2389,7 +2516,7 @@ namespace UnitTest
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "202");
-            dynamic response = sg.client.mail.send.beta.post(requestBody: data, requestHeaders: headers);
+            dynamic response = sg.client.mail.send.post(requestBody: data, requestHeaders: headers);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Accepted);
         }
 
@@ -2951,8 +3078,8 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
-  'limit': 0, 
-  'offset': 0, 
+  'limit': 1, 
+  'offset': 1, 
   'username': 'test_string'
 }";
             Dictionary<String, String> headers = new Dictionary<String, String>();
@@ -3222,7 +3349,7 @@ namespace UnitTest
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
   'date': 'test_string', 
-  'limit': 0, 
+  'limit': 1, 
   'offset': 1, 
   'sort_by_direction': 'asc', 
   'sort_by_metric': 'test_string'
@@ -3334,8 +3461,8 @@ namespace UnitTest
             }
             dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
             string queryParams = @"{
-  'end_time': 0, 
-  'start_time': 0
+  'end_time': 1, 
+  'start_time': 1
 }";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -4399,6 +4526,30 @@ namespace UnitTest
         }
 
         [Test]
+        public void test_user_webhooks_parse_settings_post()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            string data = @"{
+  'hostname': 'myhostname.com', 
+  'send_raw': false, 
+  'spam_check': true, 
+  'url': 'http://email.myhosthame.com'
+}";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "201");
+            dynamic response = sg.client.user.webhooks.parse.settings.post(requestBody: data, requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+        }
+
+        [Test]
         public void test_user_webhooks_parse_settings_get()
         {
             string _apiKey = "SendGrid API Key";
@@ -4414,6 +4565,68 @@ namespace UnitTest
             headers.Add("X-Mock", "200");
             dynamic response = sg.client.user.webhooks.parse.settings.get(requestHeaders: headers);
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void test_user_webhooks_parse_settings__hostname__patch()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            string data = @"{
+  'send_raw': true, 
+  'spam_check': false, 
+  'url': 'http://newdomain.com/parse'
+}";
+            var hostname = "test_url_param";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "200");
+            dynamic response = sg.client.user.webhooks.parse.settings._(hostname).patch(requestBody: data, requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void test_user_webhooks_parse_settings__hostname__get()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            var hostname = "test_url_param";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "200");
+            dynamic response = sg.client.user.webhooks.parse.settings._(hostname).get(requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
+        }
+
+        [Test]
+        public void test_user_webhooks_parse_settings__hostname__delete()
+        {
+            string _apiKey = "SendGrid API Key";
+            string host = "";
+            if( Environment.GetEnvironmentVariable("TRAVIS") == "true" ) {
+                host = Environment.GetEnvironmentVariable("MOCK_HOST");
+            } else {
+                host = "http://localhost:4010";
+            }
+            dynamic sg = new SendGrid.SendGridAPIClient(_apiKey, host);
+            var hostname = "test_url_param";
+            Dictionary<String, String> headers = new Dictionary<String, String>();
+            headers.Clear();
+            headers.Add("X-Mock", "204");
+            dynamic response = sg.client.user.webhooks.parse.settings._(hostname).delete(requestHeaders: headers);
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NoContent);
         }
 
         [Test]
