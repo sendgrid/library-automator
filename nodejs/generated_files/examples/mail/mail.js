@@ -29,9 +29,10 @@ sg.API(request, function (response) {
 })
 
 ///////////////////////////////////////////////////
-// v3 Mail Send Beta
-// POST /mail/send/beta
+// v3 Mail Send
+// POST /mail/send
 
+// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/blob/master/lib/helpers/mail/README.md).
 
 var request = sg.emptyRequest()
 request.body = {
@@ -123,13 +124,8 @@ request.body = {
       "send_at": 1409348513, 
       "subject": "Hello, World!", 
       "substitutions": {
-        "sub": {
-          "%name%": [
-            "John", 
-            "Jane", 
-            "Sam"
-          ]
-        }
+        "id": "substitutions", 
+        "type": "object"
       }, 
       "to": [
         {
@@ -178,7 +174,7 @@ request.body = {
   }
 };
 request.method = 'POST'
-request.path = '/v3/mail/send/beta'
+request.path = '/v3/mail/send'
 sg.API(request, function (response) {
   console.log(response.statusCode)
   console.log(response.body)
