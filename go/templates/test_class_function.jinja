@@ -1,11 +1,6 @@
 func Test_{{ test_name }}(t *testing.T){
   apiKey := "SENDGRID_APIKEY"
-  host := ""
-  if (os.Getenv("TRAVIS") == "true") {
-    host = os.Getenv("MOCK_HOST")
-  } else {
-    host = "http://localhost:4010"
-  }
+  host := "http://localhost:4010"
   request := GetRequest(apiKey, "/v3{{ api_call }}", host)
   request.Method = "{{ method }}"
   {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
