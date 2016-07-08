@@ -1,0 +1,8 @@
+
+    public static function tearDownAfterClass()
+    {
+        $command = 'kill '.self::$pid;
+        exec($command);
+        print("\nPrism shut down");
+    }
+

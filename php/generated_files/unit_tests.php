@@ -1,23 +1,65 @@
 <?php
 class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 {
-    public $apiKey;
-    public $sg;
+    protected static $apiKey;
+    protected static $sg;
+    protected static $pid;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->apiKey = "SENDGRID_API_KEY";
-        if(getenv('TRAVIS')) {
-            $host = array('host' => getenv('MOCK_HOST'));
-        } else {
-            $host = array('host' => 'http://localhost:4010');
+        self::$apiKey = "SENDGRID_API_KEY";
+        $host = array('host' => 'http://localhost:4010');
+        self::$sg = new SendGrid(self::$apiKey, $host);
+        if( file_exists( '/usr/local/bin/prism' ) == false ) {
+            if(strtoupper(substr(php_uname('s'), 0, 3)) != 'WIN'){
+                try {
+                    $proc_ls = proc_open("curl https://raw.githubusercontent.com/stoplightio/prism/master/install.sh",
+                                        array(
+                                            array("pipe","r"), //stdin
+                                            array("pipe","w"), //stdout
+                                            array("pipe","w")  //stderr
+                                        ),
+                                        $pipes);
+                    $output_ls = stream_get_contents($pipes[1]);
+                    fclose($pipes[0]);
+                    fclose($pipes[1]);
+                    fclose($pipes[2]);
+                    $return_value_ls = proc_close($proc_ls);
+                    $proc_grep = proc_open("sh",
+                                            array(
+                                                array("pipe","r"), //stdin
+                                                array("pipe","w"), //stdout
+                                                array("pipe","w")  //stderr
+                                            ),
+                                            $pipes);
+
+                    fwrite($pipes[0], $output_ls);
+                    fclose($pipes[0]);
+                    $output_grep = stream_get_contents($pipes[1]);
+
+                    fclose($pipes[1]);
+                    fclose($pipes[2]);
+                    proc_close($proc_grep);
+                } catch (Exception $e) {
+                    print("Error downloading the prism binary, you can try downloading directly here (https://github.com/stoplightio/prism/releases) and place in your /user/local/bin directory: " .  $e->getMessage() . "\n");
+                    exit();
+                }
+            } else {
+                print("Please download the Windows binary (https://github.com/stoplightio/prism/releases) and place it in your /usr/local/bin directory");
+                exit();
+            }
         }
-        $this->sg = new SendGrid($this->apiKey, $host);
+        print("Activating Prism (~20 seconds)\n");
+        $command = 'nohup prism run -s https://raw.githubusercontent.com/sendgrid/sendgrid-oai/master/oai_stoplight.json > /dev/null 2>&1 & echo $!';
+        exec($command, $op);
+        self::$pid = (int)$op[0];
+        sleep(15);
+        print("\nPrism Started");
     }
 
     public function testVersion()
     {
-        $this->assertEquals(SendGrid::VERSION, '5.0.0');
+        $this->assertEquals(SendGrid::VERSION, '5.0.3');
         $this->assertEquals(json_decode(file_get_contents(__DIR__ . '/../../composer.json'))->version, SendGrid::VERSION);
     }
 
@@ -27,7 +69,8 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $sg = new SendGrid($apiKey);
         $headers = array(
             'Authorization: Bearer '.$apiKey,
-            'User-Agent: sendgrid/' . $sg->version . ';php'
+            'User-Agent: sendgrid/' . $sg->version . ';php',
+            'Accept: application/json'
             );
         $this->assertEquals($sg->client->host, "https://api.sendgrid.com");
         $this->assertEquals($sg->client->request_headers, $headers);
@@ -42,7 +85,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"limit": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->access_settings()->activity()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->access_settings()->activity()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -62,14 +105,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->access_settings()->whitelist()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->access_settings()->whitelist()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
     public function test_access_settings_whitelist_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->access_settings()->whitelist()->get(null, null, $request_headers);
+        $response = self::$sg->client->access_settings()->whitelist()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -83,7 +126,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->access_settings()->whitelist()->delete($request_body, null, $request_headers);
+        $response = self::$sg->client->access_settings()->whitelist()->delete($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -91,7 +134,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $rule_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->access_settings()->whitelist()->_($rule_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->access_settings()->whitelist()->_($rule_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -99,7 +142,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $rule_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->access_settings()->whitelist()->_($rule_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->access_settings()->whitelist()->_($rule_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -111,14 +154,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "type": "stats_notification"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->alerts()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->alerts()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
     public function test_alerts_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->alerts()->get(null, null, $request_headers);
+        $response = self::$sg->client->alerts()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -129,7 +172,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $alert_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->alerts()->_($alert_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->alerts()->_($alert_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -137,7 +180,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $alert_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->alerts()->_($alert_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->alerts()->_($alert_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -145,7 +188,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $alert_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->alerts()->_($alert_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->alerts()->_($alert_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -161,7 +204,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->api_keys()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->api_keys()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -169,7 +212,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"limit": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->api_keys()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->api_keys()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -184,7 +227,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $api_key_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->api_keys()->_($api_key_id)->put($request_body, null, $request_headers);
+        $response = self::$sg->client->api_keys()->_($api_key_id)->put($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -195,7 +238,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $api_key_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->api_keys()->_($api_key_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->api_keys()->_($api_key_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -203,7 +246,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $api_key_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->api_keys()->_($api_key_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->api_keys()->_($api_key_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -211,7 +254,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $api_key_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->api_keys()->_($api_key_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->api_keys()->_($api_key_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -223,7 +266,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "name": "Product Suggestions"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->asm()->groups()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -231,7 +274,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"id": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->asm()->groups()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->asm()->groups()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -244,7 +287,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $group_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->asm()->groups()->_($group_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->_($group_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -252,7 +295,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $group_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->asm()->groups()->_($group_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->_($group_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -260,7 +303,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $group_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->asm()->groups()->_($group_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->_($group_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -274,7 +317,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $group_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->asm()->groups()->_($group_id)->suppressions()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->_($group_id)->suppressions()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -282,7 +325,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $group_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->asm()->groups()->_($group_id)->suppressions()->get(null, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->_($group_id)->suppressions()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -297,7 +340,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $group_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->asm()->groups()->_($group_id)->suppressions()->search()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->_($group_id)->suppressions()->search()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -306,14 +349,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $group_id = "test_url_param";
         $email = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->asm()->groups()->_($group_id)->suppressions()->_($email)->delete(null, null, $request_headers);
+        $response = self::$sg->client->asm()->groups()->_($group_id)->suppressions()->_($email)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
     public function test_asm_suppressions_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->asm()->suppressions()->get(null, null, $request_headers);
+        $response = self::$sg->client->asm()->suppressions()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -326,7 +369,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->asm()->suppressions()->global()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->asm()->suppressions()->global()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -334,7 +377,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->asm()->suppressions()->global()->_($email)->get(null, null, $request_headers);
+        $response = self::$sg->client->asm()->suppressions()->global()->_($email)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -342,7 +385,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->asm()->suppressions()->global()->_($email)->delete(null, null, $request_headers);
+        $response = self::$sg->client->asm()->suppressions()->global()->_($email)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -350,7 +393,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->asm()->suppressions()->_($email)->get(null, null, $request_headers);
+        $response = self::$sg->client->asm()->suppressions()->_($email)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -358,7 +401,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"end_date": "2016-04-01", "aggregated_by": "day", "browsers": "test_string", "limit": "test_string", "offset": "test_string", "start_date": "2016-01-01"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->browsers()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->browsers()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -385,7 +428,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "title": "March Newsletter"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->campaigns()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->campaigns()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -393,7 +436,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->campaigns()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->campaigns()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -410,7 +453,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -418,7 +461,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -426,7 +469,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -437,7 +480,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->schedules()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->schedules()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -448,7 +491,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->schedules()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->schedules()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -456,7 +499,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->schedules()->get(null, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->schedules()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -464,7 +507,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->schedules()->delete(null, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->schedules()->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -472,7 +515,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->schedules()->now()->post(null, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->schedules()->now()->post(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -483,7 +526,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $campaign_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->campaigns()->_($campaign_id)->schedules()->test()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->campaigns()->_($campaign_id)->schedules()->test()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -491,7 +534,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"category": "test_string", "limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->categories()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->categories()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -499,7 +542,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"end_date": "2016-04-01", "aggregated_by": "day", "limit": 1, "offset": 1, "start_date": "2016-01-01", "categories": "test_string"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->categories()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->categories()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -507,7 +550,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"end_date": "2016-04-01", "aggregated_by": "day", "limit": 1, "sort_by_metric": "test_string", "offset": 1, "start_date": "2016-01-01", "sort_by_direction": "asc"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->categories()->stats()->sums()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->categories()->stats()->sums()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -515,7 +558,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"aggregated_by": "day", "start_date": "2016-01-01", "end_date": "2016-04-01"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->clients()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->clients()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -524,7 +567,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"aggregated_by": "day", "start_date": "2016-01-01", "end_date": "2016-04-01"}');
         $client_type = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->clients()->_($client_type)->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->clients()->_($client_type)->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -535,14 +578,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "type": "text"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->contactdb()->custom_fields()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->custom_fields()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
     public function test_contactdb_custom_fields_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->custom_fields()->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->custom_fields()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -550,7 +593,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $custom_field_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->custom_fields()->_($custom_field_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->custom_fields()->_($custom_field_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -558,7 +601,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $custom_field_id = "test_url_param";
         $request_headers = array("X-Mock: 202");
-        $response = $this->sg->client->contactdb()->custom_fields()->_($custom_field_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->custom_fields()->_($custom_field_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 202);
     }
 
@@ -568,14 +611,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "name": "your list name"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->contactdb()->lists()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
     public function test_contactdb_lists_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->lists()->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -588,7 +631,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   4
 ]');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->contactdb()->lists()->delete($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->delete($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -600,7 +643,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"list_id": 1}');
         $list_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->lists()->_($list_id)->patch($request_body, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->_($list_id)->patch($request_body, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -609,7 +652,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"list_id": 1}');
         $list_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->lists()->_($list_id)->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->_($list_id)->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -618,7 +661,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"delete_contacts": "true"}');
         $list_id = "test_url_param";
         $request_headers = array("X-Mock: 202");
-        $response = $this->sg->client->contactdb()->lists()->_($list_id)->delete(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->_($list_id)->delete(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 202);
     }
 
@@ -630,7 +673,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 ]');
         $list_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->contactdb()->lists()->_($list_id)->recipients()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->_($list_id)->recipients()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -639,7 +682,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"page": 1, "page_size": 1, "list_id": 1}');
         $list_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->lists()->_($list_id)->recipients()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->_($list_id)->recipients()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -648,7 +691,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $list_id = "test_url_param";
         $recipient_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->contactdb()->lists()->_($list_id)->recipients()->_($recipient_id)->post(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->_($list_id)->recipients()->_($recipient_id)->post(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -658,7 +701,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $list_id = "test_url_param";
         $recipient_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->contactdb()->lists()->_($list_id)->recipients()->_($recipient_id)->delete(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->lists()->_($list_id)->recipients()->_($recipient_id)->delete(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -672,7 +715,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   }
 ]');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->contactdb()->recipients()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -693,7 +736,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   }
 ]');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->contactdb()->recipients()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -701,7 +744,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"page": 1, "page_size": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->recipients()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -712,21 +755,21 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "recipient_id2"
 ]');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->recipients()->delete($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->delete($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_contactdb_recipients_billable_count_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->recipients()->billable_count()->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->billable_count()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_contactdb_recipients_count_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->recipients()->count()->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->count()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -734,7 +777,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"%7Bfield_name%7D": "test_string", "{field_name}": "test_string"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->recipients()->search()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->search()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -742,7 +785,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $recipient_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->recipients()->_($recipient_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->_($recipient_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -750,7 +793,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $recipient_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->contactdb()->recipients()->_($recipient_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->_($recipient_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -758,14 +801,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $recipient_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->recipients()->_($recipient_id)->lists()->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->recipients()->_($recipient_id)->lists()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_contactdb_reserved_fields_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->reserved_fields()->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->reserved_fields()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -796,14 +839,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "name": "Last Name Miller"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->segments()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->contactdb()->segments()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_contactdb_segments_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->segments()->get(null, null, $request_headers);
+        $response = self::$sg->client->contactdb()->segments()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -824,7 +867,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"segment_id": "test_string"}');
         $segment_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->segments()->_($segment_id)->patch($request_body, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->segments()->_($segment_id)->patch($request_body, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -833,7 +876,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"segment_id": 1}');
         $segment_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->segments()->_($segment_id)->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->segments()->_($segment_id)->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -842,7 +885,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"delete_contacts": "true"}');
         $segment_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->contactdb()->segments()->_($segment_id)->delete(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->segments()->_($segment_id)->delete(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -851,7 +894,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"page": 1, "page_size": 1}');
         $segment_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->contactdb()->segments()->_($segment_id)->recipients()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->contactdb()->segments()->_($segment_id)->recipients()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -859,7 +902,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"aggregated_by": "day", "limit": 1, "start_date": "2016-01-01", "end_date": "2016-04-01", "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->devices()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->devices()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -867,7 +910,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"end_date": "2016-04-01", "country": "US", "aggregated_by": "day", "limit": 1, "offset": 1, "start_date": "2016-01-01"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->geo()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->geo()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -875,14 +918,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"subuser": "test_string", "ip": "test_string", "limit": 1, "exclude_whitelabels": "true", "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->ips()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_ips_assigned_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->assigned()->get(null, null, $request_headers);
+        $response = self::$sg->client->ips()->assigned()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -892,14 +935,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "name": "marketing"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->pools()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->ips()->pools()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_ips_pools_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->pools()->get(null, null, $request_headers);
+        $response = self::$sg->client->ips()->pools()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -910,7 +953,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $pool_name = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->pools()->_($pool_name)->put($request_body, null, $request_headers);
+        $response = self::$sg->client->ips()->pools()->_($pool_name)->put($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -918,7 +961,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $pool_name = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->pools()->_($pool_name)->get(null, null, $request_headers);
+        $response = self::$sg->client->ips()->pools()->_($pool_name)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -926,7 +969,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $pool_name = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->ips()->pools()->_($pool_name)->delete(null, null, $request_headers);
+        $response = self::$sg->client->ips()->pools()->_($pool_name)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -937,7 +980,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $pool_name = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->ips()->pools()->_($pool_name)->ips()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->ips()->pools()->_($pool_name)->ips()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -946,7 +989,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $pool_name = "test_url_param";
         $ip = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->ips()->pools()->_($pool_name)->ips()->_($ip)->delete(null, null, $request_headers);
+        $response = self::$sg->client->ips()->pools()->_($pool_name)->ips()->_($ip)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -956,14 +999,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "ip": "0.0.0.0"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->warmup()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->ips()->warmup()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_ips_warmup_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->warmup()->get(null, null, $request_headers);
+        $response = self::$sg->client->ips()->warmup()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -971,7 +1014,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $ip_address = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->warmup()->_($ip_address)->get(null, null, $request_headers);
+        $response = self::$sg->client->ips()->warmup()->_($ip_address)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -979,7 +1022,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $ip_address = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->ips()->warmup()->_($ip_address)->delete(null, null, $request_headers);
+        $response = self::$sg->client->ips()->warmup()->_($ip_address)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -987,14 +1030,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $ip_address = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->ips()->_($ip_address)->get(null, null, $request_headers);
+        $response = self::$sg->client->ips()->_($ip_address)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_batch_post()
     {
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->mail()->batch()->post(null, null, $request_headers);
+        $response = self::$sg->client->mail()->batch()->post(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -1002,7 +1045,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $batch_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail()->batch()->_($batch_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->mail()->batch()->_($batch_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1147,7 +1190,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   }
 }');
         $request_headers = array("X-Mock: 202");
-        $response = $this->sg->client->mail()->send()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->mail()->send()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 202);
     }
 
@@ -1155,7 +1198,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->mail_settings()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1169,14 +1212,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->address_whitelist()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->address_whitelist()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_address_whitelist_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->address_whitelist()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->address_whitelist()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1187,14 +1230,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "enabled": false
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->bcc()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->bcc()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_bcc_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->bcc()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->bcc()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1206,14 +1249,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "soft_bounces": 5
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->bounce_purge()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->bounce_purge()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_bounce_purge_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->bounce_purge()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->bounce_purge()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1225,14 +1268,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "plain_content": "..."
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->footer()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->footer()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_footer_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->footer()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->footer()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1243,14 +1286,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "enabled": true
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->forward_bounce()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->forward_bounce()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_forward_bounce_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->forward_bounce()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->forward_bounce()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1261,14 +1304,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "enabled": false
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->forward_spam()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->forward_spam()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_forward_spam_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->forward_spam()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->forward_spam()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1278,14 +1321,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "enabled": false
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->plain_content()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->plain_content()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_plain_content_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->plain_content()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->plain_content()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1297,14 +1340,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "url": "url"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->spam_check()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->spam_check()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_spam_check_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->spam_check()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->spam_check()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1315,14 +1358,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "html_content": "<% body %>"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->template()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->template()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_mail_settings_template_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mail_settings()->template()->get(null, null, $request_headers);
+        $response = self::$sg->client->mail_settings()->template()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1330,7 +1373,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"end_date": "2016-04-01", "mailbox_providers": "test_string", "aggregated_by": "day", "limit": 1, "offset": 1, "start_date": "2016-01-01"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->mailbox_providers()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->mailbox_providers()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1338,7 +1381,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->partner_settings()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->partner_settings()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1350,21 +1393,21 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "license_key": ""
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->partner_settings()->new_relic()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->partner_settings()->new_relic()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_partner_settings_new_relic_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->partner_settings()->new_relic()->get(null, null, $request_headers);
+        $response = self::$sg->client->partner_settings()->new_relic()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_scopes_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->scopes()->get(null, null, $request_headers);
+        $response = self::$sg->client->scopes()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1372,7 +1415,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"aggregated_by": "day", "limit": 1, "start_date": "2016-01-01", "end_date": "2016-04-01", "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1388,7 +1431,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "username": "John@example.com"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->subusers()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1396,7 +1439,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"username": "test_string", "limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->subusers()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1404,7 +1447,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"usernames": "test_string"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->reputations()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->subusers()->reputations()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1412,7 +1455,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"end_date": "2016-04-01", "aggregated_by": "day", "limit": 1, "offset": 1, "start_date": "2016-01-01", "subusers": "test_string"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->subusers()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1420,7 +1463,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"subuser": "test_string", "limit": 1, "sort_by_metric": "test_string", "offset": 1, "date": "test_string", "sort_by_direction": "asc"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->stats()->monthly()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->subusers()->stats()->monthly()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1428,7 +1471,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"end_date": "2016-04-01", "aggregated_by": "day", "limit": 1, "sort_by_metric": "test_string", "offset": 1, "start_date": "2016-01-01", "sort_by_direction": "asc"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->stats()->sums()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->subusers()->stats()->sums()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1439,7 +1482,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->subusers()->_($subuser_name)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1447,7 +1490,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->subusers()->_($subuser_name)->delete(null, null, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1458,7 +1501,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 ]');
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->_($subuser_name)->ips()->put($request_body, null, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->ips()->put($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1470,7 +1513,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->_($subuser_name)->monitor()->put($request_body, null, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->monitor()->put($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1482,7 +1525,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->_($subuser_name)->monitor()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->monitor()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1490,7 +1533,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->_($subuser_name)->monitor()->get(null, null, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->monitor()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1498,7 +1541,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->subusers()->_($subuser_name)->monitor()->delete(null, null, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->monitor()->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1507,7 +1550,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"date": "test_string", "sort_by_direction": "asc", "limit": 1, "sort_by_metric": "test_string", "offset": 1}');
         $subuser_name = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->subusers()->_($subuser_name)->stats()->monthly()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->subusers()->_($subuser_name)->stats()->monthly()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1515,7 +1558,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"start_time": 1, "limit": 1, "end_time": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->blocks()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->suppression()->blocks()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1529,7 +1572,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->blocks()->delete($request_body, null, $request_headers);
+        $response = self::$sg->client->suppression()->blocks()->delete($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1537,7 +1580,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->blocks()->_($email)->get(null, null, $request_headers);
+        $response = self::$sg->client->suppression()->blocks()->_($email)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1545,7 +1588,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->blocks()->_($email)->delete(null, null, $request_headers);
+        $response = self::$sg->client->suppression()->blocks()->_($email)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1553,7 +1596,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"start_time": 1, "end_time": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->bounces()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->suppression()->bounces()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1567,7 +1610,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->bounces()->delete($request_body, null, $request_headers);
+        $response = self::$sg->client->suppression()->bounces()->delete($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1575,7 +1618,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->bounces()->_($email)->get(null, null, $request_headers);
+        $response = self::$sg->client->suppression()->bounces()->_($email)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1584,7 +1627,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $query_params = json_decode('{"email_address": "example@example.com"}');
         $email = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->bounces()->_($email)->delete(null, $query_params, $request_headers);
+        $response = self::$sg->client->suppression()->bounces()->_($email)->delete(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1592,7 +1635,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"start_time": 1, "limit": 1, "end_time": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->invalid_emails()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->suppression()->invalid_emails()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1606,7 +1649,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->invalid_emails()->delete($request_body, null, $request_headers);
+        $response = self::$sg->client->suppression()->invalid_emails()->delete($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1614,7 +1657,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->invalid_emails()->_($email)->get(null, null, $request_headers);
+        $response = self::$sg->client->suppression()->invalid_emails()->_($email)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1622,7 +1665,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->invalid_emails()->_($email)->delete(null, null, $request_headers);
+        $response = self::$sg->client->suppression()->invalid_emails()->_($email)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1630,7 +1673,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->spam_report()->_($email)->get(null, null, $request_headers);
+        $response = self::$sg->client->suppression()->spam_report()->_($email)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1638,7 +1681,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $email = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->spam_report()->_($email)->delete(null, null, $request_headers);
+        $response = self::$sg->client->suppression()->spam_report()->_($email)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1646,7 +1689,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"start_time": 1, "limit": 1, "end_time": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->spam_reports()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->suppression()->spam_reports()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1660,7 +1703,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   ]
 }');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->suppression()->spam_reports()->delete($request_body, null, $request_headers);
+        $response = self::$sg->client->suppression()->spam_reports()->delete($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1668,7 +1711,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"start_time": 1, "limit": 1, "end_time": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->suppression()->unsubscribes()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->suppression()->unsubscribes()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1678,14 +1721,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "name": "example_name"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->templates()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->templates()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
     public function test_templates_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->templates()->get(null, null, $request_headers);
+        $response = self::$sg->client->templates()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1696,7 +1739,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $template_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->templates()->_($template_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1704,7 +1747,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $template_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->templates()->_($template_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1712,7 +1755,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $template_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->templates()->_($template_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1728,7 +1771,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $template_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->templates()->_($template_id)->versions()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->versions()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -1744,7 +1787,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $template_id = "test_url_param";
         $version_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->templates()->_($template_id)->versions()->_($version_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->versions()->_($version_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1753,7 +1796,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $template_id = "test_url_param";
         $version_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->templates()->_($template_id)->versions()->_($version_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->versions()->_($version_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1762,7 +1805,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $template_id = "test_url_param";
         $version_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->templates()->_($template_id)->versions()->_($version_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->versions()->_($version_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1771,7 +1814,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $template_id = "test_url_param";
         $version_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->templates()->_($template_id)->versions()->_($version_id)->activate()->post(null, null, $request_headers);
+        $response = self::$sg->client->templates()->_($template_id)->versions()->_($version_id)->activate()->post(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1779,7 +1822,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->tracking_settings()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1789,14 +1832,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "enabled": true
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->click()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->click()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_tracking_settings_click_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->click()->get(null, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->click()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1811,14 +1854,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "utm_term": ""
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->google_analytics()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->google_analytics()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_tracking_settings_google_analytics_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->google_analytics()->get(null, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->google_analytics()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1828,14 +1871,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "enabled": true
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->open()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->open()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_tracking_settings_open_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->open()->get(null, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->open()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1850,28 +1893,28 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "url": "url"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->subscription()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->subscription()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_tracking_settings_subscription_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->tracking_settings()->subscription()->get(null, null, $request_headers);
+        $response = self::$sg->client->tracking_settings()->subscription()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_user_account_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->account()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->account()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_user_credits_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->credits()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->credits()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1881,14 +1924,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "email": "example@example.com"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->email()->put($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->email()->put($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_user_email_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->email()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->email()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1899,7 +1942,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "old_password": "old_password"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->password()->put($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->password()->put($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1911,14 +1954,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "last_name": "User"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->profile()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->profile()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_user_profile_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->profile()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->profile()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1929,14 +1972,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "status": "pause"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->user()->scheduled_sends()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->scheduled_sends()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
     public function test_user_scheduled_sends_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->scheduled_sends()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->scheduled_sends()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1947,7 +1990,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $batch_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->user()->scheduled_sends()->_($batch_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->scheduled_sends()->_($batch_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1955,7 +1998,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $batch_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->scheduled_sends()->_($batch_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->scheduled_sends()->_($batch_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1963,7 +2006,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $batch_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->user()->scheduled_sends()->_($batch_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->user()->scheduled_sends()->_($batch_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -1974,14 +2017,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "require_valid_cert": false
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->settings()->enforced_tls()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->settings()->enforced_tls()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_user_settings_enforced_tls_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->settings()->enforced_tls()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->settings()->enforced_tls()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -1991,14 +2034,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "username": "test_username"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->username()->put($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->username()->put($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_user_username_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->username()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->username()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2020,14 +2063,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "url": "url"
 }');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->webhooks()->event()->settings()->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->event()->settings()->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_user_webhooks_event_settings_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->webhooks()->event()->settings()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->event()->settings()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2037,7 +2080,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "url": "url"
 }');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->user()->webhooks()->event()->test()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->event()->test()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -2050,14 +2093,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "url": "http://email.myhosthame.com"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->user()->webhooks()->parse()->settings()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->parse()->settings()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
     public function test_user_webhooks_parse_settings_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->webhooks()->parse()->settings()->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->parse()->settings()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2070,7 +2113,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $hostname = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->webhooks()->parse()->settings()->_($hostname)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->parse()->settings()->_($hostname)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2078,7 +2121,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $hostname = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->webhooks()->parse()->settings()->_($hostname)->get(null, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->parse()->settings()->_($hostname)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2086,7 +2129,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $hostname = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->user()->webhooks()->parse()->settings()->_($hostname)->delete(null, null, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->parse()->settings()->_($hostname)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -2094,7 +2137,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"aggregated_by": "day", "limit": "test_string", "start_date": "2016-01-01", "end_date": "2016-04-01", "offset": "test_string"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->user()->webhooks()->parse()->stats()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->user()->webhooks()->parse()->stats()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2113,7 +2156,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "username": "john@example.com"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->whitelabel()->domains()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -2121,28 +2164,28 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"username": "test_string", "domain": "test_string", "exclude_subusers": "true", "limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_whitelabel_domains_default_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->default()->get(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->default()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_whitelabel_domains_subuser_get()
     {
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->subuser()->get(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->subuser()->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
     public function test_whitelabel_domains_subuser_delete()
     {
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->whitelabel()->domains()->subuser()->delete(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->subuser()->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -2154,7 +2197,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $domain_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->_($domain_id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->_($domain_id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2162,7 +2205,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $domain_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->_($domain_id)->get(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->_($domain_id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2170,7 +2213,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $domain_id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->whitelabel()->domains()->_($domain_id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->_($domain_id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -2181,7 +2224,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $domain_id = "test_url_param";
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->whitelabel()->domains()->_($domain_id)->subuser()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->_($domain_id)->subuser()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -2192,7 +2235,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->_($id)->ips()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->_($id)->ips()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2201,7 +2244,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $id = "test_url_param";
         $ip = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->_($id)->ips()->_($ip)->delete(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->_($id)->ips()->_($ip)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2209,7 +2252,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->domains()->_($id)->validate()->post(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->domains()->_($id)->validate()->post(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2221,7 +2264,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
   "subdomain": "email"
 }');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->whitelabel()->ips()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->ips()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -2229,7 +2272,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"ip": "test_string", "limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->ips()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->whitelabel()->ips()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2237,7 +2280,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->ips()->_($id)->get(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->ips()->_($id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2245,7 +2288,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->whitelabel()->ips()->_($id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->ips()->_($id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -2253,7 +2296,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->ips()->_($id)->validate()->post(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->ips()->_($id)->validate()->post(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2266,7 +2309,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $query_params = json_decode('{"limit": 1, "offset": 1}');
         $request_headers = array("X-Mock: 201");
-        $response = $this->sg->client->whitelabel()->links()->post($request_body, $query_params, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->post($request_body, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 201);
     }
 
@@ -2274,7 +2317,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"limit": 1}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->links()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2282,7 +2325,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"domain": "test_string"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->links()->default()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->default()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2290,7 +2333,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"username": "test_string"}');
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->links()->subuser()->get(null, $query_params, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->subuser()->get(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2298,7 +2341,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $query_params = json_decode('{"username": "test_string"}');
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->whitelabel()->links()->subuser()->delete(null, $query_params, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->subuser()->delete(null, $query_params, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -2309,7 +2352,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->links()->_($id)->patch($request_body, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->_($id)->patch($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2317,7 +2360,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->links()->_($id)->get(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->_($id)->get(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2325,7 +2368,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $id = "test_url_param";
         $request_headers = array("X-Mock: 204");
-        $response = $this->sg->client->whitelabel()->links()->_($id)->delete(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->_($id)->delete(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 204);
     }
 
@@ -2333,7 +2376,7 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
     {
         $id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->links()->_($id)->validate()->post(null, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->_($id)->validate()->post(null, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
     }
 
@@ -2344,7 +2387,14 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 }');
         $link_id = "test_url_param";
         $request_headers = array("X-Mock: 200");
-        $response = $this->sg->client->whitelabel()->links()->_($link_id)->subuser()->post($request_body, null, $request_headers);
+        $response = self::$sg->client->whitelabel()->links()->_($link_id)->subuser()->post($request_body, null, $request_headers);
         $this->assertEquals($response->statusCode(), 200);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        $command = 'kill '.self::$pid;
+        exec($command);
+        print("\nPrism shut down");
     }
 }

@@ -1,23 +1,65 @@
 <?php
 class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
 {
-    public $apiKey;
-    public $sg;
+    protected static $apiKey;
+    protected static $sg;
+    protected static $pid;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        $this->apiKey = "SENDGRID_API_KEY";
-        if(getenv('TRAVIS')) {
-            $host = array('host' => getenv('MOCK_HOST'));
-        } else {
-            $host = array('host' => 'http://localhost:4010');
+        self::$apiKey = "SENDGRID_API_KEY";
+        $host = array('host' => 'http://localhost:4010');
+        self::$sg = new SendGrid(self::$apiKey, $host);
+        if( file_exists( '/usr/local/bin/prism' ) == false ) {
+            if(strtoupper(substr(php_uname('s'), 0, 3)) != 'WIN'){
+                try {
+                    $proc_ls = proc_open("curl https://raw.githubusercontent.com/stoplightio/prism/master/install.sh",
+                                        array(
+                                            array("pipe","r"), //stdin
+                                            array("pipe","w"), //stdout
+                                            array("pipe","w")  //stderr
+                                        ),
+                                        $pipes);
+                    $output_ls = stream_get_contents($pipes[1]);
+                    fclose($pipes[0]);
+                    fclose($pipes[1]);
+                    fclose($pipes[2]);
+                    $return_value_ls = proc_close($proc_ls);
+                    $proc_grep = proc_open("sh",
+                                            array(
+                                                array("pipe","r"), //stdin
+                                                array("pipe","w"), //stdout
+                                                array("pipe","w")  //stderr
+                                            ),
+                                            $pipes);
+
+                    fwrite($pipes[0], $output_ls);
+                    fclose($pipes[0]);
+                    $output_grep = stream_get_contents($pipes[1]);
+
+                    fclose($pipes[1]);
+                    fclose($pipes[2]);
+                    proc_close($proc_grep);
+                } catch (Exception $e) {
+                    print("Error downloading the prism binary, you can try downloading directly here (https://github.com/stoplightio/prism/releases) and place in your /user/local/bin directory: " .  $e->getMessage() . "\n");
+                    exit();
+                }
+            } else {
+                print("Please download the Windows binary (https://github.com/stoplightio/prism/releases) and place it in your /usr/local/bin directory");
+                exit();
+            }
         }
-        $this->sg = new SendGrid($this->apiKey, $host);
+        print("Activating Prism (~20 seconds)\n");
+        $command = 'nohup prism run -s https://raw.githubusercontent.com/sendgrid/sendgrid-oai/master/oai_stoplight.json > /dev/null 2>&1 & echo $!';
+        exec($command, $op);
+        self::$pid = (int)$op[0];
+        sleep(15);
+        print("\nPrism Started");
     }
 
     public function testVersion()
     {
-        $this->assertEquals(SendGrid::VERSION, '5.0.0');
+        $this->assertEquals(SendGrid::VERSION, '5.0.3');
         $this->assertEquals(json_decode(file_get_contents(__DIR__ . '/../../composer.json'))->version, SendGrid::VERSION);
     }
 
@@ -27,7 +69,8 @@ class SendGridTest_SendGrid extends \PHPUnit_Framework_TestCase
         $sg = new SendGrid($apiKey);
         $headers = array(
             'Authorization: Bearer '.$apiKey,
-            'User-Agent: sendgrid/' . $sg->version . ';php'
+            'User-Agent: sendgrid/' . $sg->version . ';php',
+            'Accept: application/json'
             );
         $this->assertEquals($sg->client->host, "https://api.sendgrid.com");
         $this->assertEquals($sg->client->request_headers, $headers);

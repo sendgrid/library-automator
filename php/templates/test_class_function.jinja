@@ -9,7 +9,7 @@
         {% endif %}
         {% if headers %}        $request_headers = array("{{ headers }}");
         {% endif %}
-        $response = $this->sg->client->{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post" or method == "delete") %}$request_body{% else %}null{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post" or method == "delete")) %}{% endif %}{% if params %}, $query_params{% else %}, null{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post" or method == "delete") or params) %}{% endif %}, $request_headers{% endif %});
+        $response = self::$sg->client->{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post" or method == "delete") %}$request_body{% else %}null{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post" or method == "delete")) %}{% endif %}{% if params %}, $query_params{% else %}, null{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post" or method == "delete") or params) %}{% endif %}, $request_headers{% endif %});
         $this->assertEquals($response->statusCode(), {{ response_code }});
     }
 
