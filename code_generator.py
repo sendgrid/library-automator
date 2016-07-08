@@ -125,10 +125,16 @@ class CodeGenerator(object):
             generated_test_class += "}"
         if self._language == "csharp":
             generated_test_class += "    }\n}"
+        if self._language == "python":
+            generated_test_class += self.generate_test_class_footer_python()
         return generated_test_class
 
     def generate_test_class_header(self):
         t = self.env.get_template('test_header.jinja')
+        return t.render()
+
+    def generate_test_class_footer_python(self):
+        t = self.env.get_template('test_footer.jinja')
         return t.render()
 
     def generate_test_class_function(self,
