@@ -1,0 +1,11 @@
+        [TestFixtureTearDown]
+        public void Dispose()
+        {
+            if (Environment.GetEnvironmentVariable("TRAVIS") != "true")
+            {
+                process.Kill();
+                Trace.WriteLine("Sutting Down Prism");
+            }
+        }
+
+

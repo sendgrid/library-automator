@@ -125,6 +125,7 @@ class CodeGenerator(object):
         if self._language == "java":
             generated_test_class += "}"
         if self._language == "csharp":
+            generated_test_class += self.generate_test_class_footer()
             generated_test_class += "    }\n}"
         if self._language == "python":
             generated_test_class += self.generate_test_class_footer()
