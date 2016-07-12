@@ -30,6 +30,7 @@ $sg = new \SendGrid($apiKey);
 * [MAILBOX PROVIDERS](#mailbox_providers)
 * [PARTNER SETTINGS](#partner_settings)
 * [SCOPES](#scopes)
+* [SENDERS](#senders)
 * [STATS](#stats)
 * [SUBUSERS](#subusers)
 * [SUPPRESSION](#suppression)
@@ -1488,7 +1489,7 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```php
-$query_params = json_decode('{"%7Bfield_name%7D": "test_string", "{field_name}": "test_string"}');
+$query_params = json_decode('{"{field_name}": "test_string"}');
 $response = $sg->client->contactdb()->recipients()->search()->get(null, $query_params);
 echo $response->statusCode();
 echo $response->body();
@@ -2713,6 +2714,141 @@ API Keys can be used to authenticate the use of [SendGrids v3 Web API](https://s
 
 ```php
 $response = $sg->client->scopes()->get();
+echo $response->statusCode();
+echo $response->body();
+echo $response->headers();
+```
+<a name="senders"></a>
+# SENDERS
+
+## Create a Sender Identity
+
+**This endpoint allows you to create a new sender identity.**
+
+*You may create up to 100 unique sender identities.*
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### POST /senders
+
+
+```php
+$request_body = json_decode('{
+  "address": "123 Elm St.", 
+  "address_2": "Apt. 456", 
+  "city": "Denver", 
+  "country": "United States", 
+  "from": {
+    "email": "from@example.com", 
+    "name": "Example INC"
+  }, 
+  "nickname": "My Sender ID", 
+  "reply_to": {
+    "email": "replyto@example.com", 
+    "name": "Example INC"
+  }, 
+  "state": "Colorado", 
+  "zip": "80202"
+}');
+$response = $sg->client->senders()->post($request_body);
+echo $response->statusCode();
+echo $response->body();
+echo $response->headers();
+```
+## Get all Sender Identities
+
+**This endpoint allows you to retrieve a list of all sender identities that have been created for your account.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### GET /senders
+
+
+```php
+$response = $sg->client->senders()->get();
+echo $response->statusCode();
+echo $response->body();
+echo $response->headers();
+```
+## Update a Sender Identity
+
+**This endpoint allows you to update a sender identity.**
+
+Updates to `from.email` require re-verification. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+Partial updates are allowed, but fields that are marked as "required" in the POST (create) endpoint must not be nil if that field is included in the PATCH request.
+
+### PATCH /senders/{sender_id}
+
+
+```php
+$request_body = json_decode('{
+  "address": "123 Elm St.", 
+  "address_2": "Apt. 456", 
+  "city": "Denver", 
+  "country": "United States", 
+  "from": {
+    "email": "from@example.com", 
+    "name": "Example INC"
+  }, 
+  "nickname": "My Sender ID", 
+  "reply_to": {
+    "email": "replyto@example.com", 
+    "name": "Example INC"
+  }, 
+  "state": "Colorado", 
+  "zip": "80202"
+}');
+$sender_id = "test_url_param";
+$response = $sg->client->senders()->_($sender_id)->patch($request_body);
+echo $response->statusCode();
+echo $response->body();
+echo $response->headers();
+```
+## View a Sender Identity
+
+**This endpoint allows you to retrieve a specific sender identity.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### GET /senders/{sender_id}
+
+
+```php
+$sender_id = "test_url_param";
+$response = $sg->client->senders()->_($sender_id)->get();
+echo $response->statusCode();
+echo $response->body();
+echo $response->headers();
+```
+## Delete a Sender Identity
+
+**This endoint allows you to delete one of your sender identities.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### DELETE /senders/{sender_id}
+
+
+```php
+$sender_id = "test_url_param";
+$response = $sg->client->senders()->_($sender_id)->delete();
+echo $response->statusCode();
+echo $response->body();
+echo $response->headers();
+```
+## Resend Sender Identity Verification
+
+**This enpdoint allows you to resend a sender identity verification email.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### POST /senders/{sender_id}/resend_verification
+
+
+```php
+$sender_id = "test_url_param";
+$response = $sg->client->senders()->_($sender_id)->resend_verification()->post();
 echo $response->statusCode();
 echo $response->body();
 echo $response->headers();
