@@ -25,6 +25,7 @@ var sg = require('sendgrid').SendGrid(process.env.SENDGRID_API_KEY)
 * [MAILBOX PROVIDERS](#mailbox_providers)
 * [PARTNER SETTINGS](#partner_settings)
 * [SCOPES](#scopes)
+* [SENDERS](#senders)
 * [STATS](#stats)
 * [SUBUSERS](#subusers)
 * [SUPPRESSION](#suppression)
@@ -1742,7 +1743,6 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 ```javascript
   var request = sg.emptyRequest()
-  request.queryParams["%7Bfield_name%7D"] = 'test_string'
   request.queryParams["{field_name}"] = 'test_string'
   request.method = 'GET'
   request.path = '/v3/contactdb/recipients/search'
@@ -3185,6 +3185,161 @@ API Keys can be used to authenticate the use of [SendGrids v3 Web API](https://s
   var request = sg.emptyRequest()
   request.method = 'GET'
   request.path = '/v3/scopes'
+  sg.API(request, function (response) {
+    console.log(response.statusCode)
+    console.log(response.body)
+    console.log(response.headers)
+  })
+  ```
+<a name="senders"></a>
+# SENDERS
+
+## Create a Sender Identity
+
+**This endpoint allows you to create a new sender identity.**
+
+*You may create up to 100 unique sender identities.*
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### POST /senders
+
+
+```javascript
+  var request = sg.emptyRequest()
+  request.body = {
+  "address": "123 Elm St.", 
+  "address_2": "Apt. 456", 
+  "city": "Denver", 
+  "country": "United States", 
+  "from": {
+    "email": "from@example.com", 
+    "name": "Example INC"
+  }, 
+  "nickname": "My Sender ID", 
+  "reply_to": {
+    "email": "replyto@example.com", 
+    "name": "Example INC"
+  }, 
+  "state": "Colorado", 
+  "zip": "80202"
+};
+  request.method = 'POST'
+  request.path = '/v3/senders'
+  sg.API(request, function (response) {
+    console.log(response.statusCode)
+    console.log(response.body)
+    console.log(response.headers)
+  })
+  ```
+## Get all Sender Identities
+
+**This endpoint allows you to retrieve a list of all sender identities that have been created for your account.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### GET /senders
+
+
+```javascript
+  var request = sg.emptyRequest()
+  request.method = 'GET'
+  request.path = '/v3/senders'
+  sg.API(request, function (response) {
+    console.log(response.statusCode)
+    console.log(response.body)
+    console.log(response.headers)
+  })
+  ```
+## Update a Sender Identity
+
+**This endpoint allows you to update a sender identity.**
+
+Updates to `from.email` require re-verification. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+Partial updates are allowed, but fields that are marked as "required" in the POST (create) endpoint must not be nil if that field is included in the PATCH request.
+
+### PATCH /senders/{sender_id}
+
+
+```javascript
+  var request = sg.emptyRequest()
+  request.body = {
+  "address": "123 Elm St.", 
+  "address_2": "Apt. 456", 
+  "city": "Denver", 
+  "country": "United States", 
+  "from": {
+    "email": "from@example.com", 
+    "name": "Example INC"
+  }, 
+  "nickname": "My Sender ID", 
+  "reply_to": {
+    "email": "replyto@example.com", 
+    "name": "Example INC"
+  }, 
+  "state": "Colorado", 
+  "zip": "80202"
+};
+  request.method = 'PATCH'
+  request.path = '/v3/senders/{sender_id}'
+  sg.API(request, function (response) {
+    console.log(response.statusCode)
+    console.log(response.body)
+    console.log(response.headers)
+  })
+  ```
+## View a Sender Identity
+
+**This endpoint allows you to retrieve a specific sender identity.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### GET /senders/{sender_id}
+
+
+```javascript
+  var request = sg.emptyRequest()
+  request.method = 'GET'
+  request.path = '/v3/senders/{sender_id}'
+  sg.API(request, function (response) {
+    console.log(response.statusCode)
+    console.log(response.body)
+    console.log(response.headers)
+  })
+  ```
+## Delete a Sender Identity
+
+**This endoint allows you to delete one of your sender identities.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### DELETE /senders/{sender_id}
+
+
+```javascript
+  var request = sg.emptyRequest()
+  request.method = 'DELETE'
+  request.path = '/v3/senders/{sender_id}'
+  sg.API(request, function (response) {
+    console.log(response.statusCode)
+    console.log(response.body)
+    console.log(response.headers)
+  })
+  ```
+## Resend Sender Identity Verification
+
+**This enpdoint allows you to resend a sender identity verification email.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### POST /senders/{sender_id}/resend_verification
+
+
+```javascript
+  var request = sg.emptyRequest()
+  request.method = 'POST'
+  request.path = '/v3/senders/{sender_id}/resend_verification'
   sg.API(request, function (response) {
     console.log(response.statusCode)
     console.log(response.body)

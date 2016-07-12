@@ -2083,7 +2083,6 @@ describe('test_contactdb_recipients_search_get', function () {
     request.test = true
     request.port = 4010
   }
-  request.queryParams["%7Bfield_name%7D"] = 'test_string'
   request.queryParams["{field_name}"] = 'test_string'
  
   request.method = 'GET'
@@ -3802,6 +3801,204 @@ describe('test_scopes_get', function () {
   it('test_scopes_get had the correct response code', function(done) {
     sg.API(request, function (response) {
       assert.equal(response.statusCode, 200, 'response code is not correct')
+      done();
+    })
+  });
+})
+
+describe('test_senders_post', function () {
+  this.timeout(30000);
+  var API_KEY = 'SendGrid API Key'
+  if(process.env.TRAVIS) {
+    var TEST_HOST = process.env.MOCK_HOST
+  } else {
+    var TEST_HOST = 'localhost'
+  }
+
+  var sg = require('../lib/sendgrid.js').SendGrid(API_KEY, TEST_HOST)
+
+  var request = sg.emptyRequest()
+  if(TEST_HOST == 'localhost') {
+    request.test = true
+    request.port = 4010
+  }
+  request.body = {
+  "address": "123 Elm St.", 
+  "address_2": "Apt. 456", 
+  "city": "Denver", 
+  "country": "United States", 
+  "from": {
+    "email": "from@example.com", 
+    "name": "Example INC"
+  }, 
+  "nickname": "My Sender ID", 
+  "reply_to": {
+    "email": "replyto@example.com", 
+    "name": "Example INC"
+  }, 
+  "state": "Colorado", 
+  "zip": "80202"
+};
+  request.method = 'POST'
+  request.path = '/v3/senders'
+  request.headers['X-Mock'] = 201
+  it('test_senders_post had the correct response code', function(done) {
+    sg.API(request, function (response) {
+      assert.equal(response.statusCode, 201, 'response code is not correct')
+      done();
+    })
+  });
+})
+
+describe('test_senders_get', function () {
+  this.timeout(30000);
+  var API_KEY = 'SendGrid API Key'
+  if(process.env.TRAVIS) {
+    var TEST_HOST = process.env.MOCK_HOST
+  } else {
+    var TEST_HOST = 'localhost'
+  }
+
+  var sg = require('../lib/sendgrid.js').SendGrid(API_KEY, TEST_HOST)
+
+  var request = sg.emptyRequest()
+  if(TEST_HOST == 'localhost') {
+    request.test = true
+    request.port = 4010
+  }
+  request.method = 'GET'
+  request.path = '/v3/senders'
+  request.headers['X-Mock'] = 200
+  it('test_senders_get had the correct response code', function(done) {
+    sg.API(request, function (response) {
+      assert.equal(response.statusCode, 200, 'response code is not correct')
+      done();
+    })
+  });
+})
+
+describe('test_senders__sender_id__patch', function () {
+  this.timeout(30000);
+  var API_KEY = 'SendGrid API Key'
+  if(process.env.TRAVIS) {
+    var TEST_HOST = process.env.MOCK_HOST
+  } else {
+    var TEST_HOST = 'localhost'
+  }
+
+  var sg = require('../lib/sendgrid.js').SendGrid(API_KEY, TEST_HOST)
+
+  var request = sg.emptyRequest()
+  if(TEST_HOST == 'localhost') {
+    request.test = true
+    request.port = 4010
+  }
+  request.body = {
+  "address": "123 Elm St.", 
+  "address_2": "Apt. 456", 
+  "city": "Denver", 
+  "country": "United States", 
+  "from": {
+    "email": "from@example.com", 
+    "name": "Example INC"
+  }, 
+  "nickname": "My Sender ID", 
+  "reply_to": {
+    "email": "replyto@example.com", 
+    "name": "Example INC"
+  }, 
+  "state": "Colorado", 
+  "zip": "80202"
+};
+  request.method = 'PATCH'
+  request.path = '/v3/senders/{sender_id}'
+  request.headers['X-Mock'] = 200
+  it('test_senders__sender_id__patch had the correct response code', function(done) {
+    sg.API(request, function (response) {
+      assert.equal(response.statusCode, 200, 'response code is not correct')
+      done();
+    })
+  });
+})
+
+describe('test_senders__sender_id__get', function () {
+  this.timeout(30000);
+  var API_KEY = 'SendGrid API Key'
+  if(process.env.TRAVIS) {
+    var TEST_HOST = process.env.MOCK_HOST
+  } else {
+    var TEST_HOST = 'localhost'
+  }
+
+  var sg = require('../lib/sendgrid.js').SendGrid(API_KEY, TEST_HOST)
+
+  var request = sg.emptyRequest()
+  if(TEST_HOST == 'localhost') {
+    request.test = true
+    request.port = 4010
+  }
+  request.method = 'GET'
+  request.path = '/v3/senders/{sender_id}'
+  request.headers['X-Mock'] = 200
+  it('test_senders__sender_id__get had the correct response code', function(done) {
+    sg.API(request, function (response) {
+      assert.equal(response.statusCode, 200, 'response code is not correct')
+      done();
+    })
+  });
+})
+
+describe('test_senders__sender_id__delete', function () {
+  this.timeout(30000);
+  var API_KEY = 'SendGrid API Key'
+  if(process.env.TRAVIS) {
+    var TEST_HOST = process.env.MOCK_HOST
+  } else {
+    var TEST_HOST = 'localhost'
+  }
+
+  var sg = require('../lib/sendgrid.js').SendGrid(API_KEY, TEST_HOST)
+
+  var request = sg.emptyRequest()
+  if(TEST_HOST == 'localhost') {
+    request.test = true
+    request.port = 4010
+  }
+  request.body = null;
+  request.method = 'DELETE'
+  request.path = '/v3/senders/{sender_id}'
+  request.headers['X-Mock'] = 204
+  it('test_senders__sender_id__delete had the correct response code', function(done) {
+    sg.API(request, function (response) {
+      assert.equal(response.statusCode, 204, 'response code is not correct')
+      done();
+    })
+  });
+})
+
+describe('test_senders__sender_id__resend_verification_post', function () {
+  this.timeout(30000);
+  var API_KEY = 'SendGrid API Key'
+  if(process.env.TRAVIS) {
+    var TEST_HOST = process.env.MOCK_HOST
+  } else {
+    var TEST_HOST = 'localhost'
+  }
+
+  var sg = require('../lib/sendgrid.js').SendGrid(API_KEY, TEST_HOST)
+
+  var request = sg.emptyRequest()
+  if(TEST_HOST == 'localhost') {
+    request.test = true
+    request.port = 4010
+  }
+  request.body = null;
+  request.method = 'POST'
+  request.path = '/v3/senders/{sender_id}/resend_verification'
+  request.headers['X-Mock'] = 204
+  it('test_senders__sender_id__resend_verification_post had the correct response code', function(done) {
+    sg.API(request, function (response) {
+      assert.equal(response.statusCode, 204, 'response code is not correct')
       done();
     })
   });
