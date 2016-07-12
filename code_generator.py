@@ -398,7 +398,7 @@ class CodeGenerator(object):
         raw_data = self.swagger.get_example_data(endpoint, method, response_code)
         data = json.dumps(raw_data, indent=2, sort_keys=True)
         query_params = self.swagger.get_query_parameters(endpoint, method)
-        params = self.generate_params(response_code, query_params, mock=False)
+        params = self.generate_params(response_code, query_params, mock=False, caller="examples")
         url_params = self.generate_url_params(endpoint, None, None, "examples")
         if self._language == "ruby":
             if raw_data:
