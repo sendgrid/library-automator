@@ -2,6 +2,8 @@
         public void {{ test_name }}()
         {
             {% if data and (method == "put" or method == "patch" or method == "post" or method == "delete")  %}            string data = @"{{ data }}";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             {% endif %}
             {% if params %}            string queryParams = @"{{ params }}";
             {% endif %}

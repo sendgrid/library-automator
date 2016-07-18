@@ -6,171 +6,176 @@ string _apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", Environme
 dynamic sg = new SendGrid.SendGridAPIClient(_apiKey);
 
 ////////////////////////////////////////////////////////
-// Create a Campaign
-// POST /campaigns
-
-string data = @"{
-  'categories': [
-    'spring line'
-  ], 
-  'custom_unsubscribe_url': '', 
-  'html_content': '<html><head><title></title></head><body><p>Check out our spring line!</p></body></html>', 
-  'ip_pool': 'marketing', 
-  'list_ids': [
-    110, 
-    124
-  ], 
-  'plain_content': 'Check out our spring line!', 
-  'segment_ids': [
-    110
-  ], 
-  'sender_id': 124451, 
-  'subject': 'New Products for Spring!', 
-  'suppression_group_id': 42, 
-  'title': 'March Newsletter'
-}";
-Object json = JsonConvert.DeserializeObject<Object>(data);
-data = json.ToString();
-dynamic response = sg.client.campaigns.post(requestBody: data);
-Console.WriteLine(response.StatusCode);
-Console.WriteLine(response.Body.ReadAsStringAsync().Result);
-Console.WriteLine(response.Headers.ToString());
-Console.ReadLine();
-
-////////////////////////////////////////////////////////
-// Retrieve all Campaigns
-// GET /campaigns
+// Retrieve all IP addresses
+// GET /ips
 
 string queryParams = @"{
+  'exclude_whitelabels': 'true', 
+  'ip': 'test_string', 
   'limit': 1, 
-  'offset': 1
+  'offset': 1, 
+  'subuser': 'test_string'
 }";
-dynamic response = sg.client.campaigns.get(queryParams: queryParams);
+dynamic response = sg.client.ips.get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// Update a Campaign
-// PATCH /campaigns/{campaign_id}
+// Retrieve all assigned IPs
+// GET /ips/assigned
+
+dynamic response = sg.client.ips.assigned.get();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Create an IP pool.
+// POST /ips/pools
 
 string data = @"{
-  'categories': [
-    'summer line'
-  ], 
-  'html_content': '<html><head><title></title></head><body><p>Check out our summer line!</p></body></html>', 
-  'plain_content': 'Check out our summer line!', 
-  'subject': 'New Products for Summer!', 
-  'title': 'May Newsletter'
+  'name': 'marketing'
 }";
 Object json = JsonConvert.DeserializeObject<Object>(data);
 data = json.ToString();
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).patch(requestBody: data);
+dynamic response = sg.client.ips.pools.post(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// Retrieve a single campaign
-// GET /campaigns/{campaign_id}
+// Retrieve all IP pools.
+// GET /ips/pools
 
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).get();
+dynamic response = sg.client.ips.pools.get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// Delete a Campaign
-// DELETE /campaigns/{campaign_id}
-
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).delete();
-Console.WriteLine(response.StatusCode);
-Console.WriteLine(response.Body.ReadAsStringAsync().Result);
-Console.WriteLine(response.Headers.ToString());
-Console.ReadLine();
-
-////////////////////////////////////////////////////////
-// Update a Scheduled Campaign
-// PATCH /campaigns/{campaign_id}/schedules
+// Update an IP pools name.
+// PUT /ips/pools/{pool_name}
 
 string data = @"{
-  'send_at': 1489451436
+  'name': 'new_pool_name'
 }";
 Object json = JsonConvert.DeserializeObject<Object>(data);
 data = json.ToString();
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).schedules.patch(requestBody: data);
+var pool_name = "test_url_param";
+dynamic response = sg.client.ips.pools._(pool_name).put(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// Schedule a Campaign
-// POST /campaigns/{campaign_id}/schedules
+// Retrieve all IPs in a specified pool.
+// GET /ips/pools/{pool_name}
+
+var pool_name = "test_url_param";
+dynamic response = sg.client.ips.pools._(pool_name).get();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Delete an IP pool.
+// DELETE /ips/pools/{pool_name}
+
+var pool_name = "test_url_param";
+dynamic response = sg.client.ips.pools._(pool_name).delete();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Add an IP address to a pool
+// POST /ips/pools/{pool_name}/ips
 
 string data = @"{
-  'send_at': 1489771528
+  'ip': '0.0.0.0'
 }";
 Object json = JsonConvert.DeserializeObject<Object>(data);
 data = json.ToString();
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).schedules.post(requestBody: data);
+var pool_name = "test_url_param";
+dynamic response = sg.client.ips.pools._(pool_name).ips.post(requestBody: data);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// View Scheduled Time of a Campaign
-// GET /campaigns/{campaign_id}/schedules
+// Remove an IP address from a pool.
+// DELETE /ips/pools/{pool_name}/ips/{ip}
 
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).schedules.get();
+var pool_name = "test_url_param";
+var ip = "test_url_param";
+dynamic response = sg.client.ips.pools._(pool_name).ips._(ip).delete();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
 Console.ReadLine();
 
 ////////////////////////////////////////////////////////
-// Unschedule a Scheduled Campaign
-// DELETE /campaigns/{campaign_id}/schedules
-
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).schedules.delete();
-Console.WriteLine(response.StatusCode);
-Console.WriteLine(response.Body.ReadAsStringAsync().Result);
-Console.WriteLine(response.Headers.ToString());
-Console.ReadLine();
-
-////////////////////////////////////////////////////////
-// Send a Campaign
-// POST /campaigns/{campaign_id}/schedules/now
-
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).schedules.now.post();
-Console.WriteLine(response.StatusCode);
-Console.WriteLine(response.Body.ReadAsStringAsync().Result);
-Console.WriteLine(response.Headers.ToString());
-Console.ReadLine();
-
-////////////////////////////////////////////////////////
-// Send a Test Campaign
-// POST /campaigns/{campaign_id}/schedules/test
+// Add an IP to warmup
+// POST /ips/warmup
 
 string data = @"{
-  'to': 'your.email@example.com'
+  'ip': '0.0.0.0'
 }";
 Object json = JsonConvert.DeserializeObject<Object>(data);
 data = json.ToString();
-var campaign_id = "test_url_param";
-dynamic response = sg.client.campaigns._(campaign_id).schedules.test.post(requestBody: data);
+dynamic response = sg.client.ips.warmup.post(requestBody: data);
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Retrieve all IPs currently in warmup
+// GET /ips/warmup
+
+dynamic response = sg.client.ips.warmup.get();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Retrieve warmup status for a specific IP address
+// GET /ips/warmup/{ip_address}
+
+var ip_address = "test_url_param";
+dynamic response = sg.client.ips.warmup._(ip_address).get();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Remove an IP from warmup
+// DELETE /ips/warmup/{ip_address}
+
+var ip_address = "test_url_param";
+dynamic response = sg.client.ips.warmup._(ip_address).delete();
+Console.WriteLine(response.StatusCode);
+Console.WriteLine(response.Body.ReadAsStringAsync().Result);
+Console.WriteLine(response.Headers.ToString());
+Console.ReadLine();
+
+////////////////////////////////////////////////////////
+// Retrieve all IP pools an IP address belongs to
+// GET /ips/{ip_address}
+
+var ip_address = "test_url_param";
+dynamic response = sg.client.ips._(ip_address).get();
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());

@@ -32,6 +32,8 @@ namespace UnitTest
                 process.StartInfo = startInfo;
                 process.Start();
                 System.Threading.Thread.Sleep(15000);
+            } else {
+                System.Threading.Thread.Sleep(15000);
             }
         }
 
@@ -290,6 +292,8 @@ namespace UnitTest
     }
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -317,6 +321,8 @@ namespace UnitTest
     3
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "204");
@@ -354,6 +360,8 @@ namespace UnitTest
   'frequency': 'daily', 
   'type': 'stats_notification'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -377,6 +385,8 @@ namespace UnitTest
             string data = @"{
   'email_to': 'example@example.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var alert_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -419,6 +429,8 @@ namespace UnitTest
     'alerts.read'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -449,6 +461,8 @@ namespace UnitTest
     'user.profile.update'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var api_key_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -463,6 +477,8 @@ namespace UnitTest
             string data = @"{
   'name': 'A New Hope'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var api_key_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -501,6 +517,8 @@ namespace UnitTest
   'is_default': true, 
   'name': 'Product Suggestions'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -529,6 +547,8 @@ namespace UnitTest
   'id': 103, 
   'name': 'Item Suggestions'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var group_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -568,6 +588,8 @@ namespace UnitTest
     'test2@example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var group_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -597,6 +619,8 @@ namespace UnitTest
     'doesnotexists@example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var group_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -636,6 +660,8 @@ namespace UnitTest
     'test2@example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -717,6 +743,8 @@ namespace UnitTest
   'suppression_group_id': 42, 
   'title': 'March Newsletter'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -750,6 +778,8 @@ namespace UnitTest
   'subject': 'New Products for Summer!', 
   'title': 'May Newsletter'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var campaign_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -786,6 +816,8 @@ namespace UnitTest
             string data = @"{
   'send_at': 1489451436
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var campaign_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -800,6 +832,8 @@ namespace UnitTest
             string data = @"{
   'send_at': 1489771528
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var campaign_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -847,6 +881,8 @@ namespace UnitTest
             string data = @"{
   'to': 'your.email@example.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var campaign_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -945,6 +981,8 @@ namespace UnitTest
   'name': 'pet', 
   'type': 'text'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -990,6 +1028,8 @@ namespace UnitTest
             string data = @"{
   'name': 'your list name'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -1016,6 +1056,8 @@ namespace UnitTest
   3, 
   4
 ]";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "204");
@@ -1029,6 +1071,8 @@ namespace UnitTest
             string data = @"{
   'name': 'newlistname'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             string queryParams = @"{
   'list_id': 1
 }";
@@ -1075,6 +1119,8 @@ namespace UnitTest
   'recipient_id1', 
   'recipient_id2'
 ]";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var list_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -1137,6 +1183,8 @@ namespace UnitTest
     'last_name': 'Jones'
   }
 ]";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -1161,6 +1209,8 @@ namespace UnitTest
     'last_name': 'User'
   }
 ]";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -1189,6 +1239,8 @@ namespace UnitTest
   'recipient_id1', 
   'recipient_id2'
 ]";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1299,6 +1351,8 @@ namespace UnitTest
   'list_id': 4, 
   'name': 'Last Name Miller'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1331,6 +1385,8 @@ namespace UnitTest
   'list_id': 5, 
   'name': 'The Millers'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             string queryParams = @"{
   'segment_id': 'test_string'
 }";
@@ -1453,6 +1509,8 @@ namespace UnitTest
             string data = @"{
   'name': 'marketing'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1476,6 +1534,8 @@ namespace UnitTest
             string data = @"{
   'name': 'new_pool_name'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var pool_name = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -1512,6 +1572,8 @@ namespace UnitTest
             string data = @"{
   'ip': '0.0.0.0'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var pool_name = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -1538,6 +1600,8 @@ namespace UnitTest
             string data = @"{
   'ip': '0.0.0.0'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1750,6 +1814,8 @@ namespace UnitTest
     }
   }
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "202");
@@ -1781,6 +1847,8 @@ namespace UnitTest
     'example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1805,6 +1873,8 @@ namespace UnitTest
   'email': 'email@example.com', 
   'enabled': false
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1830,6 +1900,8 @@ namespace UnitTest
   'hard_bounces': 5, 
   'soft_bounces': 5
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1855,6 +1927,8 @@ namespace UnitTest
   'html_content': '...', 
   'plain_content': '...'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1879,6 +1953,8 @@ namespace UnitTest
   'email': 'example@example.com', 
   'enabled': true
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1903,6 +1979,8 @@ namespace UnitTest
   'email': '', 
   'enabled': false
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1926,6 +2004,8 @@ namespace UnitTest
             string data = @"{
   'enabled': false
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1951,6 +2031,8 @@ namespace UnitTest
   'max_score': 5, 
   'url': 'url'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -1975,6 +2057,8 @@ namespace UnitTest
   'enabled': true, 
   'html_content': '<% body %>'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2032,6 +2116,8 @@ namespace UnitTest
   'enabled': true, 
   'license_key': ''
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2079,6 +2165,8 @@ namespace UnitTest
   'state': 'Colorado', 
   'zip': '80202'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -2116,6 +2204,8 @@ namespace UnitTest
   'state': 'Colorado', 
   'zip': '80202'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var sender_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -2186,6 +2276,8 @@ namespace UnitTest
   'password': 'johns_password', 
   'username': 'John@example.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2282,6 +2374,8 @@ namespace UnitTest
             string data = @"{
   'disabled': false
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var subuser_name = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -2307,6 +2401,8 @@ namespace UnitTest
             string data = @"[
   '127.0.0.1'
 ]";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var subuser_name = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -2322,6 +2418,8 @@ namespace UnitTest
   'email': 'example@example.com', 
   'frequency': 500
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var subuser_name = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -2337,6 +2435,8 @@ namespace UnitTest
   'email': 'example@example.com', 
   'frequency': 50000
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var subuser_name = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -2411,6 +2511,8 @@ namespace UnitTest
     'example2@example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "204");
@@ -2464,6 +2566,8 @@ namespace UnitTest
     'example2@example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "204");
@@ -2522,6 +2626,8 @@ namespace UnitTest
     'example2@example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "204");
@@ -2599,6 +2705,8 @@ namespace UnitTest
     'example2@example.com'
   ]
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "204");
@@ -2628,6 +2736,8 @@ namespace UnitTest
             string data = @"{
   'name': 'example_name'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -2651,6 +2761,8 @@ namespace UnitTest
             string data = @"{
   'name': 'new_example_name'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var template_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -2692,6 +2804,8 @@ namespace UnitTest
   'subject': '<%subject%>', 
   'template_id': 'ddb96bbc-9b92-425e-8979-99464621b543'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var template_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -2710,6 +2824,8 @@ namespace UnitTest
   'plain_content': '<%body%>', 
   'subject': '<%subject%>'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var template_id = "test_url_param";
             var version_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
@@ -2775,6 +2891,8 @@ namespace UnitTest
             string data = @"{
   'enabled': true
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2803,6 +2921,8 @@ namespace UnitTest
   'utm_source': 'sendgrid.com', 
   'utm_term': ''
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2826,6 +2946,8 @@ namespace UnitTest
             string data = @"{
   'enabled': true
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2854,6 +2976,8 @@ namespace UnitTest
   'replace': 'replacement tag', 
   'url': 'url'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2897,6 +3021,8 @@ namespace UnitTest
             string data = @"{
   'email': 'example@example.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2921,6 +3047,8 @@ namespace UnitTest
   'new_password': 'new_password', 
   'old_password': 'old_password'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2936,6 +3064,8 @@ namespace UnitTest
   'first_name': 'Example', 
   'last_name': 'User'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -2960,6 +3090,8 @@ namespace UnitTest
   'batch_id': 'YOUR_BATCH_ID', 
   'status': 'pause'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -2983,6 +3115,8 @@ namespace UnitTest
             string data = @"{
   'status': 'pause'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var batch_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -3020,6 +3154,8 @@ namespace UnitTest
   'require_tls': true, 
   'require_valid_cert': false
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -3043,6 +3179,8 @@ namespace UnitTest
             string data = @"{
   'username': 'test_username'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -3078,6 +3216,8 @@ namespace UnitTest
   'unsubscribe': true, 
   'url': 'url'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "200");
@@ -3101,6 +3241,8 @@ namespace UnitTest
             string data = @"{
   'url': 'url'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "204");
@@ -3117,6 +3259,8 @@ namespace UnitTest
   'spam_check': true, 
   'url': 'http://email.myhosthame.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -3142,6 +3286,8 @@ namespace UnitTest
   'spam_check': false, 
   'url': 'http://newdomain.com/parse'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var hostname = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -3204,6 +3350,8 @@ namespace UnitTest
   'subdomain': 'news', 
   'username': 'john@example.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -3265,6 +3413,8 @@ namespace UnitTest
   'custom_spf': true, 
   'default': false
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var domain_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -3301,6 +3451,8 @@ namespace UnitTest
             string data = @"{
   'username': 'jane@example.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var domain_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -3315,6 +3467,8 @@ namespace UnitTest
             string data = @"{
   'ip': '192.168.0.1'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -3354,6 +3508,8 @@ namespace UnitTest
   'ip': '192.168.1.1', 
   'subdomain': 'email'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
             headers.Add("X-Mock", "201");
@@ -3417,6 +3573,8 @@ namespace UnitTest
   'domain': 'example.com', 
   'subdomain': 'mail'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             string queryParams = @"{
   'limit': 1, 
   'offset': 1
@@ -3486,6 +3644,8 @@ namespace UnitTest
             string data = @"{
   'default': true
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();
@@ -3533,6 +3693,8 @@ namespace UnitTest
             string data = @"{
   'username': 'jane@example.com'
 }";
+            Object json = JsonConvert.DeserializeObject<Object>(data);
+            data = json.ToString();
             var link_id = "test_url_param";
             Dictionary<String, String> headers = new Dictionary<String, String>();
             headers.Clear();

@@ -6,17 +6,18 @@ string _apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", Environme
 dynamic sg = new SendGrid.SendGridAPIClient(_apiKey);
 
 ////////////////////////////////////////////////////////
-// Retrieve email statistics by device type.
-// GET /devices/stats
+// Retrieve email statistics by country and state/province.
+// GET /geo/stats
 
 string queryParams = @"{
   'aggregated_by': 'day', 
+  'country': 'US', 
   'end_date': '2016-04-01', 
   'limit': 1, 
   'offset': 1, 
   'start_date': '2016-01-01'
 }";
-dynamic response = sg.client.devices.stats.get(queryParams: queryParams);
+dynamic response = sg.client.geo.stats.get(queryParams: queryParams);
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
