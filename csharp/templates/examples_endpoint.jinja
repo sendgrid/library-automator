@@ -17,7 +17,7 @@ data = json.ToString();
 headers.Clear();
 {{ headers }}
 {% endif %}
-dynamic response = sg.client{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post" or method == "delete") %}requestBody: data{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post" or method == "delete")) %}, {% endif %}{% if params %}queryParams: queryParams{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post" or method == "delete") or params) %}, {% endif %}requestHeaders: headers{% endif %});
+dynamic response = await sg.client{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post" or method == "delete") %}requestBody: data{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post" or method == "delete")) %}, {% endif %}{% if params %}queryParams: queryParams{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post" or method == "delete") or params) %}, {% endif %}requestHeaders: headers{% endif %});
 Console.WriteLine(response.StatusCode);
 Console.WriteLine(response.Body.ReadAsStringAsync().Result);
 Console.WriteLine(response.Headers.ToString());
