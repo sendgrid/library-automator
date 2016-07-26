@@ -9,7 +9,7 @@
 {% endif %}
 
 ```ruby
-{% if data and (method == "put" or method == "patch" or method == "post")  %}data = JSON.parse('{{ data }}')
+{% if data and (method == "put" or method == "patch" or method == "post" or method == "delete")  %}data = JSON.parse('{{ data }}')
 {% endif %}
 {% if params %}params = JSON.parse('{{ params }}')
 {% endif %}
