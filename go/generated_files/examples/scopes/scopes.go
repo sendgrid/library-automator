@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/sendgrid/sendgrid-go"
 	"os"
+	"log"
 )
 
 ///////////////////////////////////////////////////
@@ -17,7 +18,7 @@ func Retrievealistofscopesforwhichthisuserhasaccess() {
   request.Method = "GET"
   response, err := sendgrid.API(request)
   if err != nil {
-    fmt.Println(err)
+    log.Println(err)
   } else {
     fmt.Println(response.StatusCode)
     fmt.Println(response.Body)
