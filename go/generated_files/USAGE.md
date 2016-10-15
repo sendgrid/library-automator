@@ -8,8 +8,8 @@ package main
 import (
 	"fmt"
 	"github.com/sendgrid/sendgrid-go"
-	"os"
 	"log"
+	"os"
 )
 
 apiKey := os.Getenv("YOUR_SENDGRID_APIKEY")
