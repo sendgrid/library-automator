@@ -1,7 +1,7 @@
         [Test]
         public async void {{ test_name }}()
         {
-            {% if data and (method == "put" or method == "patch" or method == "post" or method == "delete")  %}            string data = @"{{ data }}";
+            {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}            string data = @"{{ data }}";
             Object json = JsonConvert.DeserializeObject<Object>(data);
             data = json.ToString();
             {% endif %}
@@ -13,7 +13,8 @@
             headers.Clear();
             {{ headers }}
             {% endif %}
-            dynamic response = await sg.client{{ api_call }}({% if data and (method == "put" or method == "patch" or method == "post" or method == "delete") %}requestBody: data{% endif %}{% if params and (data and (method == "put" or method == "patch" or method == "post" or method == "delete")) %}, {% endif %}{% if params %}queryParams: queryParams{% endif %}{% if headers %}{% if headers and (data and (method == "put" or method == "patch" or method == "post" or method == "delete") or params) %}, {% endif %}requestHeaders: headers{% endif %});
+            Client client = new Client(apiKey, host);
+            Response response = await client.RequestAsync(method: Client.Methods.{{ method }}, urlPath: "{{ api_call }}{% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE") %}, requestBody: data{% endif %}{% if params and (data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")) %}{% endif %}{% if params %}, queryParams: queryParams{% endif %}{% if headers %}{% if headers and (data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE") or params) %}{% endif %}, requestHeaders: headers{% endif %});
             Assert.AreEqual(response.StatusCode, {% if response_code == "200" %}HttpStatusCode.OK{% endif %}{% if response_code == "204" %}HttpStatusCode.NoContent{% endif %}{% if response_code == "201" %}HttpStatusCode.Created{% endif %}{% if response_code == "202" %}HttpStatusCode.Accepted{% endif %});
         }
 

@@ -1,9 +1,12 @@
-import re
-import os
-from jinja2 import Environment, FileSystemLoader
-from swagger import Swagger
-from config import Config
 import json
+import os
+import re
+from config import Config
+
+from jinja2 import Environment, FileSystemLoader
+
+from swagger import Swagger
+
 
 class CodeGenerator(object):
     def __init__(self, language):
@@ -65,6 +68,7 @@ class CodeGenerator(object):
                                 data = None
                             headers = json.dumps(self.generate_headers(response_code))
                         if self._language == "csharp":
+                            method = method.upper()
                             headers = self.generate_headers(response_code)
                             headers = "headers.Add(\"X-Mock\", \"" + str(headers["X-Mock"]) + "\");"
                             if raw_data:
@@ -175,7 +179,7 @@ class CodeGenerator(object):
        seperator = ""
        if self._language == "ruby":
            endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
-           # Account for Python reserved word
+           # Account for Ruby reserved word
            endpoint = endpoint.replace("mail.send", "mail._(\"send\")")
            seperator = "."
        if self._language == "python":
@@ -184,10 +188,10 @@ class CodeGenerator(object):
            endpoint = endpoint.replace("global", "_(\"global\")")
            seperator = "."
        if self._language == "csharp":
-           endpoint = endpoint.replace("/", ".").replace("{", "_(").replace("}", ")")
-           endpoint = endpoint.replace("event", "_(\"event\")")
-           endpoint = endpoint.replace("default", "_(\"default\")")
-           seperator = "."
+           endpoint = endpoint[1:] + "\""
+           endpoint = endpoint.replace("}/", " + \"/")
+           endpoint = endpoint.replace("{", "\" + ").replace("}\"", "")
+           return endpoint
        if self._language == "php":
            endpoint = endpoint.replace("{", "_($").replace("}/", ")->")
            endpoint = endpoint.replace("}", ")->")
@@ -282,12 +286,13 @@ class CodeGenerator(object):
                 data = None
             api_call = api_call[:-1]
         if self._language == "csharp":
+            method = method.upper()
             if raw_data:
                 data = json.dumps(raw_data, indent=2, sort_keys=True).replace('"', "'")
             else:
                 data = None
-            api_call = api_call.replace("event", "_(\"event\")")
-            api_call = api_call.replace("default", "_(\"default\")")
+            #api_call = api_call.replace("event", "_(\"event\")")
+            #api_call = api_call.replace("default", "_(\"default\")")
         if self._language == "nodejs":
             method = method.upper()
             api_call = "/v3/" + api_call[:-1]
