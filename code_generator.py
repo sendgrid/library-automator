@@ -455,6 +455,7 @@ class CodeGenerator(object):
             func_title = func_title.replace("[Needs:Statsobjectdefined,hascategoryID?]", "")
             func_title = func_title.replace("'", "")
         if self._language == "csharp":
+            method = method.upper()
             if raw_data:
                 data = json.dumps(raw_data, indent=2, sort_keys=True).replace('"', "'")
             else:
