@@ -1,6 +1,8 @@
         [Test]
-        public async void {{ test_name }}()
+        public async Task {{ test_name }}()
         {
+            string host = "http://localhost:4010";
+            var sg = new SendGridClient(apiKey, host);
             {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}            string data = @"{{ data }}";
             Object json = JsonConvert.DeserializeObject<Object>(data);
             data = json.ToString();
@@ -13,9 +15,8 @@
             headers.Clear();
             {{ headers }}
             {% endif %}
-            Client client = new Client(apiKey, host);
-            Response response = await client.RequestAsync(method: Client.Methods.{{ method }}, urlPath: "{{ api_call }}{% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE") %}, requestBody: data{% endif %}{% if params and (data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")) %}{% endif %}{% if params %}, queryParams: queryParams{% endif %}{% if headers %}{% if headers and (data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE") or params) %}{% endif %}, requestHeaders: headers{% endif %});
-            Assert.AreEqual(response.StatusCode, {% if response_code == "200" %}HttpStatusCode.OK{% endif %}{% if response_code == "204" %}HttpStatusCode.NoContent{% endif %}{% if response_code == "201" %}HttpStatusCode.Created{% endif %}{% if response_code == "202" %}HttpStatusCode.Accepted{% endif %});
+            Response response = await sg.RequestAsync(method: SendGridClient.Method.{{ method }}, urlPath: "{{ api_call }}{% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE") %}, requestBody: data{% endif %}{% if params and (data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")) %}{% endif %}{% if params %}, queryParams: queryParams{% endif %}{% if headers %}{% if headers and (data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE") or params) %}{% endif %}{% endif %}, requestHeaders: headers);
+            Assert.AreEqual({% if response_code == "200" %}HttpStatusCode.OK{% endif %}{% if response_code == "204" %}HttpStatusCode.NoContent{% endif %}{% if response_code == "201" %}HttpStatusCode.Created{% endif %}{% if response_code == "202" %}HttpStatusCode.Accepted{% endif %}, response.StatusCode);
         }
 
 

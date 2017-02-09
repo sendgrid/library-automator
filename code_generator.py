@@ -173,6 +173,11 @@ class CodeGenerator(object):
            call = "(self):"
        if self._language == "php":
            call = "()"
+       if self._language == "csharp":
+           split_endpoint = endpoint.split('__')
+           split_endpoint = '_'.join(split_endpoint)
+           split_endpoint = self.upper_first(self.to_camelcase(split_endpoint[1:]).replace("_", ""))
+           return "Test" + split_endpoint + self.upper_first(self.to_camelcase(method))
        return "test" + endpoint + "_" + method + call
 
     def generate_api_call(self, endpoint, method):
@@ -479,6 +484,9 @@ class CodeGenerator(object):
 ###############################################################################
 ####### UTILITY FUNCTIONS
 ###############################################################################
+
+    def upper_first(self, string):
+        return string[0].upper() + string[1:]
 
     # Used in tests and examples
     def get_class_names(self):
