@@ -47,11 +47,11 @@ namespace SendGrid.Tests
         public Process process = new Process();
     }
 
-    public class MyIntegrationTests : IClassFixture<IntegrationFixture>
+    public class Integration : IClassFixture<IntegrationFixture>
     {
         IntegrationFixture fixture;
 
-        public MyIntegrationTests(IntegrationFixture fixture)
+        public Integration(IntegrationFixture fixture)
         {
             this.fixture = fixture;
         }

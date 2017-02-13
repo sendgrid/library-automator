@@ -3,13 +3,12 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 # INITIALIZATION
 
 ```csharp
-using System;
+using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail; // If you are using the Mail Helper
-using Newtonsoft.Json; // You can generate your JSON string yourelf or with another library if you prefer
 
-string apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY", EnvironmentVariableTarget.User);
-Client client = new Client(apiKey);
+string apiKey = Environment.GetEnvironmentVariable("SENDGRID_APIKEY");
+var client = new SendGridClient(apiKey);
 ```
 
 
