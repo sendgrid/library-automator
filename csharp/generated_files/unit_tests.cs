@@ -38,7 +38,7 @@ namespace SendGrid.Tests
             if (Environment.GetEnvironmentVariable("TRAVIS") != "true")
             {
                 process.Kill();
-                Trace.WriteLine("Sutting Down Prism");
+                Trace.WriteLine("Shutting Down Prism");
             }
         }
 
