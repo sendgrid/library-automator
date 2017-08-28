@@ -3,7 +3,8 @@ This documentation is based on our [OAI specification](https://github.com/sendgr
 # INITIALIZATION
 
 ```javascript
-var sg = require('sendgrid').SendGrid(process.env.SENDGRID_API_KEY)
+const client = require('@sendgrid/client');
+client.setApiKey(process.env.SENDGRID_API_KEY);
 ```
 
 # Table of Contents
@@ -29,6 +30,7 @@ var sg = require('sendgrid').SendGrid(process.env.SENDGRID_API_KEY)
 * [STATS](#stats)
 * [SUBUSERS](#subusers)
 * [SUPPRESSION](#suppression)
+* [TEAMMATES](#teammates)
 * [TEMPLATES](#templates)
 * [TRACKING SETTINGS](#tracking_settings)
 * [USER](#user)
@@ -50,16 +52,18 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["limit"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/access_settings/activity'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/access_settings/activity';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Add one or more IPs to the whitelist
 
 **This endpoint allows you to add one or more IP addresses to your IP whitelist.**
@@ -74,8 +78,7 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "ips": [
     {
       "ip": "192.168.1.1"
@@ -88,35 +91,15 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
     }
   ]
 };
-  request.method = 'POST'
-  request.path = '/v3/access_settings/whitelist'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/access_settings/whitelist';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a list of currently whitelisted IPs
-
-**This endpoint allows you to retrieve a list of IP addresses that are currently whitelisted.**
-
-IP Access Management allows you to control which IP addresses can be used to access your account, either through the User Interface or the API. There is no limit to the number of IP addresses that you can add to your whitelist. It is possible to remove your own IP address from the whitelist, thus preventing yourself from accessing your account.
-
-For more information, please see our [User Guide](http://sendgrid.com/docs/User_Guide/Settings/ip_access_management.html).
-
-### GET /access_settings/whitelist
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/access_settings/whitelist'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Remove one or more IPs from the whitelist
 
 **This endpoint allows you to remove one or more IPs from your IP whitelist.**
@@ -131,45 +114,42 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "ids": [
     1, 
     2, 
     3
   ]
 };
-  request.method = 'DELETE'
-  request.path = '/v3/access_settings/whitelist'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/access_settings/whitelist';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a specific whitelisted IP
+```
+## Retrieve a list of currently whitelisted IPs
 
-**This endpoint allows you to retreive a specific IP address that has been whitelisted.**
-
-You must include the ID for the specific IP address you want to retrieve in your call.
+**This endpoint allows you to retrieve a list of IP addresses that are currently whitelisted.**
 
 IP Access Management allows you to control which IP addresses can be used to access your account, either through the User Interface or the API. There is no limit to the number of IP addresses that you can add to your whitelist. It is possible to remove your own IP address from the whitelist, thus preventing yourself from accessing your account.
 
 For more information, please see our [User Guide](http://sendgrid.com/docs/User_Guide/Settings/ip_access_management.html).
 
-### GET /access_settings/whitelist/{rule_id}
+### GET /access_settings/whitelist
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/access_settings/whitelist/{rule_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/access_settings/whitelist';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Remove a specific IP from the whitelist
 
 **This endpoint allows you to remove a specific IP address from your IP whitelist.**
@@ -184,15 +164,38 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/access_settings/whitelist/{rule_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/access_settings/whitelist/{rule_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve a specific whitelisted IP
+
+**This endpoint allows you to retreive a specific IP address that has been whitelisted.**
+
+You must include the ID for the specific IP address you want to retrieve in your call.
+
+IP Access Management allows you to control which IP addresses can be used to access your account, either through the User Interface or the API. There is no limit to the number of IP addresses that you can add to your whitelist. It is possible to remove your own IP address from the whitelist, thus preventing yourself from accessing your account.
+
+For more information, please see our [User Guide](http://sendgrid.com/docs/User_Guide/Settings/ip_access_management.html).
+
+### GET /access_settings/whitelist/{rule_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/access_settings/whitelist/{rule_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 <a name="alerts"></a>
 # ALERTS
 
@@ -200,9 +203,10 @@ For more information, please see our [User Guide](http://sendgrid.com/docs/User_
 
 **This endpoint allows you to create a new alert.**
 
-Alerts allow you to specify an email address to receive notifications regarding your email usage or statistics. 
-* Usage alerts allow you to set the threshold at which an alert will be sent.
-* Stats notifications allow you to set how frequently you would like to receive email statistics reports. For example, "daily", "weekly", or "monthly".
+Alerts allow you to specify an email address to receive notifications regarding your email usage or statistics. There are two types of alerts that can be created with this endpoint:
+
+* `usage_limit` allows you to set the threshold at which an alert will be sent.
+* `stats_notification` allows you to set how frequently you would like to receive email statistics reports. For example, "daily", "weekly", or "monthly".
 
 For more information about alerts, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/alerts.html).
 
@@ -210,20 +214,20 @@ For more information about alerts, please see our [User Guide](https://sendgrid.
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email_to": "example@example.com", 
   "frequency": "daily", 
   "type": "stats_notification"
 };
-  request.method = 'POST'
-  request.path = '/v3/alerts'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/alerts';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all alerts
 
 **This endpoint allows you to retieve all of your alerts.**
@@ -238,15 +242,14 @@ For more information about alerts, please see our [User Guide](https://sendgrid.
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/alerts'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/alerts';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update an alert
 
 **This endpoint allows you to update an alert.**
@@ -261,41 +264,18 @@ For more information about alerts, please see our [User Guide](https://sendgrid.
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email_to": "example@example.com"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/alerts/{alert_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/alerts/{alert_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a specific alert
-
-**This endpoint allows you to retrieve a specific alert.**
-
-Alerts allow you to specify an email address to receive notifications regarding your email usage or statistics. 
-* Usage alerts allow you to set the threshold at which an alert will be sent.
-* Stats notifications allow you to set how frequently you would like to receive email statistics reports. For example, "daily", "weekly", or "monthly".
-
-For more information about alerts, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/alerts.html).
-
-### GET /alerts/{alert_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/alerts/{alert_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete an alert
 
 **This endpoint allows you to delete an alert.**
@@ -310,21 +290,44 @@ For more information about alerts, please see our [User Guide](https://sendgrid.
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/alerts/{alert_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/alerts/{alert_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve a specific alert
+
+**This endpoint allows you to retrieve a specific alert.**
+
+Alerts allow you to specify an email address to receive notifications regarding your email usage or statistics. 
+* Usage alerts allow you to set the threshold at which an alert will be sent.
+* Stats notifications allow you to set how frequently you would like to receive email statistics reports. For example, "daily", "weekly", or "monthly".
+
+For more information about alerts, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/alerts.html).
+
+### GET /alerts/{alert_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/alerts/{alert_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 <a name="api_keys"></a>
 # API KEYS
 
 ## Create API keys
 
-**This enpoint allows you to create a new random API Key for the user.**
+**This endpoint allows you to create a new random API Key for the user.**
 
 A JSON request body containing a "name" property is required. If number of maximum keys is reached, HTTP 403 will be returned.
 
@@ -338,8 +341,7 @@ See the [API Key Permissions List](https://sendgrid.com/docs/API_Reference/Web_A
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "My API Key", 
   "sample": "data", 
   "scopes": [
@@ -348,14 +350,15 @@ See the [API Key Permissions List](https://sendgrid.com/docs/API_Reference/Web_A
     "alerts.read"
   ]
 };
-  request.method = 'POST'
-  request.path = '/v3/api_keys'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/api_keys';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all API Keys belonging to the authenticated user
 
 **This endpoint allows you to retrieve all API Keys that belong to the authenticated user.**
@@ -366,16 +369,18 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["limit"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/api_keys'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/api_keys';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update the name & scopes of an API Key
 
 **This endpoint allows you to update the name and scopes of a given API key.**
@@ -385,27 +390,26 @@ Most provide the list of all the scopes an api key should have.
 
 The API Keys feature allows customers to be able to generate an API Key credential which can be used for authentication with the SendGrid v3 Web API or the [Mail API Endpoint](https://sendgrid.com/docs/API_Reference/Web_API/mail.html).
 
-
 ### PUT /api_keys/{api_key_id}
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "A New Hope", 
   "scopes": [
     "user.profile.read", 
     "user.profile.update"
   ]
 };
-  request.method = 'PUT'
-  request.path = '/v3/api_keys/{api_key_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PUT';
+  request.url = '/v3/api_keys/{api_key_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update API keys
 
 **This endpoint allows you to update the name of an existing API Key.**
@@ -424,37 +428,18 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "A New Hope"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/api_keys/{api_key_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/api_keys/{api_key_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve an existing API Key
-
-**This endpoint allows you to retrieve a single api key.**
-
-If the API Key ID does not exist an HTTP 404 will be returned.
-
-### GET /api_keys/{api_key_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/api_keys/{api_key_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete API keys
 
 **This endpoint allows you to revoke an existing API Key**
@@ -473,15 +458,34 @@ The API Keys feature allows customers to be able to generate an API Key credenti
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/api_keys/{api_key_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/api_keys/{api_key_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve an existing API Key
+
+**This endpoint allows you to retrieve a single api key.**
+
+If the API Key ID does not exist an HTTP 404 will be returned.
+
+### GET /api_keys/{api_key_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/api_keys/{api_key_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 <a name="asm"></a>
 # ASM
 
@@ -499,20 +503,20 @@ Each user can create up to 25 different suppression groups.
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "description": "Suggestions for products our users might like.", 
   "is_default": true, 
   "name": "Product Suggestions"
 };
-  request.method = 'POST'
-  request.path = '/v3/asm/groups'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/asm/groups';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve information about multiple suppression groups
 
 **This endpoint allows you to retrieve information about multiple suppression groups.**
@@ -527,67 +531,18 @@ Suppression groups, or [unsubscribe groups](https://sendgrid.com/docs/API_Refere
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["id"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/asm/groups'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Update a suppression group.
-
-**This endpoint allows you to update or change a suppression group.**
-
-Suppression groups, or unsubscribe groups, are specific types or categories of email that you would like your recipients to be able to unsubscribe from. For example: Daily Newsletters, Invoices, System Alerts.
-
-The **name** and **description** of the unsubscribe group will be visible by recipients when they are managing their subscriptions.
-
-Each user can create up to 25 different suppression groups.
-
-### PATCH /asm/groups/{group_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "description": "Suggestions for items our users might like.", 
-  "id": 103, 
-  "name": "Item Suggestions"
+  const queryParams = {
+  'id': 1
 };
-  request.method = 'PATCH'
-  request.path = '/v3/asm/groups/{group_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/asm/groups';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Get information on a single suppression group.
-
-**This endpoint allows you to retrieve a single suppression group.**
-
-Suppression groups, or unsubscribe groups, are specific types or categories of email that you would like your recipients to be able to unsubscribe from. For example: Daily Newsletters, Invoices, System Alerts.
-
-The **name** and **description** of the unsubscribe group will be visible by recipients when they are managing their subscriptions.
-
-Each user can create up to 25 different suppression groups.
-
-### GET /asm/groups/{group_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/asm/groups/{group_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a suppression group.
 
 **This endpoint allows you to delete a suppression group.**
@@ -604,15 +559,66 @@ Each user can create up to 25 different suppression groups.
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/asm/groups/{group_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/asm/groups/{group_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Update a suppression group.
+
+**This endpoint allows you to update or change a suppression group.**
+
+Suppression groups, or unsubscribe groups, are specific types or categories of email that you would like your recipients to be able to unsubscribe from. For example: Daily Newsletters, Invoices, System Alerts.
+
+The **name** and **description** of the unsubscribe group will be visible by recipients when they are managing their subscriptions.
+
+Each user can create up to 25 different suppression groups.
+
+### PATCH /asm/groups/{group_id}
+
+
+```javascript
+  const data = {
+  "description": "Suggestions for items our users might like.", 
+  "id": 103, 
+  "name": "Item Suggestions"
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/asm/groups/{group_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Get information on a single suppression group.
+
+**This endpoint allows you to retrieve a single suppression group.**
+
+Suppression groups, or unsubscribe groups, are specific types or categories of email that you would like your recipients to be able to unsubscribe from. For example: Daily Newsletters, Invoices, System Alerts.
+
+The **name** and **description** of the unsubscribe group will be visible by recipients when they are managing their subscriptions.
+
+Each user can create up to 25 different suppression groups.
+
+### GET /asm/groups/{group_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/asm/groups/{group_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Add suppressions to a suppression group
 
 **This endpoint allows you to add email addresses to an unsubscribe group.**
@@ -625,21 +631,21 @@ Suppressions are recipient email addresses that are added to [unsubscribe groups
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "recipient_emails": [
     "test1@example.com", 
     "test2@example.com"
   ]
 };
-  request.method = 'POST'
-  request.path = '/v3/asm/groups/{group_id}/suppressions'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/asm/groups/{group_id}/suppressions';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all suppressions for a suppression group
 
 **This endpoint allows you to retrieve all suppressed email addresses belonging to the given group.**
@@ -650,15 +656,14 @@ Suppressions are recipient email addresses that are added to [unsubscribe groups
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/asm/groups/{group_id}/suppressions'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/asm/groups/{group_id}/suppressions';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Search for suppressions within a group
 
 **This endpoint allows you to search a suppression group for multiple suppressions.**
@@ -671,22 +676,22 @@ Suppressions are a list of email addresses that will not receive content sent un
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "recipient_emails": [
     "exists1@example.com", 
     "exists2@example.com", 
     "doesnotexists@example.com"
   ]
 };
-  request.method = 'POST'
-  request.path = '/v3/asm/groups/{group_id}/suppressions/search'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/asm/groups/{group_id}/suppressions/search';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a suppression from a suppression group
 
 **This endpoint allows you to remove a suppressed email address from the given suppression group.**
@@ -697,15 +702,16 @@ Suppressions are recipient email addresses that are added to [unsubscribe groups
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/asm/groups/{group_id}/suppressions/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/asm/groups/{group_id}/suppressions/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all suppressions
 
 **This endpoint allows you to retrieve a list of all suppressions.**
@@ -716,15 +722,14 @@ Suppressions are a list of email addresses that will not receive content sent un
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/asm/suppressions'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/asm/suppressions';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Add recipient addresses to the global suppression group.
 
 **This endpoint allows you to add one or more email addresses to the global suppressions group.**
@@ -735,21 +740,41 @@ A global suppression (or global unsubscribe) is an email address of a recipient 
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "recipient_emails": [
     "test1@example.com", 
     "test2@example.com"
   ]
 };
-  request.method = 'POST'
-  request.path = '/v3/asm/suppressions/global'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/asm/suppressions/global';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Delete a Global Suppression
+
+**This endpoint allows you to remove an email address from the global suppressions group.**
+
+A global suppression (or global unsubscribe) is an email address of a recipient who does not want to receive any of your messages. A globally suppressed recipient will be removed from any email you send. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/global_unsubscribes.html).
+
+### DELETE /asm/suppressions/global/{email}
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/asm/suppressions/global/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieve a Global Suppression
 
 **This endpoint allows you to retrieve a global suppression. You can also use this endpoint to confirm if an email address is already globally suppresed.**
@@ -762,34 +787,14 @@ A global suppression (or global unsubscribe) is an email address of a recipient 
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/asm/suppressions/global/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/asm/suppressions/global/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Delete a Global Suppression
-
-**This endpoint allows you to remove an email address from the global suppressions group.**
-
-A global suppression (or global unsubscribe) is an email address of a recipient who does not want to receive any of your messages. A globally suppressed recipient will be removed from any email you send. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/global_unsubscribes.html).
-
-### DELETE /asm/suppressions/global/{email}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/asm/suppressions/global/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Retrieve all suppression groups for an email address
 
 **This endpoint returns the list of all groups that the given email address has been unsubscribed from.**
@@ -800,19 +805,18 @@ Suppressions are a list of email addresses that will not receive content sent un
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/asm/suppressions/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/asm/suppressions/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="browsers"></a>
 # BROWSERS
 
-## Retrieve email statistics by browser. 
+## Retrieve email statistics by browser.
 
 **This endpoint allows you to retrieve your email statistics segmented by browser type.**
 
@@ -824,21 +828,23 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["browsers"] = 'test_string'
-  request.queryParams["limit"] = 'test_string'
-  request.queryParams["offset"] = 'test_string'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.method = 'GET'
-  request.path = '/v3/browsers/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'browsers': 'test_string', 
+  'end_date': '2016-04-01', 
+  'limit': 'test_string', 
+  'offset': 'test_string', 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/browsers/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="campaigns"></a>
 # CAMPAIGNS
 
@@ -858,8 +864,7 @@ For more information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "categories": [
     "spring line"
   ], 
@@ -879,14 +884,15 @@ For more information:
   "suppression_group_id": 42, 
   "title": "March Newsletter"
 };
-  request.method = 'POST'
-  request.path = '/v3/campaigns'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/campaigns';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all Campaigns
 
 **This endpoint allows you to retrieve a list of all of your campaigns.**
@@ -903,17 +909,19 @@ For more information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/campaigns'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/campaigns';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update a Campaign
 
 Update a campaign. This is especially useful if you only set up the campaign using POST /campaigns, but didn't set many of the parameters.
@@ -926,8 +934,7 @@ For more information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "categories": [
     "summer line"
   ], 
@@ -936,37 +943,15 @@ For more information:
   "subject": "New Products for Summer!", 
   "title": "May Newsletter"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/campaigns/{campaign_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/campaigns/{campaign_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a single campaign
-
-**This endpoint allows you to retrieve a specific campaign.**
-
-Our Marketing Campaigns API lets you create, manage, send, and schedule campaigns.
-
-For more information:
-
-* [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
-
-### GET /campaigns/{campaign_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/campaigns/{campaign_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a Campaign
 
 **This endpoint allows you to delete a specific campaign.**
@@ -981,84 +966,38 @@ For more information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/campaigns/{campaign_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/campaigns/{campaign_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Update a Scheduled Campaign
+```
+## Retrieve a single campaign
 
-**This endpoint allows to you change the scheduled time and date for a campaign to be sent.**
+**This endpoint allows you to retrieve a specific campaign.**
+
+Our Marketing Campaigns API lets you create, manage, send, and schedule campaigns.
 
 For more information:
 
 * [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
 
-### PATCH /campaigns/{campaign_id}/schedules
+### GET /campaigns/{campaign_id}
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "send_at": 1489451436
-};
-  request.method = 'PATCH'
-  request.path = '/v3/campaigns/{campaign_id}/schedules'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/campaigns/{campaign_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Schedule a Campaign
-
-**This endpoint allows you to schedule a specific date and time for your campaign to be sent.**
-
-For more information:
-
-* [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
-
-### POST /campaigns/{campaign_id}/schedules
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "send_at": 1489771528
-};
-  request.method = 'POST'
-  request.path = '/v3/campaigns/{campaign_id}/schedules'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## View Scheduled Time of a Campaign
-
-**This endpoint allows you to retrieve the date and time that the given campaign has been scheduled to be sent.**
-
-For more information:
-
-* [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
-
-### GET /campaigns/{campaign_id}/schedules
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/campaigns/{campaign_id}/schedules'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Unschedule a Scheduled Campaign
 
 **This endpoint allows you to unschedule a campaign that has already been scheduled to be sent.**
@@ -1074,15 +1013,84 @@ For more information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/campaigns/{campaign_id}/schedules'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/campaigns/{campaign_id}/schedules';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Schedule a Campaign
+
+**This endpoint allows you to schedule a specific date and time for your campaign to be sent.**
+
+For more information:
+
+* [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
+
+### POST /campaigns/{campaign_id}/schedules
+
+
+```javascript
+  const data = {
+  "send_at": 1489771528
+};
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/campaigns/{campaign_id}/schedules';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## View Scheduled Time of a Campaign
+
+**This endpoint allows you to retrieve the date and time that the given campaign has been scheduled to be sent.**
+
+For more information:
+
+* [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
+
+### GET /campaigns/{campaign_id}/schedules
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/campaigns/{campaign_id}/schedules';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Update a Scheduled Campaign
+
+**This endpoint allows to you change the scheduled time and date for a campaign to be sent.**
+
+For more information:
+
+* [User Guide > Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html)
+
+### PATCH /campaigns/{campaign_id}/schedules
+
+
+```javascript
+  const data = {
+  "send_at": 1489451436
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/campaigns/{campaign_id}/schedules';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Send a Campaign
 
 **This endpoint allows you to immediately send a campaign at the time you make the API call.**
@@ -1097,15 +1105,16 @@ For more information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/campaigns/{campaign_id}/schedules/now'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/campaigns/{campaign_id}/schedules/now';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Send a Test Campaign
 
 **This endpoint allows you to send a test campaign.**
@@ -1120,18 +1129,18 @@ For more information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "to": "your.email@example.com"
 };
-  request.method = 'POST'
-  request.path = '/v3/campaigns/{campaign_id}/schedules/test'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/campaigns/{campaign_id}/schedules/test';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="categories"></a>
 # CATEGORIES
 
@@ -1145,73 +1154,79 @@ Categories can help organize your email analytics by enabling you to tag emails 
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["category"] = 'test_string'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/categories'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'category': 'test_string', 
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/categories';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve Email Statistics for Categories
 
 **This endpoint allows you to retrieve all of your email statistics for each of your categories.**
 
 If you do not define any query parameters, this endpoint will return a sum for each category in groups of 10.
 
-Categories allow you to group your emails together according to broad topics that you define. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/categories.html). 
+Categories allow you to group your emails together according to broad topics that you define. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/categories.html).
 
 ### GET /categories/stats
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["categories"] = 'test_string'
-  request.method = 'GET'
-  request.path = '/v3/categories/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'categories': 'test_string', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'offset': 1, 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/categories/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve sums of email stats for each category [Needs: Stats object defined, has category ID?]
 
 **This endpoint allows you to retrieve the total sum of each email statistic for every category over the given date range.**
 
 If you do not define any query parameters, this endpoint will return a sum for each category in groups of 10.
 
-Categories allow you to group your emails together according to broad topics that you define. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/categories.html). 
+Categories allow you to group your emails together according to broad topics that you define. For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Statistics/categories.html).
 
 ### GET /categories/stats/sums
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["sort_by_metric"] = 'test_string'
-  request.queryParams["offset"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["sort_by_direction"] = 'asc'
-  request.method = 'GET'
-  request.path = '/v3/categories/stats/sums'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'offset': 1, 
+  'sort_by_direction': 'asc', 
+  'sort_by_metric': 'test_string', 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/categories/stats/sums';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="clients"></a>
 # CLIENTS
 
@@ -1227,18 +1242,20 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["end_date"] = '2016-04-01'
-  request.method = 'GET'
-  request.path = '/v3/clients/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/clients/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve stats by a specific client type.
 
 **This endpoint allows you to retrieve your email statistics segmented by a specific client type.**
@@ -1257,18 +1274,20 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["end_date"] = '2016-04-01'
-  request.method = 'GET'
-  request.path = '/v3/clients/{client_type}/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/clients/{client_type}/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="contactdb"></a>
 # CONTACTDB
 
@@ -1282,19 +1301,19 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "pet", 
   "type": "text"
 };
-  request.method = 'POST'
-  request.path = '/v3/contactdb/custom_fields'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/contactdb/custom_fields';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all custom fields
 
 **This endpoint allows you to retrieve all custom fields.** 
@@ -1305,34 +1324,14 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/custom_fields'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/contactdb/custom_fields';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a Custom Field
-
-**This endpoint allows you to retrieve a custom field by ID.**
-
-The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
-
-### GET /contactdb/custom_fields/{custom_field_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/custom_fields/{custom_field_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a Custom Field
 
 **This endpoint allows you to delete a custom field by ID.**
@@ -1343,15 +1342,34 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/contactdb/custom_fields/{custom_field_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/contactdb/custom_fields/{custom_field_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve a Custom Field
+
+**This endpoint allows you to retrieve a custom field by ID.**
+
+The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
+
+### GET /contactdb/custom_fields/{custom_field_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/contactdb/custom_fields/{custom_field_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Create a List
 
 **This endpoint allows you to create a list for your recipients.**
@@ -1362,37 +1380,18 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "your list name"
 };
-  request.method = 'POST'
-  request.path = '/v3/contactdb/lists'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/contactdb/lists';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve all lists
-
-**This endpoint allows you to retrieve all of your recipient lists. If you don't have any lists, an empty array will be returned.**
-
-The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
-
-### GET /contactdb/lists
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/lists'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete Multiple lists
 
 **This endpoint allows you to delete multiple recipient lists.**
@@ -1403,21 +1402,63 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = [
+  const data = [
   1, 
   2, 
   3, 
   4
 ];
-  request.method = 'DELETE'
-  request.path = '/v3/contactdb/lists'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/contactdb/lists';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve all lists
+
+**This endpoint allows you to retrieve all of your recipient lists. If you don't have any lists, an empty array will be returned.**
+
+The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
+
+### GET /contactdb/lists
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/contactdb/lists';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Delete a List
+
+**This endpoint allows you to delete a specific recipient list with the given ID.**
+
+The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
+
+### DELETE /contactdb/lists/{list_id}
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  const queryParams = {
+  'delete_contacts': 'true'
+};
+  request.qs = queryParams;
+  request.method = 'DELETE';
+  request.url = '/v3/contactdb/lists/{list_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Update a List
 
 **This endpoint allows you to update the name of one of your recipient lists.**
@@ -1429,19 +1470,22 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "newlistname"
 };
-  request.queryParams["list_id"] = '1'
-  request.method = 'PATCH'
-  request.path = '/v3/contactdb/lists/{list_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  const queryParams = {
+  'list_id': 1
+};
+  request.qs = queryParams;
+  request.method = 'PATCH';
+  request.url = '/v3/contactdb/lists/{list_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve a single list
 
 This endpoint allows you to retrieve a single recipient list.
@@ -1452,36 +1496,18 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["list_id"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/contactdb/lists/{list_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'list_id': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/contactdb/lists/{list_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Delete a List
-
-**This endpoint allows you to delete a specific recipient list with the given ID.**
-
-The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
-
-### DELETE /contactdb/lists/{list_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["delete_contacts"] = 'true'
-  request.method = 'DELETE'
-  request.path = '/v3/contactdb/lists/{list_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Add Multiple Recipients to a List
 
 **This endpoint allows you to add multiple recipients to a list.**
@@ -1494,19 +1520,19 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = [
+  const data = [
   "recipient_id1", 
   "recipient_id2"
 ];
-  request.method = 'POST'
-  request.path = '/v3/contactdb/lists/{list_id}/recipients'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/contactdb/lists/{list_id}/recipients';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all recipients on a List
 
 **This endpoint allows you to retrieve all recipients on the list with the given ID.** 
@@ -1517,18 +1543,20 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["page"] = '1'
-  request.queryParams["page_size"] = '1'
-  request.queryParams["list_id"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/contactdb/lists/{list_id}/recipients'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'list_id': 1, 
+  'page': 1, 
+  'page_size': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/contactdb/lists/{list_id}/recipients';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Add a Single Recipient to a List
 
 **This endpoint allows you to add a single recipient to a list.**
@@ -1539,15 +1567,16 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/contactdb/lists/{list_id}/recipients/{recipient_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/contactdb/lists/{list_id}/recipients/{recipient_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a Single Recipient from a Single List
 
 **This endpoint allows you to delete a single recipient from a list.**
@@ -1558,17 +1587,107 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["recipient_id"] = '1'
-  request.queryParams["list_id"] = '1'
-  request.method = 'DELETE'
-  request.path = '/v3/contactdb/lists/{list_id}/recipients/{recipient_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  const queryParams = {
+  'list_id': 1, 
+  'recipient_id': 1
+};
+  request.qs = queryParams;
+  request.method = 'DELETE';
+  request.url = '/v3/contactdb/lists/{list_id}/recipients/{recipient_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Add recipients
+
+**This endpoint allows you to add a Marketing Campaigns recipient.**
+
+You can add custom field data as a parameter on this endpoint. We have provided an example using some of the default custom fields SendGrid provides.
+
+The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
+
+### POST /contactdb/recipients
+
+
+```javascript
+  const data = [
+  {
+    "age": 25, 
+    "email": "example@example.com", 
+    "first_name": "", 
+    "last_name": "User"
+  }, 
+  {
+    "age": 25, 
+    "email": "example2@example.com", 
+    "first_name": "Example", 
+    "last_name": "User"
+  }
+];
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/contactdb/recipients';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Delete Recipient
+
+**This endpoint allows you to deletes one or more recipients.**
+
+The body of an API call to this endpoint must include an array of recipient IDs of the recipients you want to delete.
+
+The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
+
+### DELETE /contactdb/recipients
+
+
+```javascript
+  const data = [
+  "recipient_id1", 
+  "recipient_id2"
+];
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/contactdb/recipients';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve recipients
+
+**This endpoint allows you to retrieve all of your Marketing Campaigns recipients.**
+
+Batch deletion of a page makes it possible to receive an empty page of recipients before reaching the end of
+the list of recipients. To avoid this issue; iterate over pages until a 404 is retrieved.
+
+The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
+
+### GET /contactdb/recipients
+
+
+```javascript
+  const queryParams = {
+  'page': 1, 
+  'page_size': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/contactdb/recipients';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Update Recipient
 
 **This endpoint allows you to update one or more recipients.**
@@ -1583,106 +1702,22 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = [
+  const data = [
   {
     "email": "jones@example.com", 
     "first_name": "Guy", 
     "last_name": "Jones"
   }
 ];
-  request.method = 'PATCH'
-  request.path = '/v3/contactdb/recipients'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/contactdb/recipients';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Add recipients
-
-**This endpoint allows you to add a Marketing Campaigns recipient.**
-
-It is of note that you can add custom field data as a parameter on this endpoint. We have provided an example using some of the default custom fields SendGrid provides.
-
-The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
-
-### POST /contactdb/recipients
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = [
-  {
-    "age": 25, 
-    "email": "example@example.com", 
-    "first_name": "", 
-    "last_name": "User"
-  }, 
-  {
-    "age": 25, 
-    "email": "example2@example.com", 
-    "first_name": "Example", 
-    "last_name": "User"
-  }
-];
-  request.method = 'POST'
-  request.path = '/v3/contactdb/recipients'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve recipients
-
-**This endpoint allows you to retrieve all of your Marketing Campaigns recipients.**
-
-Batch deletion of a page makes it possible to receive an empty page of recipients before reaching the end of
-the list of recipients. To avoid this issue; iterate over pages until a 404 is retrieved.
-
-The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
-
-### GET /contactdb/recipients
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["page"] = '1'
-  request.queryParams["page_size"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/contactdb/recipients'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Delete Recipient
-
-**This endpoint allows you to deletes one or more recipients.**
-
-The body of an API call to this endpoint must include an array of recipient IDs of the recipients you want to delete.
-
-The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html).
-
-### DELETE /contactdb/recipients
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = [
-  "recipient_id1", 
-  "recipient_id2"
-];
-  request.method = 'DELETE'
-  request.path = '/v3/contactdb/recipients'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Retrieve the count of billable recipients
 
 **This endpoint allows you to retrieve the number of Marketing Campaigns recipients that you will be billed for.**
@@ -1695,15 +1730,14 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/recipients/billable_count'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/contactdb/recipients/billable_count';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve a Count of Recipients
 
 **This endpoint allows you to retrieve the total number of Marketing Campaigns recipients.**
@@ -1714,15 +1748,14 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/recipients/count'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/contactdb/recipients/count';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve recipients matching search criteria
 
 **This endpoint allows you to perform a search on all of your Marketing Campaigns recipients.**
@@ -1742,35 +1775,18 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["{field_name}"] = 'test_string'
-  request.method = 'GET'
-  request.path = '/v3/contactdb/recipients/search'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  '{field_name}': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/contactdb/recipients/search';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a single recipient
-
-**This endpoint allows you to retrieve a single recipient by ID from your contact database.**
-
-The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
-
-### GET /contactdb/recipients/{recipient_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/recipients/{recipient_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a Recipient
 
 **This endpoint allows you to delete a single recipient with the given ID from your contact database.**
@@ -1781,15 +1797,34 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/contactdb/recipients/{recipient_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/contactdb/recipients/{recipient_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve a single recipient
+
+**This endpoint allows you to retrieve a single recipient by ID from your contact database.**
+
+The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
+
+### GET /contactdb/recipients/{recipient_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/contactdb/recipients/{recipient_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieve the lists that a recipient is on
 
 **This endpoint allows you to retrieve the lists that a given recipient belongs to.**
@@ -1802,15 +1837,14 @@ The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.co
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/recipients/{recipient_id}/lists'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/contactdb/recipients/{recipient_id}/lists';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve reserved fields
 
 **This endpoint allows you to list all fields that are reserved and can't be used for custom field names.**
@@ -1821,15 +1855,14 @@ The contactdb is a database of your contacts for [SendGrid Marketing Campaigns](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/reserved_fields'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/contactdb/reserved_fields';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Create a Segment
 
 **This endpoint allows you to create a segment.**
@@ -1860,8 +1893,7 @@ For more information about segments in Marketing Campaigns, please see our [User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "conditions": [
     {
       "and_or": "", 
@@ -1885,14 +1917,15 @@ For more information about segments in Marketing Campaigns, please see our [User
   "list_id": 4, 
   "name": "Last Name Miller"
 };
-  request.method = 'POST'
-  request.path = '/v3/contactdb/segments'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/contactdb/segments';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all segments
 
 **This endpoint allows you to retrieve all of your segments.**
@@ -1905,71 +1938,14 @@ For more information about segments in Marketing Campaigns, please see our [User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/contactdb/segments'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/contactdb/segments';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Update a segment
-
-**This endpoint allows you to update a segment.**
-
-The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
-
-For more information about segments in Marketing Campaigns, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/lists.html#-Create-a-Segment).
-
-### PATCH /contactdb/segments/{segment_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "conditions": [
-    {
-      "and_or": "", 
-      "field": "last_name", 
-      "operator": "eq", 
-      "value": "Miller"
-    }
-  ], 
-  "list_id": 5, 
-  "name": "The Millers"
-};
-  request.queryParams["segment_id"] = 'test_string'
-  request.method = 'PATCH'
-  request.path = '/v3/contactdb/segments/{segment_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve a segment
-
-**This endpoint allows you to retrieve a single segment with the given ID.**
-
-The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
-
-For more information about segments in Marketing Campaigns, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/lists.html#-Create-a-Segment).
-
-### GET /contactdb/segments/{segment_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["segment_id"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/contactdb/segments/{segment_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a segment
 
 **This endpoint allows you to delete a segment from your recipients database.**
@@ -1984,16 +1960,81 @@ For more information about segments in Marketing Campaigns, please see our [User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["delete_contacts"] = 'true'
-  request.method = 'DELETE'
-  request.path = '/v3/contactdb/segments/{segment_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  const queryParams = {
+  'delete_contacts': 'true'
+};
+  request.qs = queryParams;
+  request.method = 'DELETE';
+  request.url = '/v3/contactdb/segments/{segment_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Update a segment
+
+**This endpoint allows you to update a segment.**
+
+The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
+
+For more information about segments in Marketing Campaigns, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/lists.html#-Create-a-Segment).
+
+### PATCH /contactdb/segments/{segment_id}
+
+
+```javascript
+  const data = {
+  "conditions": [
+    {
+      "and_or": "", 
+      "field": "last_name", 
+      "operator": "eq", 
+      "value": "Miller"
+    }
+  ], 
+  "list_id": 5, 
+  "name": "The Millers"
+};
+  request.body = data;
+  const queryParams = {
+  'segment_id': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'PATCH';
+  request.url = '/v3/contactdb/segments/{segment_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve a segment
+
+**This endpoint allows you to retrieve a single segment with the given ID.**
+
+The Contacts API helps you manage your [Marketing Campaigns](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/index.html) recipients.
+
+For more information about segments in Marketing Campaigns, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/lists.html#-Create-a-Segment).
+
+### GET /contactdb/segments/{segment_id}
+
+
+```javascript
+  const queryParams = {
+  'segment_id': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/contactdb/segments/{segment_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieve recipients on a segment
 
 **This endpoint allows you to retrieve all of the recipients in a segment with the given ID.**
@@ -2006,17 +2047,35 @@ For more information about segments in Marketing Campaigns, please see our [User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["page"] = '1'
-  request.queryParams["page_size"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/contactdb/segments/{segment_id}/recipients'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'page': 1, 
+  'page_size': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/contactdb/segments/{segment_id}/recipients';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Get Contact Upload Status
+
+
+
+### GET /contactdb/status
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/contactdb/status';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 <a name="devices"></a>
 # DEVICES
 
@@ -2041,20 +2100,22 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/devices/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'offset': 1, 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/devices/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="geo"></a>
 # GEO
 
@@ -2070,24 +2131,52 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["country"] = 'US'
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.method = 'GET'
-  request.path = '/v3/geo/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'country': 'US', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'offset': 1, 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/geo/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="ips"></a>
 # IPS
 
+## Add IPs
+
+This endpoint is for adding a(n) IP Address(es) to your account.
+
+### POST /ips
+
+
+```javascript
+  const data = {
+  "count": 90323478, 
+  "subusers": [
+    "subuser1", 
+    "subuser2"
+  ], 
+  "user_can_send": true, 
+  "warmup": true
+};
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/ips';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieve all IP addresses
 
 **This endpoint allows you to retrieve a list of all assigned and unassigned IPs.**
@@ -2100,20 +2189,23 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["subuser"] = 'test_string'
-  request.queryParams["ip"] = 'test_string'
-  request.queryParams["limit"] = '1'
-  request.queryParams["exclude_whitelabels"] = 'true'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/ips'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'exclude_whitelabels': 'true', 
+  'ip': 'test_string', 
+  'limit': 1, 
+  'offset': 1, 
+  'sort_by_direction': 'asc', 
+  'subuser': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/ips';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all assigned IPs
 
 **This endpoint allows you to retrieve only assigned IP addresses.**
@@ -2124,15 +2216,14 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/ips/assigned'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/ips/assigned';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Create an IP pool.
 
 **This endpoint allows you to create an IP pool.**
@@ -2149,18 +2240,18 @@ If an IP pool is NOT specified for an email, it will use any IP available, inclu
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "marketing"
 };
-  request.method = 'POST'
-  request.path = '/v3/ips/pools'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/ips/pools';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all IP pools.
 
 **This endpoint allows you to retreive all of your IP pools.**
@@ -2175,15 +2266,14 @@ If an IP pool is NOT specified for an email, it will use any IP available, inclu
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/ips/pools'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/ips/pools';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update an IP pools name.
 
 **This endpoint allows you to update the name of an IP pool.**
@@ -2198,41 +2288,18 @@ If an IP pool is NOT specified for an email, it will use any IP available, inclu
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "new_pool_name"
 };
-  request.method = 'PUT'
-  request.path = '/v3/ips/pools/{pool_name}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PUT';
+  request.url = '/v3/ips/pools/{pool_name}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve all IPs in a specified pool.
-
-**This endpoint allows you to list all of the IP addresses that are in a specific IP pool.**
-
-IP Pools allow you to group your dedicated SendGrid IP addresses together. For example, you could create separate pools for your transactional and marketing email. When sending marketing emails, specify that you want to use the marketing IP pool. This allows you to maintain separate reputations for your different email traffic.
-
-IP pools can only be used with whitelabeled IP addresses.
-
-If an IP pool is NOT specified for an email, it will use any IP available, including ones in pools.
-
-### GET /ips/pools/{pool_name}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/ips/pools/{pool_name}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete an IP pool.
 
 **This endpoint allows you to delete an IP pool.**
@@ -2247,15 +2314,38 @@ If an IP pool is NOT specified for an email, it will use any IP available, inclu
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/ips/pools/{pool_name}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/ips/pools/{pool_name}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve all IPs in a specified pool.
+
+**This endpoint allows you to list all of the IP addresses that are in a specific IP pool.**
+
+IP Pools allow you to group your dedicated SendGrid IP addresses together. For example, you could create separate pools for your transactional and marketing email. When sending marketing emails, specify that you want to use the marketing IP pool. This allows you to maintain separate reputations for your different email traffic.
+
+IP pools can only be used with whitelabeled IP addresses.
+
+If an IP pool is NOT specified for an email, it will use any IP available, including ones in pools.
+
+### GET /ips/pools/{pool_name}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/ips/pools/{pool_name}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Add an IP address to a pool
 
 **This endpoint allows you to add an IP address to an IP pool.**
@@ -2268,18 +2358,18 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "ip": "0.0.0.0"
 };
-  request.method = 'POST'
-  request.path = '/v3/ips/pools/{pool_name}/ips'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/ips/pools/{pool_name}/ips';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Remove an IP address from a pool.
 
 **This endpoint allows you to remove an IP address from an IP pool.**
@@ -2292,15 +2382,32 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/ips/pools/{pool_name}/ips/{ip}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/ips/pools/{pool_name}/ips/{ip}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Get remaining IPs count
+
+This endpoint gets amount of IP Addresses that can still be created during a given period and the price of those IPs.
+
+### GET /ips/remaining
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/ips/remaining';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Add an IP to warmup
 
 **This endpoint allows you to enter an IP address into warmup mode.**
@@ -2313,18 +2420,18 @@ For more general information about warming up IPs, please see our [Classroom](ht
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "ip": "0.0.0.0"
 };
-  request.method = 'POST'
-  request.path = '/v3/ips/warmup'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/ips/warmup';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all IPs currently in warmup
 
 **This endpoint allows you to retrieve all of your IP addresses that are currently warming up.**
@@ -2337,36 +2444,14 @@ For more general information about warming up IPs, please see our [Classroom](ht
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/ips/warmup'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/ips/warmup';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve warmup status for a specific IP address
-
-**This endpoint allows you to retrieve the warmup status for a specific IP address.**
-
-SendGrid can automatically warm up dedicated IP addresses by limiting the amount of mail that can be sent through them per hour, with the limit determined by how long the IP address has been in warmup. See the [warmup schedule](https://sendgrid.com/docs/API_Reference/Web_API_v3/IP_Management/ip_warmup_schedule.html) for more details on how SendGrid limits your email traffic for IPs in warmup.
-
-For more general information about warming up IPs, please see our [Classroom](https://sendgrid.com/docs/Classroom/Deliver/Delivery_Introduction/warming_up_ips.html).
-
-### GET /ips/warmup/{ip_address}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/ips/warmup/{ip_address}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Remove an IP from warmup
 
 **This endpoint allows you to remove an IP address from warmup mode.**
@@ -2379,15 +2464,36 @@ For more general information about warming up IPs, please see our [Classroom](ht
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/ips/warmup/{ip_address}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/ips/warmup/{ip_address}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve warmup status for a specific IP address
+
+**This endpoint allows you to retrieve the warmup status for a specific IP address.**
+
+SendGrid can automatically warm up dedicated IP addresses by limiting the amount of mail that can be sent through them per hour, with the limit determined by how long the IP address has been in warmup. See the [warmup schedule](https://sendgrid.com/docs/API_Reference/Web_API_v3/IP_Management/ip_warmup_schedule.html) for more details on how SendGrid limits your email traffic for IPs in warmup.
+
+For more general information about warming up IPs, please see our [Classroom](https://sendgrid.com/docs/Classroom/Deliver/Delivery_Introduction/warming_up_ips.html).
+
+### GET /ips/warmup/{ip_address}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/ips/warmup/{ip_address}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieve all IP pools an IP address belongs to
 
 **This endpoint allows you to see which IP pools a particular IP address has been added to.**
@@ -2400,15 +2506,14 @@ A single IP address or a range of IP addresses may be dedicated to an account in
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/ips/{ip_address}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/ips/{ip_address}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="mail"></a>
 # MAIL
 
@@ -2426,15 +2531,16 @@ More Information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/mail/batch'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/mail/batch';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Validate batch ID
 
 **This endpoint allows you to validate a batch ID.**
@@ -2449,124 +2555,45 @@ More Information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail/batch/{batch_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail/batch/{batch_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## v3 Mail Send
 
 This endpoint allows you to send email over SendGrids v3 Web API, the most recent version of our API. If you are looking for documentation about the v2 Mail Send endpoint, please see our [v2 API Reference](https://sendgrid.com/docs/API_Reference/Web_API/mail.html).
 
 * Top level parameters are referred to as "global".
 * Individual fields within the personalizations array will override any other global, or message level, parameters that are defined outside of personalizations.
+ 
+**SendGrid provides libraries to help you quickly and easily integrate with the v3 Web API in 7 different languages: [C#](https://github.com/sendgrid/sendgrid-csharp), [Go](https://github.com/sendgrid/sendgrid-go), [Java](https://github.com/sendgrid/sendgrid-java), [Node JS](https://github.com/sendgrid/sendgrid-nodejs), [PHP](https://github.com/sendgrid/sendgrid-php), [Python](https://github.com/sendgrid/sendgrid-python), and [Ruby](https://github.com/sendgrid/sendgrid-ruby).**
 
-For an overview of the v3 Mail Send endpoint, please visit our [v3 API Reference](https://sendgrid.com/docs/API_Reference/Web_API_v3/Mail/index.html)
 
 For more detailed information about how to use the v3 Mail Send endpoint, please visit our [Classroom](https://sendgrid.com/docs/Classroom/Send/v3_Mail_Send/index.html).
 
 ### POST /mail/send
 
-// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/blob/master/lib/helpers/mail/README.md).
+// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/tree/master/packages/mail).
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "asm": {
-    "group_id": 1, 
-    "groups_to_display": [
-      1, 
-      2, 
-      3
-    ]
-  }, 
-  "attachments": [
-    {
-      "content": "[BASE64 encoded content block here]", 
-      "content_id": "ii_139db99fdb5c3704", 
-      "disposition": "inline", 
-      "filename": "file1.jpg", 
-      "name": "file1", 
-      "type": "jpg"
-    }
-  ], 
-  "batch_id": "[YOUR BATCH ID GOES HERE]", 
-  "categories": [
-    "category1", 
-    "category2"
-  ], 
+  const data = {
   "content": [
     {
       "type": "text/html", 
-      "value": "<html><p>Hello, world!</p><img src=[CID GOES HERE]></img></html>"
+      "value": "<html><p>Hello, world!</p></html>"
     }
   ], 
-  "custom_args": {
-    "New Argument 1": "New Value 1", 
-    "activationAttempt": "1", 
-    "customerAccountNumber": "[CUSTOMER ACCOUNT NUMBER GOES HERE]"
-  }, 
   "from": {
     "email": "sam.smith@example.com", 
     "name": "Sam Smith"
   }, 
-  "headers": {}, 
-  "ip_pool_name": "[YOUR POOL NAME GOES HERE]", 
-  "mail_settings": {
-    "bcc": {
-      "email": "ben.doe@example.com", 
-      "enable": true
-    }, 
-    "bypass_list_management": {
-      "enable": true
-    }, 
-    "footer": {
-      "enable": true, 
-      "html": "<p>Thanks</br>The SendGrid Team</p>", 
-      "text": "Thanks,/n The SendGrid Team"
-    }, 
-    "sandbox_mode": {
-      "enable": false
-    }, 
-    "spam_check": {
-      "enable": true, 
-      "post_to_url": "http://example.com/compliance", 
-      "threshold": 3
-    }
-  }, 
   "personalizations": [
     {
-      "bcc": [
-        {
-          "email": "sam.doe@example.com", 
-          "name": "Sam Doe"
-        }
-      ], 
-      "cc": [
-        {
-          "email": "jane.doe@example.com", 
-          "name": "Jane Doe"
-        }
-      ], 
-      "custom_args": {
-        "New Argument 1": "New Value 1", 
-        "activationAttempt": "1", 
-        "customerAccountNumber": "[CUSTOMER ACCOUNT NUMBER GOES HERE]"
-      }, 
-      "headers": {
-        "X-Accept-Language": "en", 
-        "X-Mailer": "MyApp"
-      }, 
-      "send_at": 1409348513, 
       "subject": "Hello, World!", 
-      "substitutions": {
-        "id": "substitutions", 
-        "type": "object"
-      }, 
       "to": [
         {
           "email": "john.doe@example.com", 
@@ -2579,48 +2606,17 @@ For more detailed information about how to use the v3 Mail Send endpoint, please
     "email": "sam.smith@example.com", 
     "name": "Sam Smith"
   }, 
-  "sections": {
-    "section": {
-      ":sectionName1": "section 1 text", 
-      ":sectionName2": "section 2 text"
-    }
-  }, 
-  "send_at": 1409348513, 
-  "subject": "Hello, World!", 
-  "template_id": "[YOUR TEMPLATE ID GOES HERE]", 
-  "tracking_settings": {
-    "click_tracking": {
-      "enable": true, 
-      "enable_text": true
-    }, 
-    "ganalytics": {
-      "enable": true, 
-      "utm_campaign": "[NAME OF YOUR REFERRER SOURCE]", 
-      "utm_content": "[USE THIS SPACE TO DIFFERENTIATE YOUR EMAIL FROM ADS]", 
-      "utm_medium": "[NAME OF YOUR MARKETING MEDIUM e.g. email]", 
-      "utm_name": "[NAME OF YOUR CAMPAIGN]", 
-      "utm_term": "[IDENTIFY PAID KEYWORDS HERE]"
-    }, 
-    "open_tracking": {
-      "enable": true, 
-      "substitution_tag": "%opentrack"
-    }, 
-    "subscription_tracking": {
-      "enable": true, 
-      "html": "If you would like to unsubscribe and stop receiving these emails <% clickhere %>.", 
-      "substitution_tag": "<%click here%>", 
-      "text": "If you would like to unsubscribe and stop receiveing these emails <% click here %>."
-    }
-  }
+  "subject": "Hello, World!"
 };
-  request.method = 'POST'
-  request.path = '/v3/mail/send'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/mail/send';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="mail_settings"></a>
 # MAIL SETTINGS
 
@@ -2634,17 +2630,19 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/mail_settings'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/mail_settings';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update address whitelist mail settings
 
 **This endpoint allows you to update your current email address whitelist settings.**
@@ -2657,22 +2655,22 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true, 
   "list": [
     "email1@example.com", 
     "example.com"
   ]
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/address_whitelist'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/address_whitelist';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve address whitelist mail settings
 
 **This endpoint allows you to retrieve your current email address whitelist settings.**
@@ -2685,15 +2683,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/address_whitelist'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/address_whitelist';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update BCC mail settings
 
 **This endpoint allows you to update your current BCC mail settings.**
@@ -2706,19 +2703,19 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email": "email@example.com", 
   "enabled": false
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/bcc'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/bcc';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all BCC mail settings
 
 **This endpoint allows you to retrieve your current BCC mail settings.**
@@ -2731,15 +2728,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/bcc'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/bcc';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update bounce purge mail settings
 
 **This endpoint allows you to update your current bounce purge settings.**
@@ -2752,20 +2748,20 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true, 
   "hard_bounces": 5, 
   "soft_bounces": 5
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/bounce_purge'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/bounce_purge';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve bounce purge mail settings
 
 **This endpoint allows you to retrieve your current bounce purge settings.**
@@ -2778,15 +2774,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/bounce_purge'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/bounce_purge';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update footer mail settings
 
 **This endpoint allows you to update your current Footer mail settings.**
@@ -2799,20 +2794,20 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true, 
   "html_content": "...", 
   "plain_content": "..."
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/footer'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/footer';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve footer mail settings
 
 **This endpoint allows you to retrieve your current Footer mail settings.**
@@ -2825,15 +2820,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/footer'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/footer';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update forward bounce mail settings
 
 **This endpoint allows you to update your current bounce forwarding mail settings.**
@@ -2846,19 +2840,19 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email": "example@example.com", 
   "enabled": true
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/forward_bounce'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/forward_bounce';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve forward bounce mail settings
 
 **This endpoint allows you to retrieve your current bounce forwarding mail settings.**
@@ -2871,15 +2865,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/forward_bounce'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/forward_bounce';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update forward spam mail settings
 
 **This endpoint allows you to update your current Forward Spam mail settings.**
@@ -2892,19 +2885,19 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email": "", 
   "enabled": false
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/forward_spam'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/forward_spam';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve forward spam mail settings
 
 **This endpoint allows you to retrieve your current Forward Spam mail settings.**
@@ -2917,15 +2910,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/forward_spam'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/forward_spam';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update plain content mail settings
 
 **This endpoint allows you to update your current Plain Content mail settings.**
@@ -2938,18 +2930,18 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": false
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/plain_content'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/plain_content';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve plain content mail settings
 
 **This endpoint allows you to retrieve your current Plain Content mail settings.**
@@ -2962,15 +2954,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/plain_content'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/plain_content';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update spam check mail settings
 
 **This endpoint allows you to update your current spam checker mail settings.**
@@ -2983,20 +2974,20 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true, 
   "max_score": 5, 
   "url": "url"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/spam_check'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/spam_check';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve spam check mail settings
 
 **This endpoint allows you to retrieve your current Spam Checker mail settings.**
@@ -3009,15 +3000,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/spam_check'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/spam_check';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update template mail settings
 
 **This endpoint allows you to update your current legacy email template settings.**
@@ -3032,19 +3022,19 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true, 
   "html_content": "<% body %>"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/mail_settings/template'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/mail_settings/template';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve legacy template mail settings
 
 **This endpoint allows you to retrieve your current legacy email template settings.**
@@ -3059,15 +3049,14 @@ Mail settings allow you to tell SendGrid specific things to do to every email th
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/mail_settings/template'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/mail_settings/template';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="mailbox_providers"></a>
 # MAILBOX PROVIDERS
 
@@ -3083,21 +3072,23 @@ Advanced Stats provide a more in-depth view of your email statistics and the act
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["mailbox_providers"] = 'test_string'
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.method = 'GET'
-  request.path = '/v3/mailbox_providers/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'mailbox_providers': 'test_string', 
+  'offset': 1, 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/mailbox_providers/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="partner_settings"></a>
 # PARTNER SETTINGS
 
@@ -3111,17 +3102,19 @@ Our partner settings allow you to integrate your SendGrid account with our partn
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/partner_settings'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/partner_settings';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Updates New Relic partner settings.
 
 **This endpoint allows you to update or change your New Relic partner settings.**
@@ -3134,20 +3127,20 @@ By integrating with New Relic, you can send your SendGrid email statistics to yo
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enable_subuser_statistics": true, 
   "enabled": true, 
   "license_key": ""
 };
-  request.method = 'PATCH'
-  request.path = '/v3/partner_settings/new_relic'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/partner_settings/new_relic';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Returns all New Relic partner settings.
 
 **This endpoint allows you to retrieve your current New Relic partner settings.**
@@ -3160,15 +3153,14 @@ By integrating with New Relic, you can send your SendGrid email statistics to yo
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/partner_settings/new_relic'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/partner_settings/new_relic';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="scopes"></a>
 # SCOPES
 
@@ -3176,21 +3168,85 @@ By integrating with New Relic, you can send your SendGrid email statistics to yo
 
 **This endpoint returns a list of all scopes that this user has access to.**
 
-API Keys can be used to authenticate the use of [SendGrids v3 Web API](https://sendgrid.com/docs/API_Reference/Web_API_v3/index.html), or the [Mail API Endpoint](https://sendgrid.com/docs/API_Reference/Web_API/mail.html). API Keys may be assigned certain permissions, or scopes, that limit which API endpoints they are able to access. For a more detailed explanation of how you can use API Key permissios, please visit our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/api_keys.html#-API-Key-Permissions) or [Classroom](https://sendgrid.com/docs/Classroom/Basics/API/api_key_permissions.html). 
+API Keys can be used to authenticate the use of [SendGrids v3 Web API](https://sendgrid.com/docs/API_Reference/Web_API_v3/index.html), or the [Mail API Endpoint](https://sendgrid.com/docs/API_Reference/Web_API/mail.html). API Keys may be assigned certain permissions, or scopes, that limit which API endpoints they are able to access. For a more detailed explanation of how you can use API Key permissios, please visit our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/api_keys.html#-API-Key-Permissions) or [Classroom](https://sendgrid.com/docs/Classroom/Basics/API/api_key_permissions.html).
 
 ### GET /scopes
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/scopes'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/scopes';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve access requests
+
+This endpoint allows you to retrieve a list of all recent access requests.
+
+**Note:** The Response Header's 'link' parameter will include pagination info. For example:
+
+link: ```<https://api.sendgrid.com/v3/scopes/requests?limit=10&offset=0>; rel="first"; title="1", <https://api.sendgrid.com/v3/scopes/requests?limit=10&offset=10>; rel="last"; title="2", <https://api.sendgrid.com/v3/scopes/requests?limit=10&offset=0>; rel="prev"; title="1"```
+
+### GET /scopes/requests
+
+
+```javascript
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/scopes/requests';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Deny access request
+
+This endpoint allows you to deny an attempt to access your account.
+
+**Note:** Only teammate admins may delete a teammate's access request.
+
+### DELETE /scopes/requests/{request_id}
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/scopes/requests/{request_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Approve access request
+
+This endpoint allows you to approve an access attempt.
+
+**Note:** Only teammate admins may approve another teammates access request.
+
+### PATCH /scopes/requests/{request_id}/approve
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/scopes/requests/{request_id}/approve';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 <a name="senders"></a>
 # SENDERS
 
@@ -3206,8 +3262,7 @@ Sender Identities are required to be verified before use. If your domain has bee
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "address": "123 Elm St.", 
   "address_2": "Apt. 456", 
   "city": "Denver", 
@@ -3224,14 +3279,15 @@ Sender Identities are required to be verified before use. If your domain has bee
   "state": "Colorado", 
   "zip": "80202"
 };
-  request.method = 'POST'
-  request.path = '/v3/senders'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/senders';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Get all Sender Identities
 
 **This endpoint allows you to retrieve a list of all sender identities that have been created for your account.**
@@ -3242,15 +3298,52 @@ Sender Identities are required to be verified before use. If your domain has bee
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/senders'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/senders';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## View a Sender Identity
+
+**This endpoint allows you to retrieve a specific sender identity.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### GET /senders/{sender_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/senders/{sender_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Delete a Sender Identity
+
+**This endoint allows you to delete one of your sender identities.**
+
+Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
+
+### DELETE /senders/{sender_id}
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/senders/{sender_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Update a Sender Identity
 
 **This endpoint allows you to update a sender identity.**
@@ -3263,8 +3356,7 @@ Partial updates are allowed, but fields that are marked as "required" in the POS
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "address": "123 Elm St.", 
   "address_2": "Apt. 456", 
   "city": "Denver", 
@@ -3281,52 +3373,15 @@ Partial updates are allowed, but fields that are marked as "required" in the POS
   "state": "Colorado", 
   "zip": "80202"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/senders/{sender_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/senders/{sender_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## View a Sender Identity
-
-**This endpoint allows you to retrieve a specific sender identity.**
-
-Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
-
-### GET /senders/{sender_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/senders/{sender_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Delete a Sender Identity
-
-**This endoint allows you to delete one of your sender identities.**
-
-Sender Identities are required to be verified before use. If your domain has been whitelabeled it will auto verify on creation. Otherwise an email will be sent to the `from.email`.
-
-### DELETE /senders/{sender_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/senders/{sender_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Resend Sender Identity Verification
 
 **This enpdoint allows you to resend a sender identity verification email.**
@@ -3337,15 +3392,16 @@ Sender Identities are required to be verified before use. If your domain has bee
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/senders/{sender_id}/resend_verification'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/senders/{sender_id}/resend_verification';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="stats"></a>
 # STATS
 
@@ -3359,20 +3415,22 @@ Parent accounts will see aggregated stats for their account and all subuser acco
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'offset': 1, 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="subusers"></a>
 # SUBUSERS
 
@@ -3389,8 +3447,7 @@ For more information about Subusers:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email": "John@example.com", 
   "ips": [
     "1.1.1.1", 
@@ -3399,14 +3456,15 @@ For more information about Subusers:
   "password": "johns_password", 
   "username": "John@example.com"
 };
-  request.method = 'POST'
-  request.path = '/v3/subusers'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/subusers';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## List all Subusers
 
 This endpoint allows you to retrieve a list of all of your subusers. You can choose to retrieve specific subusers as well as limit the results that come back from the API.
@@ -3420,18 +3478,20 @@ For more information about Subusers:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["username"] = 'test_string'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/subusers'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1, 
+  'username': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/subusers';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve Subuser Reputations
 
 Subuser sender reputations give a good idea how well a sender is doing with regards to how recipients and recipient servers react to the mail that is being received. When a bounce, spam report, or other negative action happens on a sent email, it will effect your sender rating.
@@ -3442,16 +3502,18 @@ This endpoint allows you to request the reputations for your subusers.
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["usernames"] = 'test_string'
-  request.method = 'GET'
-  request.path = '/v3/subusers/reputations'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'usernames': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/subusers/reputations';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve email statistics for your subusers.
 
 **This endpoint allows you to retrieve the email statistics for the given subusers.**
@@ -3466,21 +3528,23 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["subusers"] = 'test_string'
-  request.method = 'GET'
-  request.path = '/v3/subusers/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'offset': 1, 
+  'start_date': '2016-01-01', 
+  'subusers': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/subusers/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve monthly stats for all subusers
 
 **This endpoint allows you to retrieve the monthly email statistics for all subusers over the given date range.**
@@ -3496,21 +3560,23 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["subuser"] = 'test_string'
-  request.queryParams["limit"] = '1'
-  request.queryParams["sort_by_metric"] = 'test_string'
-  request.queryParams["offset"] = '1'
-  request.queryParams["date"] = 'test_string'
-  request.queryParams["sort_by_direction"] = 'asc'
-  request.method = 'GET'
-  request.path = '/v3/subusers/stats/monthly'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'date': 'test_string', 
+  'limit': 1, 
+  'offset': 1, 
+  'sort_by_direction': 'asc', 
+  'sort_by_metric': 'test_string', 
+  'subuser': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/subusers/stats/monthly';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ##  Retrieve the totals for each email statistic metric for all subusers.
 
 **This endpoint allows you to retrieve the total sums of each email statistic metric for all subusers over the given date range.**
@@ -3524,47 +3590,24 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = '1'
-  request.queryParams["sort_by_metric"] = 'test_string'
-  request.queryParams["offset"] = '1'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["sort_by_direction"] = 'asc'
-  request.method = 'GET'
-  request.path = '/v3/subusers/stats/sums'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Enable/disable a subuser
-
-This endpoint allows you to enable or disable a subuser.
-
-For more information about Subusers:
-
-* [User Guide > Subusers](https://sendgrid.com/docs/User_Guide/Settings/Subusers/index.html)
-* [Classroom > How do I add more subusers to my account?](https://sendgrid.com/docs/Classroom/Basics/Account/how_do_i_add_more_subusers_to_my_account.html)
-
-### PATCH /subusers/{subuser_name}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "disabled": false
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'limit': 1, 
+  'offset': 1, 
+  'sort_by_direction': 'asc', 
+  'sort_by_metric': 'test_string', 
+  'start_date': '2016-01-01'
 };
-  request.method = 'PATCH'
-  request.path = '/v3/subusers/{subuser_name}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/subusers/stats/sums';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a subuser
 
 This endpoint allows you to delete a subuser. This is a permanent action, once deleted a subuser cannot be retrieved.
@@ -3578,15 +3621,41 @@ For more information about Subusers:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/subusers/{subuser_name}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/subusers/{subuser_name}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Enable/disable a subuser
+
+This endpoint allows you to enable or disable a subuser.
+
+For more information about Subusers:
+
+* [User Guide > Subusers](https://sendgrid.com/docs/User_Guide/Settings/Subusers/index.html)
+* [Classroom > How do I add more subusers to my account?](https://sendgrid.com/docs/Classroom/Basics/Account/how_do_i_add_more_subusers_to_my_account.html)
+
+### PATCH /subusers/{subuser_name}
+
+
+```javascript
+  const data = {
+  "disabled": false
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/subusers/{subuser_name}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Update IPs assigned to a subuser
 
 Each subuser should be assigned to an IP address, from which all of this subuser's mail will be sent. Often, this is the same IP as the parent account, but each subuser can have their own, or multiple, IP addresses as well. 
@@ -3600,18 +3669,18 @@ More information:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = [
+  const data = [
   "127.0.0.1"
 ];
-  request.method = 'PUT'
-  request.path = '/v3/subusers/{subuser_name}/ips'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PUT';
+  request.url = '/v3/subusers/{subuser_name}/ips';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update Monitor Settings for a subuser
 
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
@@ -3620,19 +3689,19 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email": "example@example.com", 
   "frequency": 500
 };
-  request.method = 'PUT'
-  request.path = '/v3/subusers/{subuser_name}/monitor'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PUT';
+  request.url = '/v3/subusers/{subuser_name}/monitor';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Create monitor settings
 
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
@@ -3641,36 +3710,19 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email": "example@example.com", 
   "frequency": 50000
 };
-  request.method = 'POST'
-  request.path = '/v3/subusers/{subuser_name}/monitor'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/subusers/{subuser_name}/monitor';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve monitor settings for a subuser
-
-Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
-
-### GET /subusers/{subuser_name}/monitor
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/subusers/{subuser_name}/monitor'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete monitor settings
 
 Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
@@ -3679,15 +3731,32 @@ Subuser monitor settings allow you to receive a sample of an outgoing message by
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/subusers/{subuser_name}/monitor'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/subusers/{subuser_name}/monitor';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve monitor settings for a subuser
+
+Subuser monitor settings allow you to receive a sample of an outgoing message by a specific customer at a specific frequency of emails.
+
+### GET /subusers/{subuser_name}/monitor
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/subusers/{subuser_name}/monitor';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieve the monthly email statistics for a single subuser
 
 **This endpoint allows you to retrive the monthly email statistics for a specific subuser.**
@@ -3703,48 +3772,25 @@ For more information, see our [User Guide](https://sendgrid.com/docs/User_Guide/
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["date"] = 'test_string'
-  request.queryParams["sort_by_direction"] = 'asc'
-  request.queryParams["limit"] = '1'
-  request.queryParams["sort_by_metric"] = 'test_string'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/subusers/{subuser_name}/stats/monthly'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'date': 'test_string', 
+  'limit': 1, 
+  'offset': 1, 
+  'sort_by_direction': 'asc', 
+  'sort_by_metric': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/subusers/{subuser_name}/stats/monthly';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="suppression"></a>
 # SUPPRESSION
 
-## Retrieve all blocks
-
-**This endpoint allows you to retrieve a list of all email addresses that are currently on your blocks list.**
-
-[Blocks](https://sendgrid.com/docs/Glossary/blocks.html) happen when your message was rejected for a reason related to the message, not the recipient address. This can happen when your mail server IP address has been added to a blacklist or blocked by an ISP, or if the message content is flagged by a filter on the receiving server.
-
-For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/blocks.html).
-
-### GET /suppression/blocks
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["start_time"] = '1'
-  request.queryParams["limit"] = '1'
-  request.queryParams["end_time"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/suppression/blocks'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
 ## Delete blocks
 
 **This endpoint allows you to delete all email addresses on your blocks list.**
@@ -3762,43 +3808,49 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "delete_all": false, 
   "emails": [
     "example1@example.com", 
     "example2@example.com"
   ]
 };
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/blocks'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/blocks';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a specific block
+```
+## Retrieve all blocks
 
-**This endpoint allows you to retrieve a specific email address from your blocks list.**
+**This endpoint allows you to retrieve a list of all email addresses that are currently on your blocks list.**
 
-[Blocks](https://sendgrid.com/docs/Glossary/blocks.html) happen when your message was rejected for a reason related to the message, not the recipient address. This can happen when your mail server IP address has been added to a blacklist or blocked by an ISP, or if the message content is flagged by a filter on the receiving server.
+There are several causes for [blocked](https://sendgrid.com/docs/Glossary/blocks.html) emails: for example, your mail server IP address is on an ISP blacklist, or blocked by an ISP, or if the receiving server flags the message content.
 
 For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/blocks.html).
 
-### GET /suppression/blocks/{email}
+### GET /suppression/blocks
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/suppression/blocks/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'end_time': 1, 
+  'limit': 1, 
+  'offset': 1, 
+  'start_time': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/suppression/blocks';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a specific block
 
 **This endpoint allows you to delete a specific email address from your blocks list.**
@@ -3811,46 +3863,41 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/blocks/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/blocks/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve all bounces
+```
+## Retrieve a specific block
 
-**This endpoint allows you to retrieve all of your bounces.**
+**This endpoint allows you to retrieve a specific email address from your blocks list.**
 
-Bounces are messages that are returned to the server that sent it. 
+[Blocks](https://sendgrid.com/docs/Glossary/blocks.html) happen when your message was rejected for a reason related to the message, not the recipient address. This can happen when your mail server IP address has been added to a blacklist or blocked by an ISP, or if the message content is flagged by a filter on the receiving server.
 
-For more information see: 
+For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/blocks.html).
 
-* [User Guide > Bounces](https://sendgrid.com/docs/User_Guide/Suppressions/bounces.html) for more information
-* [Glossary > Bounces](https://sendgrid.com/docs/Glossary/Bounces.html)
-
-### GET /suppression/bounces
+### GET /suppression/blocks/{email}
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["start_time"] = '1'
-  request.queryParams["end_time"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/suppression/bounces'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/suppression/blocks/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete bounces
 
 **This endpoint allows you to delete all of your bounces. You can also use this endpoint to remove a specific email address from your bounce list.**
 
-Bounces are messages that are returned to the server that sent it.
+A bounced email is when the message is undeliverable and then returned to the server that sent it.
 
 For more information see: 
 
@@ -3864,52 +3911,55 @@ Note: the `delete_all` and `emails` parameters should be used independently of e
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "delete_all": true, 
   "emails": [
     "example@example.com", 
     "example2@example.com"
   ]
 };
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/bounces'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/bounces';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a Bounce
+```
+## Retrieve all bounces
 
-**This endpoint allows you to retrieve a specific bounce for a given email address.**
+**This endpoint allows you to retrieve all of your bounces.**
 
-Bounces are messages that are returned to the server that sent it.
+A bounced email is when the message is undeliverable and then returned to the server that sent it.  
 
 For more information see: 
 
 * [User Guide > Bounces](https://sendgrid.com/docs/User_Guide/Suppressions/bounces.html) for more information
 * [Glossary > Bounces](https://sendgrid.com/docs/Glossary/Bounces.html)
-* [Classroom > List Scrubbing Guide](https://sendgrid.com/docs/Classroom/Deliver/list_scrubbing.html)
 
-### GET /suppression/bounces/{email}
+### GET /suppression/bounces
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/suppression/bounces/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'end_time': 1, 
+  'start_time': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/suppression/bounces';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a bounce
 
 **This endpoint allows you to remove an email address from your bounce list.**
 
-Bounces are messages that are returned to the server that sent it. This endpoint allows you to delete a single email addresses from your bounce list. 
+A bounced email is when the message is undeliverable and then returned to the server that sent it. This endpoint allows you to delete a single email addresses from your bounce list. 
 
 For more information see: 
 
@@ -3921,43 +3971,44 @@ For more information see:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["email_address"] = 'example@example.com'
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/bounces/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  const queryParams = {
+  'email_address': 'example@example.com'
+};
+  request.qs = queryParams;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/bounces/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve all invalid emails
+```
+## Retrieve a Bounce
 
-**This endpoint allows you to retrieve a list of all invalid email addresses.**
+**This endpoint allows you to retrieve a specific bounce for a given email address.**
 
-An invalid email occurs when you attempt to send email to an address that is formatted in a manner that does not meet internet email format standards or the email does not exist at the recipients mail server.
+A bounced email is when the message is undeliverable and then returned to the server that sent it.
 
-Examples include addresses without the @ sign or addresses that include certain special characters and/or spaces. This response can come from our own server or the recipient mail server.
+For more information see: 
 
-For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/invalid_emails.html).
+* [User Guide > Bounces](https://sendgrid.com/docs/User_Guide/Suppressions/bounces.html) for more information
+* [Glossary > Bounces](https://sendgrid.com/docs/Glossary/Bounces.html)
+* [Classroom > List Scrubbing Guide](https://sendgrid.com/docs/Classroom/Deliver/list_scrubbing.html)
 
-### GET /suppression/invalid_emails
+### GET /suppression/bounces/{email}
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["start_time"] = '1'
-  request.queryParams["limit"] = '1'
-  request.queryParams["end_time"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/suppression/invalid_emails'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/suppression/bounces/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete invalid emails
 
 **This endpoint allows you to remove email addresses from your invalid email address list.**
@@ -3977,25 +4028,25 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "delete_all": false, 
   "emails": [
     "example1@example.com", 
     "example2@example.com"
   ]
 };
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/invalid_emails'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/invalid_emails';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a specific invalid email
+```
+## Retrieve all invalid emails
 
-**This endpoint allows you to retrieve a specific invalid email addresses.**
+**This endpoint allows you to retrieve a list of all invalid email addresses.**
 
 An invalid email occurs when you attempt to send email to an address that is formatted in a manner that does not meet internet email format standards or the email does not exist at the recipients mail server.
 
@@ -4003,19 +4054,25 @@ Examples include addresses without the @ sign or addresses that include certain 
 
 For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/invalid_emails.html).
 
-### GET /suppression/invalid_emails/{email}
+### GET /suppression/invalid_emails
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/suppression/invalid_emails/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'end_time': 1, 
+  'limit': 1, 
+  'offset': 1, 
+  'start_time': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/suppression/invalid_emails';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a specific invalid email
 
 **This endpoint allows you to remove a specific email address from the invalid email address list.**
@@ -4030,82 +4087,38 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/invalid_emails/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/invalid_emails/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a specific spam report
+```
+## Retrieve a specific invalid email
 
-**This endpoint allows you to retrieve a specific spam report.**
+**This endpoint allows you to retrieve a specific invalid email addresses.**
 
-[Spam reports](https://sendgrid.com/docs/Glossary/spam_reports.html) happen when a recipient indicates that they think your email is [spam](https://sendgrid.com/docs/Glossary/spam.html) and then their email provider reports this to SendGrid.
+An invalid email occurs when you attempt to send email to an address that is formatted in a manner that does not meet internet email format standards or the email does not exist at the recipients mail server.
 
-For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
+Examples include addresses without the @ sign or addresses that include certain special characters and/or spaces. This response can come from our own server or the recipient mail server.
 
-### GET /suppression/spam_report/{email}
+For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/invalid_emails.html).
+
+### GET /suppression/invalid_emails/{email}
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/suppression/spam_report/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/suppression/invalid_emails/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Delete a specific spam report
-
-**This endpoint allows you to delete a specific spam report.**
-
-[Spam reports](https://sendgrid.com/docs/Glossary/spam_reports.html) happen when a recipient indicates that they think your email is [spam](https://sendgrid.com/docs/Glossary/spam.html) and then their email provider reports this to SendGrid.
-
-For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
-
-### DELETE /suppression/spam_report/{email}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/spam_report/{email}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve all spam reports
-
-**This endpoint allows you to retrieve all spam reports.**
-
-[Spam reports](https://sendgrid.com/docs/Glossary/spam_reports.html) happen when a recipient indicates that they think your email is [spam](https://sendgrid.com/docs/Glossary/spam.html) and then their email provider reports this to SendGrid.
-
-For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
-
-### GET /suppression/spam_reports
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["start_time"] = '1'
-  request.queryParams["limit"] = '1'
-  request.queryParams["end_time"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/suppression/spam_reports'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete spam reports
 
 **This endpoint allows you to delete your spam reports.**
@@ -4123,22 +4136,91 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/User
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "delete_all": false, 
   "emails": [
     "example1@example.com", 
     "example2@example.com"
   ]
 };
-  request.method = 'DELETE'
-  request.path = '/v3/suppression/spam_reports'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/spam_reports';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve all spam reports
+
+**This endpoint allows you to retrieve all spam reports.**
+
+[Spam reports](https://sendgrid.com/docs/Glossary/spam_reports.html) happen when a recipient indicates that they think your email is [spam](https://sendgrid.com/docs/Glossary/spam.html) and then their email provider reports this to SendGrid.
+
+For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
+
+### GET /suppression/spam_reports
+
+
+```javascript
+  const queryParams = {
+  'end_time': 1, 
+  'limit': 1, 
+  'offset': 1, 
+  'start_time': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/suppression/spam_reports';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Delete a specific spam report
+
+**This endpoint allows you to delete a specific spam report.**
+
+[Spam reports](https://sendgrid.com/docs/Glossary/spam_reports.html) happen when a recipient indicates that they think your email is [spam](https://sendgrid.com/docs/Glossary/spam.html) and then their email provider reports this to SendGrid.
+
+For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
+
+### DELETE /suppression/spam_reports/{email}
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/suppression/spam_reports/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve a specific spam report
+
+**This endpoint allows you to retrieve a specific spam report.**
+
+[Spam reports](https://sendgrid.com/docs/Glossary/spam_reports.html) happen when a recipient indicates that they think your email is [spam](https://sendgrid.com/docs/Glossary/spam.html) and then their email provider reports this to SendGrid.
+
+For more information, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Suppressions/spam_reports.html).
+
+### GET /suppression/spam_reports/{email}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/suppression/spam_reports/{email}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieve all global suppressions
 
 **This endpoint allows you to retrieve a list of all email address that are globally suppressed.**
@@ -4149,19 +4231,200 @@ A global suppression (or global unsubscribe) is an email address of a recipient 
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["start_time"] = '1'
-  request.queryParams["limit"] = '1'
-  request.queryParams["end_time"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/suppression/unsubscribes'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'end_time': 1, 
+  'limit': 1, 
+  'offset': 1, 
+  'start_time': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/suppression/unsubscribes';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+<a name="teammates"></a>
+# TEAMMATES
+
+## Invite teammate
+
+This endpoint allows you to send a teammate invitation via email with a predefined set of scopes, or permissions.
+
+**Note:** A teammate invite will expire after 7 days, but you may resend the invite at any time to reset the expiration date.
+
+Essentials, [Legacy Lite](https://sendgrid.com/docs/Classroom/Basics/Billing/legacy_lite_plan.html), and Free Trial users may create up to one teammate per account. There are no limits for how many teammates a Pro or higher account may create.
+
+### POST /teammates
+
+
+```javascript
+  const data = {
+  "email": "teammate1@example.com", 
+  "is_admin": false, 
+  "scopes": [
+    "user.profile.read", 
+    "user.profile.update"
+  ]
+};
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/teammates';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve all teammates
+
+This endpoint allows you to retrieve a list of all current teammates.
+
+**Note:** The Response Header will include pagination info. For example:
+
+link: ```<https://api.sendgrid.com/v3/teammates?limit=10&offset=0>; rel="first"; title="1", <https://api.sendgrid.com/v3/teammates?limit=10&offset=10>; rel="last"; title="2", <https://api.sendgrid.com/v3/teammates?limit=10&offset=0>; rel="prev"; title="1"```
+
+### GET /teammates
+
+
+```javascript
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/teammates';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve all pending teammates
+
+This endpoint allows you to retrieve a list of all pending teammate invitations.
+
+**Note:** Each teammate invitation is valid for 7 days. Users may resend the invite to refresh the expiration date.
+
+### GET /teammates/pending
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/teammates/pending';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Delete pending teammate
+
+This endpoint allows you to delete a pending teammate invite.
+
+### DELETE /teammates/pending/{token}
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/teammates/pending/{token}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Resend teammate invite
+
+This endpoint allows you to resend a teammate invite.
+
+**Note:** Teammate invitations will expire after 7 days. Resending an invite will reset the expiration date.
+
+### POST /teammates/pending/{token}/resend
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/teammates/pending/{token}/resend';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Delete teammate
+
+This endpoint allows you to delete a teammate.
+
+**Only the parent user or an admin teammate can delete another teammate.**
+
+### DELETE /teammates/{username}
+
+
+```javascript
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/teammates/{username}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Update teammate's permissions
+
+This endpoint allows you to update a teammates permissions.
+
+To turn a teammate into an admin, the request body should contain an `is_admin` set to `true`. Otherwise, set `is_admin` to `false` and pass in all the scopes that a teammate should have.
+
+**Only the parent user or other admin teammates can update another teammates permissions.**
+
+**Admin users can only update permissions.**
+
+### PATCH /teammates/{username}
+
+
+```javascript
+  const data = {
+  "is_admin": false, 
+  "scopes": [
+    "user.profile.read", 
+    "user.profile.edit"
+  ]
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/teammates/{username}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve specific teammate
+
+This endpoint allows you to retrieve a specific teammate by username.
+
+### GET /teammates/{username}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/teammates/{username}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 <a name="templates"></a>
 # TEMPLATES
 
@@ -4177,18 +4440,18 @@ Transactional templates are templates created specifically for transactional ema
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "name": "example_name"
 };
-  request.method = 'POST'
-  request.path = '/v3/templates'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/templates';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all transactional templates.
 
 **This endpoint allows you to retrieve all transactional templates.**
@@ -4201,62 +4464,14 @@ Transactional templates are templates created specifically for transactional ema
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/templates'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/templates';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Edit a transactional template.
-
-**This endpoint allows you to edit a transactional template.**
-
-Each user can create up to 300 different transactional templates. Transactional templates are specific to accounts and subusers. Templates created on a parent account will not be accessible from the subuser accounts.
-
-Transactional templates are templates created specifically for transactional email and are not to be confused with [Marketing Campaigns templates](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/templates.html). For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
-
-
-### PATCH /templates/{template_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "name": "new_example_name"
-};
-  request.method = 'PATCH'
-  request.path = '/v3/templates/{template_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve a single transactional template.
-
-**This endpoint allows you to retrieve a single transactional template.**
-
-Each user can create up to 300 different transactional templates. Transactional templates are specific to accounts and subusers. Templates created on a parent account will not be accessible from the subuser accounts.
-
-Transactional templates are templates created specifically for transactional email and are not to be confused with [Marketing Campaigns templates](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/templates.html). For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
-
-
-### GET /templates/{template_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/templates/{template_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a template.
 
 **This endpoint allows you to delete a transactional template.**
@@ -4265,20 +4480,64 @@ Each user can create up to 300 different transactional templates. Transactional 
 
 Transactional templates are templates created specifically for transactional email and are not to be confused with [Marketing Campaigns templates](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/templates.html). For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
 
-
 ### DELETE /templates/{template_id}
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/templates/{template_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/templates/{template_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Edit a transactional template.
+
+**This endpoint allows you to edit a transactional template.**
+
+Each user can create up to 300 different transactional templates. Transactional templates are specific to accounts and subusers. Templates created on a parent account will not be accessible from the subuser accounts.
+
+Transactional templates are templates created specifically for transactional email and are not to be confused with [Marketing Campaigns templates](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/templates.html). For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
+
+### PATCH /templates/{template_id}
+
+
+```javascript
+  const data = {
+  "name": "new_example_name"
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/templates/{template_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve a single transactional template.
+
+**This endpoint allows you to retrieve a single transactional template.**
+
+Each user can create up to 300 different transactional templates. Transactional templates are specific to accounts and subusers. Templates created on a parent account will not be accessible from the subuser accounts.
+
+Transactional templates are templates created specifically for transactional email and are not to be confused with [Marketing Campaigns templates](https://sendgrid.com/docs/User_Guide/Marketing_Campaigns/templates.html). For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
+
+### GET /templates/{template_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/templates/{template_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Create a new transactional template version.
 
 **This endpoint allows you to create a new version of a template.**
@@ -4287,13 +4546,11 @@ Each transactional template can have multiple versions, each version with its ow
 
 For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
 
-
 ### POST /templates/{template_id}/versions
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "active": 1, 
   "html_content": "<%body%>", 
   "name": "example_version_name", 
@@ -4301,75 +4558,15 @@ For more information about transactional templates, please see our [User Guide](
   "subject": "<%subject%>", 
   "template_id": "ddb96bbc-9b92-425e-8979-99464621b543"
 };
-  request.method = 'POST'
-  request.path = '/v3/templates/{template_id}/versions'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/templates/{template_id}/versions';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Edit a transactional template version.
-
-**This endpoint allows you to edit a version of one of your transactional templates.**
-
-Each transactional template can have multiple versions, each version with its own subject and content. Each user can have up to 300 versions across across all templates.
-
-For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
-
-## URI Parameters
-| URI Parameter | Type | Description |
-|---|---|---|
-| template_id | string | The ID of the original template |
-| version_id | string | The ID of the template version |
-
-### PATCH /templates/{template_id}/versions/{version_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "active": 1, 
-  "html_content": "<%body%>", 
-  "name": "updated_example_name", 
-  "plain_content": "<%body%>", 
-  "subject": "<%subject%>"
-};
-  request.method = 'PATCH'
-  request.path = '/v3/templates/{template_id}/versions/{version_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve a specific transactional template version.
-
-**This endpoint allows you to retrieve a specific version of a template.**
-
-Each transactional template can have multiple versions, each version with its own subject and content. Each user can have up to 300 versions across across all templates.
-
-For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
-
-## URI Parameters
-| URI Parameter | Type | Description |
-|---|---|---|
-| template_id | string | The ID of the original template |
-| version_id | string |  The ID of the template version |
-
-### GET /templates/{template_id}/versions/{version_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/templates/{template_id}/versions/{version_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a transactional template version.
 
 **This endpoint allows you to delete one of your transactional template versions.**
@@ -4388,15 +4585,76 @@ For more information about transactional templates, please see our [User Guide](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/templates/{template_id}/versions/{version_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/templates/{template_id}/versions/{version_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Edit a transactional template version.
+
+**This endpoint allows you to edit a version of one of your transactional templates.**
+
+Each transactional template can have multiple versions, each version with its own subject and content. Each user can have up to 300 versions across across all templates.
+
+For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
+
+## URI Parameters
+| URI Parameter | Type | Description |
+|---|---|---|
+| template_id | string | The ID of the original template |
+| version_id | string | The ID of the template version |
+
+### PATCH /templates/{template_id}/versions/{version_id}
+
+
+```javascript
+  const data = {
+  "active": 1, 
+  "html_content": "<%body%>", 
+  "name": "updated_example_name", 
+  "plain_content": "<%body%>", 
+  "subject": "<%subject%>"
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/templates/{template_id}/versions/{version_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve a specific transactional template version.
+
+**This endpoint allows you to retrieve a specific version of a template.**
+
+Each transactional template can have multiple versions, each version with its own subject and content. Each user can have up to 300 versions across across all templates.
+
+For more information about transactional templates, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Transactional_Templates/index.html).
+
+## URI Parameters
+| URI Parameter | Type | Description |
+|---|---|---|
+| template_id | string | The ID of the original template |
+| version_id | string |  The ID of the template version |
+
+### GET /templates/{template_id}/versions/{version_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/templates/{template_id}/versions/{version_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Activate a transactional template version.
 
 **This endpoint allows you to activate a version of one of your templates.**
@@ -4416,15 +4674,16 @@ For more information about transactional templates, please see our [User Guide](
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/templates/{template_id}/versions/{version_id}/activate'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/templates/{template_id}/versions/{version_id}/activate';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="tracking_settings"></a>
 # TRACKING SETTINGS
 
@@ -4440,17 +4699,19 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/tracking_settings'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/tracking_settings';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update Click Tracking Settings
 
 **This endpoint allows you to change your current click tracking setting. You can enable, or disable, click tracking using this endpoint.**
@@ -4463,18 +4724,18 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true
 };
-  request.method = 'PATCH'
-  request.path = '/v3/tracking_settings/click'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/tracking_settings/click';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve Click Track Settings
 
 **This endpoint allows you to retrieve your current click tracking setting.**
@@ -4487,15 +4748,14 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/tracking_settings/click'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/tracking_settings/click';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update Google Analytics Settings
 
 **This endpoint allows you to update your current setting for Google Analytics.**
@@ -4512,8 +4772,7 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true, 
   "utm_campaign": "website", 
   "utm_content": "", 
@@ -4521,14 +4780,15 @@ For more information about tracking, please see our [User Guide](https://sendgri
   "utm_source": "sendgrid.com", 
   "utm_term": ""
 };
-  request.method = 'PATCH'
-  request.path = '/v3/tracking_settings/google_analytics'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/tracking_settings/google_analytics';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve Google Analytics Settings
 
 **This endpoint allows you to retrieve your current setting for Google Analytics.**
@@ -4545,15 +4805,14 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/tracking_settings/google_analytics'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/tracking_settings/google_analytics';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update Open Tracking Settings
 
 **This endpoint allows you to update your current settings for open tracking.**
@@ -4568,18 +4827,18 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true
 };
-  request.method = 'PATCH'
-  request.path = '/v3/tracking_settings/open'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/tracking_settings/open';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Get Open Tracking Settings
 
 **This endpoint allows you to retrieve your current settings for open tracking.**
@@ -4594,15 +4853,14 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/tracking_settings/open'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/tracking_settings/open';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update Subscription Tracking Settings
 
 **This endpoint allows you to update your current settings for subscription tracking.**
@@ -4617,8 +4875,7 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "enabled": true, 
   "html_content": "html content", 
   "landing": "landing page html", 
@@ -4626,14 +4883,15 @@ For more information about tracking, please see our [User Guide](https://sendgri
   "replace": "replacement tag", 
   "url": "url"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/tracking_settings/subscription'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/tracking_settings/subscription';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve Subscription Tracking Settings
 
 **This endpoint allows you to retrieve your current settings for subscription tracking.**
@@ -4648,15 +4906,14 @@ For more information about tracking, please see our [User Guide](https://sendgri
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/tracking_settings/subscription'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/tracking_settings/subscription';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="user"></a>
 # USER
 
@@ -4676,15 +4933,14 @@ For more information about your user profile:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/account'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/account';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve your credit balance
 
 **This endpoint allows you to retrieve the current credit balance for your account.**
@@ -4695,15 +4951,14 @@ Your monthly credit allotment limits the number of emails you may send before in
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/credits'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/credits';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update your account email address
 
 **This endpoint allows you to update the email address currently on file for your account.**
@@ -4718,18 +4973,18 @@ For more information about your user profile:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "email": "example@example.com"
 };
-  request.method = 'PUT'
-  request.path = '/v3/user/email'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PUT';
+  request.url = '/v3/user/email';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve your account email address
 
 **This endpoint allows you to retrieve the email address currently on file for your account.**
@@ -4744,15 +4999,14 @@ For more information about your user profile:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/email'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/email';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update your password
 
 **This endpoint allows you to update your password.**
@@ -4767,19 +5021,19 @@ For more information about your user profile:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "new_password": "new_password", 
   "old_password": "old_password"
 };
-  request.method = 'PUT'
-  request.path = '/v3/user/password'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PUT';
+  request.url = '/v3/user/password';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update a user's profile
 
 **This endpoint allows you to update your current profile details.**
@@ -4796,20 +5050,20 @@ It should be noted that any one or more of the parameters can be updated via the
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "city": "Orange", 
   "first_name": "Example", 
   "last_name": "User"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/user/profile'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/user/profile';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Get a user's profile
 
 Keeping your user profile up to date is important. This will help SendGrid to verify who you are as well as contact you should we need to.
@@ -4822,15 +5076,14 @@ For more information about your user profile:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/profile'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/profile';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Cancel or pause a scheduled send
 
 **This endpoint allows you to cancel or pause an email that has been scheduled to be sent.**
@@ -4838,104 +5091,103 @@ For more information about your user profile:
 If the maximum number of cancellations/pauses are added, HTTP 400 will
 be returned.
 
-The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
+The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header. Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
 
 ### POST /user/scheduled_sends
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "batch_id": "YOUR_BATCH_ID", 
   "status": "pause"
 };
-  request.method = 'POST'
-  request.path = '/v3/user/scheduled_sends'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/user/scheduled_sends';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all scheduled sends
 
 **This endpoint allows you to retrieve all cancel/paused scheduled send information.**
 
-The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
+The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header. Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
 
 ### GET /user/scheduled_sends
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/scheduled_sends'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/scheduled_sends';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Update user scheduled send information
-
-**This endpoint allows you to update the status of a scheduled send for the given `batch_id`.**
-
-The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
-
-### PATCH /user/scheduled_sends/{batch_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "status": "pause"
-};
-  request.method = 'PATCH'
-  request.path = '/v3/user/scheduled_sends/{batch_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve scheduled send
-
-**This endpoint allows you to retrieve the cancel/paused scheduled send information for a specific `batch_id`.**
-
-The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
-
-### GET /user/scheduled_sends/{batch_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/scheduled_sends/{batch_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a cancellation or pause of a scheduled send
 
 **This endpoint allows you to delete the cancellation/pause of a scheduled send.**
 
-The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header.Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
+The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header. Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
 
 ### DELETE /user/scheduled_sends/{batch_id}
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/user/scheduled_sends/{batch_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/user/scheduled_sends/{batch_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Update user scheduled send information
+
+**This endpoint allows you to update the status of a scheduled send for the given `batch_id`.**
+
+The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header. Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
+
+### PATCH /user/scheduled_sends/{batch_id}
+
+
+```javascript
+  const data = {
+  "status": "pause"
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/user/scheduled_sends/{batch_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve scheduled send
+
+**This endpoint allows you to retrieve the cancel/paused scheduled send information for a specific `batch_id`.**
+
+The Cancel Scheduled Sends feature allows the customer to cancel a scheduled send based on a Batch ID included in the SMTPAPI header. Scheduled sends cancelled less than 10 minutes before the scheduled time are not guaranteed to be cancelled.
+
+### GET /user/scheduled_sends/{batch_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/user/scheduled_sends/{batch_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Update Enforced TLS settings
 
 **This endpoint allows you to update your current Enforced TLS settings.**
@@ -4948,19 +5200,19 @@ The Enforced TLS settings specify whether or not the recipient is required to su
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "require_tls": true, 
   "require_valid_cert": false
 };
-  request.method = 'PATCH'
-  request.path = '/v3/user/settings/enforced_tls'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/user/settings/enforced_tls';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve current Enforced TLS settings.
 
 **This endpoint allows you to retrieve your current Enforced TLS settings.**
@@ -4973,15 +5225,14 @@ The Enforced TLS settings specify whether or not the recipient is required to su
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/settings/enforced_tls'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/settings/enforced_tls';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update your username
 
 **This endpoint allows you to update the username for your account.**
@@ -4996,18 +5247,18 @@ For more information about your user profile:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "username": "test_username"
 };
-  request.method = 'PUT'
-  request.path = '/v3/user/username'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PUT';
+  request.url = '/v3/user/username';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve your username
 
 **This endpoint allows you to retrieve your current account username.**
@@ -5022,15 +5273,14 @@ For more information about your user profile:
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/username'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/username';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Update Event Notification Settings
 
 **This endpoint allows you to update your current event webhook settings.**
@@ -5045,8 +5295,7 @@ Common uses of this data are to remove unsubscribes, react to spam reports, dete
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "bounce": true, 
   "click": true, 
   "deferred": true, 
@@ -5061,14 +5310,15 @@ Common uses of this data are to remove unsubscribes, react to spam reports, dete
   "unsubscribe": true, 
   "url": "url"
 };
-  request.method = 'PATCH'
-  request.path = '/v3/user/webhooks/event/settings'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/user/webhooks/event/settings';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve Event Webhook settings
 
 **This endpoint allows you to retrieve your current event webhook settings.**
@@ -5083,16 +5333,15 @@ Common uses of this data are to remove unsubscribes, react to spam reports, dete
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/webhooks/event/settings'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/webhooks/event/settings';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Test Event Notification Settings 
+```
+## Test Event Notification Settings
 
 **This endpoint allows you to test your event webhook by sending a fake event notification post to the provided URL.**
 
@@ -5104,18 +5353,18 @@ Common uses of this data are to remove unsubscribes, react to spam reports, dete
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "url": "url"
 };
-  request.method = 'POST'
-  request.path = '/v3/user/webhooks/event/test'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/user/webhooks/event/test';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Create a parse setting
 
 **This endpoint allows you to create a new inbound parse setting.**
@@ -5126,21 +5375,21 @@ The inbound parse webhook allows you to have incoming emails parsed, extracting 
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "hostname": "myhostname.com", 
   "send_raw": false, 
   "spam_check": true, 
   "url": "http://email.myhosthame.com"
 };
-  request.method = 'POST'
-  request.path = '/v3/user/webhooks/parse/settings'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/user/webhooks/parse/settings';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all parse settings
 
 **This endpoint allows you to retrieve all of your current inbound parse settings.**
@@ -5151,58 +5400,14 @@ The inbound parse webhook allows you to have incoming emails parsed, extracting 
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/webhooks/parse/settings'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/user/webhooks/parse/settings';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Update a parse setting
-
-**This endpoint allows you to update a specific inbound parse setting.**
-
-The inbound parse webhook allows you to have incoming emails parsed, extracting some or all of the contnet, and then have that content POSTed by SendGrid to a URL of your choosing. For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Webhooks/parse.html).
-
-### PATCH /user/webhooks/parse/settings/{hostname}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "send_raw": true, 
-  "spam_check": false, 
-  "url": "http://newdomain.com/parse"
-};
-  request.method = 'PATCH'
-  request.path = '/v3/user/webhooks/parse/settings/{hostname}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve a specific parse setting
-
-**This endpoint allows you to retrieve a specific inbound parse setting.**
-
-The inbound parse webhook allows you to have incoming emails parsed, extracting some or all of the contnet, and then have that content POSTed by SendGrid to a URL of your choosing. For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Webhooks/parse.html).
-
-### GET /user/webhooks/parse/settings/{hostname}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/user/webhooks/parse/settings/{hostname}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete a parse setting
 
 **This endpoint allows you to delete a specific inbound parse setting.**
@@ -5213,15 +5418,58 @@ The inbound parse webhook allows you to have incoming emails parsed, extracting 
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/user/webhooks/parse/settings/{hostname}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/user/webhooks/parse/settings/{hostname}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Update a parse setting
+
+**This endpoint allows you to update a specific inbound parse setting.**
+
+The inbound parse webhook allows you to have incoming emails parsed, extracting some or all of the contnet, and then have that content POSTed by SendGrid to a URL of your choosing. For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Webhooks/parse.html).
+
+### PATCH /user/webhooks/parse/settings/{hostname}
+
+
+```javascript
+  const data = {
+  "send_raw": true, 
+  "spam_check": false, 
+  "url": "http://newdomain.com/parse"
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/user/webhooks/parse/settings/{hostname}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve a specific parse setting
+
+**This endpoint allows you to retrieve a specific inbound parse setting.**
+
+The inbound parse webhook allows you to have incoming emails parsed, extracting some or all of the contnet, and then have that content POSTed by SendGrid to a URL of your choosing. For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Webhooks/parse.html).
+
+### GET /user/webhooks/parse/settings/{hostname}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/user/webhooks/parse/settings/{hostname}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Retrieves Inbound Parse Webhook statistics.
 
 **This endpoint allows you to retrieve the statistics for your Parse Webhook useage.**
@@ -5234,20 +5482,22 @@ There are a number of pre-made integrations for the SendGrid Parse Webhook which
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["aggregated_by"] = 'day'
-  request.queryParams["limit"] = 'test_string'
-  request.queryParams["start_date"] = '2016-01-01'
-  request.queryParams["end_date"] = '2016-04-01'
-  request.queryParams["offset"] = 'test_string'
-  request.method = 'GET'
-  request.path = '/v3/user/webhooks/parse/stats'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'aggregated_by': 'day', 
+  'end_date': '2016-04-01', 
+  'limit': 'test_string', 
+  'offset': 'test_string', 
+  'start_date': '2016-01-01'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/user/webhooks/parse/stats';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 <a name="whitelabel"></a>
 # WHITELABEL
 
@@ -5267,8 +5517,7 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "automatic_security": false, 
   "custom_spf": true, 
   "default": true, 
@@ -5280,14 +5529,15 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
   "subdomain": "news", 
   "username": "john@example.com"
 };
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/domains'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/domains';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## List all domain whitelabels.
 
 **This endpoint allows you to retrieve a list of all domain whitelabels you have created.**
@@ -5296,25 +5546,26 @@ A domain whitelabel allows you to remove the via or sent on behalf of message th
 
 For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
 
-
 ### GET /whitelabel/domains
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["username"] = 'test_string'
-  request.queryParams["domain"] = 'test_string'
-  request.queryParams["exclude_subusers"] = 'true'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/domains'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'domain': 'test_string', 
+  'exclude_subusers': 'true', 
+  'limit': 1, 
+  'offset': 1, 
+  'username': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/domains';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Get the default domain whitelabel.
 
 **This endpoint allows you to retrieve the default whitelabel for a domain.**
@@ -5332,43 +5583,14 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/domains/default'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/domains/default';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## List the domain whitelabel associated with the given user.
-
-**This endpoint allows you to retrieve all of the whitelabels that have been assigned to a specific subuser.**
-
-A domain whitelabel allows you to remove the via or sent on behalf of message that your recipients see when they read your emails. Whitelabeling a domain allows you to replace sendgrid.net with your personal sending domain. You will be required to create a subdomain so that SendGrid can generate the DNS records which you must give to your host provider. If you choose to use Automated Security, SendGrid will provide you with 3 CNAME records. If you turn Automated Security off, you will be given 2 TXT records and 1 MX record.
-
-Domain whitelabels can be associated with (i.e. assigned to) subusers from a parent account. This functionality allows subusers to send mail using their parent's whitelabels. To associate a whitelabel with a subuser, the parent account must first create the whitelabel and validate it. The the parent may then associate the whitelabel via the subuser management tools.
-
-For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
-
-## URI Parameters
-| URI Parameter   | Type  | Description  |
-|---|---|---|
-| username | string  | Username of the subuser to find associated whitelabels for. |
-
-### GET /whitelabel/domains/subuser
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/domains/subuser'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Disassociate a domain whitelabel from a given user.
 
 **This endpoint allows you to disassociate a specific whitelabel from a subuser.**
@@ -5388,62 +5610,43 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/whitelabel/domains/subuser'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/whitelabel/domains/subuser';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Update a domain whitelabel.
+```
+## List the domain whitelabel associated with the given user.
 
-**This endpoint allows you to update the settings for a domain whitelabel.**
+**This endpoint allows you to retrieve all of the whitelabels that have been assigned to a specific subuser.**
 
 A domain whitelabel allows you to remove the via or sent on behalf of message that your recipients see when they read your emails. Whitelabeling a domain allows you to replace sendgrid.net with your personal sending domain. You will be required to create a subdomain so that SendGrid can generate the DNS records which you must give to your host provider. If you choose to use Automated Security, SendGrid will provide you with 3 CNAME records. If you turn Automated Security off, you will be given 2 TXT records and 1 MX record.
 
-For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
-
-### PATCH /whitelabel/domains/{domain_id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "custom_spf": true, 
-  "default": false
-};
-  request.method = 'PATCH'
-  request.path = '/v3/whitelabel/domains/{domain_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Retrieve a domain whitelabel.
-
-**This endpoint allows you to retrieve a specific domain whitelabel.**
-
-A domain whitelabel allows you to remove the via or sent on behalf of message that your recipients see when they read your emails. Whitelabeling a domain allows you to replace sendgrid.net with your personal sending domain. You will be required to create a subdomain so that SendGrid can generate the DNS records which you must give to your host provider. If you choose to use Automated Security, SendGrid will provide you with 3 CNAME records. If you turn Automated Security off, you will be given 2 TXT records and 1 MX record.
+Domain whitelabels can be associated with (i.e. assigned to) subusers from a parent account. This functionality allows subusers to send mail using their parent's whitelabels. To associate a whitelabel with a subuser, the parent account must first create the whitelabel and validate it. The the parent may then associate the whitelabel via the subuser management tools.
 
 For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
 
+## URI Parameters
+| URI Parameter   | Type  | Description  |
+|---|---|---|
+| username | string  | Username of the subuser to find associated whitelabels for. |
 
-### GET /whitelabel/domains/{domain_id}
+### GET /whitelabel/domains/subuser
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/domains/{domain_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/domains/subuser';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a domain whitelabel.
 
 **This endpoint allows you to delete a domain whitelabel.**
@@ -5456,15 +5659,61 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/whitelabel/domains/{domain_id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/whitelabel/domains/{domain_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Update a domain whitelabel.
+
+**This endpoint allows you to update the settings for a domain whitelabel.**
+
+A domain whitelabel allows you to remove the via or sent on behalf of message that your recipients see when they read your emails. Whitelabeling a domain allows you to replace sendgrid.net with your personal sending domain. You will be required to create a subdomain so that SendGrid can generate the DNS records which you must give to your host provider. If you choose to use Automated Security, SendGrid will provide you with 3 CNAME records. If you turn Automated Security off, you will be given 2 TXT records and 1 MX record.
+
+For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
+
+### PATCH /whitelabel/domains/{domain_id}
+
+
+```javascript
+  const data = {
+  "custom_spf": true, 
+  "default": false
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/whitelabel/domains/{domain_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve a domain whitelabel.
+
+**This endpoint allows you to retrieve a specific domain whitelabel.**
+
+A domain whitelabel allows you to remove the via or sent on behalf of message that your recipients see when they read your emails. Whitelabeling a domain allows you to replace sendgrid.net with your personal sending domain. You will be required to create a subdomain so that SendGrid can generate the DNS records which you must give to your host provider. If you choose to use Automated Security, SendGrid will provide you with 3 CNAME records. If you turn Automated Security off, you will be given 2 TXT records and 1 MX record.
+
+For more information on whitelabeling, please see our [User Guide](https://sendgrid.com/docs/User_Guide/Settings/Whitelabel/index.html)
+
+### GET /whitelabel/domains/{domain_id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/domains/{domain_id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Associate a domain whitelabel with a given user.
 
 **This endpoint allows you to associate a specific domain whitelabel with a subuser.**
@@ -5484,18 +5733,18 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "username": "jane@example.com"
 };
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/domains/{domain_id}/subuser'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/domains/{domain_id}/subuser';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Add an IP to a domain whitelabel.
 
 **This endpoint allows you to add an IP address to a domain whitelabel.**
@@ -5513,18 +5762,18 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "ip": "192.168.0.1"
 };
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/domains/{id}/ips'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/domains/{id}/ips';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Remove an IP from a domain whitelabel.
 
 **This endpoint allows you to remove a domain's IP address from that domain's whitelabel.**
@@ -5543,15 +5792,16 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/whitelabel/domains/{id}/ips/{ip}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/whitelabel/domains/{id}/ips/{ip}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Validate a domain whitelabel.
 
 **This endpoint allows you to validate a domain whitelabel. If it fails, it will return an error message describing why the whitelabel could not be validated.**
@@ -5569,15 +5819,16 @@ For more information on whitelabeling, please see our [User Guide](https://sendg
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/domains/{id}/validate'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/domains/{id}/validate';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Create an IP whitelabel
 
 **This endpoint allows you to create an IP whitelabel.**
@@ -5592,20 +5843,20 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "domain": "example.com", 
   "ip": "192.168.1.1", 
   "subdomain": "email"
 };
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/ips'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/ips';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all IP whitelabels
 
 **This endpoint allows you to retrieve all of the IP whitelabels that have been createdy by this account.**
@@ -5620,39 +5871,20 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["ip"] = 'test_string'
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/ips'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'ip': 'test_string', 
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/ips';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve an IP whitelabel
-
-**This endpoint allows you to retrieve an IP whitelabel.**
-
-A IP whitelabel consists of a subdomain and domain that will be used to generate a reverse DNS record for a given IP. Once SendGrid has verified that the appropriate A record for the IP has been created, the appropriate reverse DNS record for the IP is generated.
-
-For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html).
-
-### GET /whitelabel/ips/{id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/ips/{id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Delete an IP whitelabel
 
 **This endpoint allows you to delete an IP whitelabel.**
@@ -5665,15 +5897,36 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/whitelabel/ips/{id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/whitelabel/ips/{id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Retrieve an IP whitelabel
+
+**This endpoint allows you to retrieve an IP whitelabel.**
+
+A IP whitelabel consists of a subdomain and domain that will be used to generate a reverse DNS record for a given IP. Once SendGrid has verified that the appropriate A record for the IP has been created, the appropriate reverse DNS record for the IP is generated.
+
+For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/ips.html).
+
+### GET /whitelabel/ips/{id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/ips/{id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Validate an IP whitelabel
 
 **This endpoint allows you to validate an IP whitelabel.**
@@ -5686,15 +5939,16 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/ips/{id}/validate'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/ips/{id}/validate';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Create a Link Whitelabel
 
 **This endpoint allows you to create a new link whitelabel.**
@@ -5707,22 +5961,25 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "default": true, 
   "domain": "example.com", 
   "subdomain": "mail"
 };
-  request.queryParams["limit"] = '1'
-  request.queryParams["offset"] = '1'
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/links'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  const queryParams = {
+  'limit': 1, 
+  'offset': 1
+};
+  request.qs = queryParams;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/links';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve all link whitelabels
 
 **This endpoint allows you to retrieve all link whitelabels.**
@@ -5735,16 +5992,18 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["limit"] = '1'
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/links'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'limit': 1
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/links';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Retrieve a Default Link Whitelabel
 
 **This endpoint allows you to retrieve the default link whitelabel.**
@@ -5764,42 +6023,18 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["domain"] = 'test_string'
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/links/default'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'domain': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/links/default';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve Associated Link Whitelabel
-
-**This endpoint allows you to retrieve the associated link whitelabel for a subuser.**
-
-Link whitelables can be associated with subusers from the parent account. This functionality allows
-subusers to send mail using their parent's linke whitelabels. To associate a link whitelabel, the parent account
-must first create a whitelabel and validate it. The parent may then associate that whitelabel with a subuser via the API or the Subuser Management page in the user interface.
-
-Email link whitelabels allow all of the click-tracked links you send in your emails to include the URL of your domain instead of sendgrid.net.
-
-For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
-
-### GET /whitelabel/links/subuser
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["username"] = 'test_string'
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/links/subuser'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
+```
 ## Disassociate a Link Whitelabel
 
 **This endpoint allows you to disassociate a link whitelabel from a subuser.**
@@ -5816,61 +6051,48 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.queryParams["username"] = 'test_string'
-  request.method = 'DELETE'
-  request.path = '/v3/whitelabel/links/subuser'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
-  })
-  ```
-## Update a Link Whitelabel
-
-**This endpoint allows you to update a specific link whitelabel. You can use this endpoint to change a link whitelabel's default status.**
-
-Email link whitelabels allow all of the click-tracked links you send in your emails to include the URL of your domain instead of sendgrid.net.
-
-For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
-
-### PATCH /whitelabel/links/{id}
-
-
-```javascript
-  var request = sg.emptyRequest()
-  request.body = {
-  "default": true
+  const data = None;
+  request.body = data;
+  const queryParams = {
+  'username': 'test_string'
 };
-  request.method = 'PATCH'
-  request.path = '/v3/whitelabel/links/{id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.qs = queryParams;
+  request.method = 'DELETE';
+  request.url = '/v3/whitelabel/links/subuser';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
-## Retrieve a Link Whitelabel
+```
+## Retrieve Associated Link Whitelabel
 
-**This endpoint allows you to retrieve a specific link whitelabel.**
+**This endpoint allows you to retrieve the associated link whitelabel for a subuser.**
+
+Link whitelables can be associated with subusers from the parent account. This functionality allows
+subusers to send mail using their parent's linke whitelabels. To associate a link whitelabel, the parent account
+must first create a whitelabel and validate it. The parent may then associate that whitelabel with a subuser via the API or the Subuser Management page in the user interface.
 
 Email link whitelabels allow all of the click-tracked links you send in your emails to include the URL of your domain instead of sendgrid.net.
 
 For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
 
-### GET /whitelabel/links/{id}
+### GET /whitelabel/links/subuser
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'GET'
-  request.path = '/v3/whitelabel/links/{id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const queryParams = {
+  'username': 'test_string'
+};
+  request.qs = queryParams;
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/links/subuser';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Delete a Link Whitelabel
 
 **This endpoint allows you to delete a link whitelabel.**
@@ -5883,15 +6105,60 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'DELETE'
-  request.path = '/v3/whitelabel/links/{id}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'DELETE';
+  request.url = '/v3/whitelabel/links/{id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
+## Update a Link Whitelabel
+
+**This endpoint allows you to update a specific link whitelabel. You can use this endpoint to change a link whitelabel's default status.**
+
+Email link whitelabels allow all of the click-tracked links you send in your emails to include the URL of your domain instead of sendgrid.net.
+
+For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
+
+### PATCH /whitelabel/links/{id}
+
+
+```javascript
+  const data = {
+  "default": true
+};
+  request.body = data;
+  request.method = 'PATCH';
+  request.url = '/v3/whitelabel/links/{id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
+## Retrieve a Link Whitelabel
+
+**This endpoint allows you to retrieve a specific link whitelabel.**
+
+Email link whitelabels allow all of the click-tracked links you send in your emails to include the URL of your domain instead of sendgrid.net.
+
+For more information, please see our [User Guide](https://sendgrid.com/docs/API_Reference/Web_API_v3/Whitelabel/links.html).
+
+### GET /whitelabel/links/{id}
+
+
+```javascript
+  request.method = 'GET';
+  request.url = '/v3/whitelabel/links/{id}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
+  })
+```
 ## Validate a Link Whitelabel
 
 **This endpoint allows you to validate a link whitelabel.**
@@ -5904,15 +6171,16 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/links/{id}/validate'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  const data = None;
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/links/{id}/validate';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 ## Associate a Link Whitelabel
 
 **This endpoint allows you to associate a link whitelabel with a subuser account.**
@@ -5929,16 +6197,16 @@ For more information, please see our [User Guide](https://sendgrid.com/docs/API_
 
 
 ```javascript
-  var request = sg.emptyRequest()
-  request.body = {
+  const data = {
   "username": "jane@example.com"
 };
-  request.method = 'POST'
-  request.path = '/v3/whitelabel/links/{link_id}/subuser'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.body = data;
+  request.method = 'POST';
+  request.url = '/v3/whitelabel/links/{link_id}/subuser';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 

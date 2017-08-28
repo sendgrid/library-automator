@@ -1,34 +1,26 @@
-describe('{{ test_name }}', function () {
-  this.timeout(30000);
-  var API_KEY = 'SendGrid API Key'
-  if(process.env.TRAVIS) {
-    var TEST_HOST = process.env.MOCK_HOST
-  } else {
-    var TEST_HOST = 'localhost'
-  }
-
-  var sg = require('../lib/sendgrid.js').SendGrid(API_KEY, TEST_HOST)
-
-  var request = sg.emptyRequest()
-  if(TEST_HOST == 'localhost') {
-    request.test = true
-    request.port = 4010
-  }
-  {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-  request.body = {{ data }};
+describe('{{ test_name }}', () => {
+  var request = {};
+  {% if (data != 'null') and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
+  const data = {{ data }};
+  request.body = data;
   {% endif %}
   {% if params %}
-  {{ params }}
+  const queryParams = {{ params }};
+  request.qs = queryParams;
   {% endif %}
-  request.method = '{{ method }}'
-  request.path = '{{ api_call }}'
-  request.headers['X-Mock'] = {{ response_code }}
-  it('{{ test_name }} had the correct response code', function(done) {
-    sg.API(request, function (response) {
-      assert.equal(response.statusCode, {{ response_code }}, 'response code is not correct')
-      done();
-    })
+  request.method = '{{ method }}';
+  request.url = '{{ api_call }}';
+  it('should have the correct response code', () => {
+    var sgClient = require('./client');
+    sgClient.setApiKey('SendGrid API Key');
+    sgClient.setDefaultRequest('baseUrl', baseUrl);
+    sgClient.setDefaultHeader('X-Mock', {{ response_code }});
+    return sgClient
+      .request(request)
+      .then(([response, body]) => {
+        expect(response.statusCode).to.equal({{ response_code }});
+      });
   });
-})
+});
 
 

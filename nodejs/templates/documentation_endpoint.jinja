@@ -5,23 +5,24 @@
 ### {{ method_title }} {{ endpoint }}
 
 {% if endpoint == "/mail/send" %}
-// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/blob/master/lib/helpers/mail/README.md).
+// This endpoint has a helper, check it out [here](https://github.com/sendgrid/sendgrid-nodejs/tree/master/packages/mail).
 {% endif %}
 
 ```javascript
-  var request = sg.emptyRequest()
-  {% if data and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
-  request.body = {{ data }};
+  {% if (data != 'null') and (method == "PUT" or method == "PATCH" or method == "POST" or method == "DELETE")  %}
+  const data = {{ data }};
+  request.body = data;
   {% endif %}
   {% if params %}
-  {{ params }}
+  const queryParams = {{ params }};
+  request.qs = queryParams;
   {% endif %}
-  request.method = '{{ method }}'
-  request.path = '{{ api_call }}'
-  sg.API(request, function (response) {
-    console.log(response.statusCode)
-    console.log(response.body)
-    console.log(response.headers)
+  request.method = '{{ method }}';
+  request.url = '{{ api_call }}';
+  client.request(request)
+  .then(([response, body]) => {
+    console.log(response.statusCode);
+    console.log(response.body);
   })
-  ```
+```
 

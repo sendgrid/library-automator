@@ -14,7 +14,7 @@ class Swagger(object):
         github_token = os.environ.get('GITHUB_TOKEN')
         gh = github3.login(token=github_token)
         repo = gh.repository(self.config.github_user, self.config.swagger_source)
-        contents = repo.directory_contents('/', return_as=dict)
+        contents = repo.contents('/')
         content = repo.blob(contents[self.config.swagger_filename].sha)
         swagger = base64.b64decode(content.content)
         return json.loads(swagger)
@@ -42,7 +42,10 @@ class Swagger(object):
         return self.swagger_json["paths"][endpoint]
 
     def get_endpoint_description(self, endpoint, method):
-        return self.swagger_json["paths"][endpoint][method]["description"]
+        try:
+            return self.swagger_json["paths"][endpoint][method]["description"]
+        except KeyError, e:
+            return ""
 
     def get_endpoint_short_description(self, endpoint, method):
         return self.swagger_json["paths"][endpoint][method]["summary"]
@@ -50,10 +53,10 @@ class Swagger(object):
     def get_response_codes(self, endpoint, method):
         return sorted(self.swagger_json["paths"][endpoint][method]["responses"].keys())
 
-    def get_query_parameters(self, endpoint, method):
-        query_params = self.swagger_json["paths"][endpoint][method]["parameters"]
+    def get_query_parameters(self, endpoint, method, language=None):
         qparams = {}
         try:
+            query_params = self.swagger_json["paths"][endpoint][method]["parameters"]
             for param in query_params:
                 is_int = False
                 if param[u'in'] == u'query':
@@ -89,7 +92,11 @@ class Swagger(object):
                             qparams[str(param[u'name'])] = type_test_data
                     is_int = False
         except KeyError, e:
-            qparams = None
+            if(language == 'nodejs'):
+                if param[u'$ref']:
+                    pass
+                else:
+                    qparams = None
         return qparams
 
     def get_example_data(self, endpoint, method, response_code):

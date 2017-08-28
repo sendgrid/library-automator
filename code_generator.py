@@ -45,6 +45,12 @@ class CodeGenerator(object):
                         raw_data = self.swagger.get_example_data(endpoint, method, response_code)
                         data = json.dumps(raw_data, indent=2, sort_keys=True)
                         api_call = self.generate_api_call(endpoint, method)
+                        #if (endpoint == '/whitelabel/links/subuser') and (method == 'get'):
+                        #    print(endpoint)
+                        #    print(method)
+                        #    print(query_params)
+                        #    query_params = self.swagger.get_query_parameters(endpoint, method, 'nodejs')
+                        #else:
                         query_params = self.swagger.get_query_parameters(endpoint, method)
                         params = self.generate_params(response_code, query_params, mock=False, caller="test")
                         url_params = self.generate_url_params(endpoint)
@@ -492,13 +498,14 @@ class CodeGenerator(object):
     def get_class_names(self):
         class_names = {}
         for endpoint in sorted(self.swagger_json["paths"]):
+            raw_endpoint = endpoint
             split_endpoint = endpoint.split('/')
             class_name = self.to_camelcase(split_endpoint[1].capitalize())
             try:
-                class_names[class_name].append(endpoint)
+                class_names[class_name].append(raw_endpoint)
             except KeyError, e:
                 class_names[class_name] = []
-                class_names[class_name].append(endpoint)
+                class_names[class_name].append(raw_endpoint)
         return class_names
 
     # Used in tests, docs and examples
@@ -535,9 +542,9 @@ class CodeGenerator(object):
                 else:
                     nodejs_params += "request.queryParams[\"" + str(key) + "\"] = '" + str(all_params[key]) + "'\n  "
             if caller == "docs":
-                nodejs_params = nodejs_params[:-3]
+                nodejs_params = json.dumps(all_params, indent=2, sort_keys=True).replace('"', "'")
             else:
-                nodejs_params = nodejs_params[:-1]
+                nodejs_params = json.dumps(all_params, indent=2, sort_keys=True).replace('"', "'")
             return nodejs_params
         if (self._language == "go") and (all_params != None):
             go_params = ""
